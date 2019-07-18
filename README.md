@@ -8,7 +8,7 @@ $ pipenv --two
 ..
 ...
 ....
-$ (env)bash$ pipenv install
+$ (env) bash-3.2$ pipenv install
 ```
 
 ### Viewing Help File
