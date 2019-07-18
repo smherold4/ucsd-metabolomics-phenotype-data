@@ -1,25 +1,29 @@
 # UCSD Metabolomics SQL storage
 Metabolomics and Phenotype ElasticSearch project
 
-## Python setup
+### Python setup
 ```
 $ pip install pipenv
 $ pipenv --two
-$ pipenv install
+.
+..
+...
+....
+$ (env)bash$ pipenv install
 ```
 
-## Viewing Help File
+### Viewing Help File
 ```
 python main.py -h
 ```
 
-## Adding new study names
+### Adding new study names
 ```
 INSERT INTO study (name) VALUES ('Finrisk');
 INSERT INTO study (name) VALUES ('FHS');
 ```
 
-## Importing descriptions without alignment
+### Importing descriptions without alignment
 ```
 python main.py \
   --study-name 'Finrisk' \
