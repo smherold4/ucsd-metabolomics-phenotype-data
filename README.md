@@ -1,11 +1,11 @@
-# UCSD Metabolomics SQL storage
+## UCSD Metabolomics SQL storage
 Metabolomics and Phenotype ElasticSearch project
 
-# python setup
+# Python setup
 ```
-> pip install pipenv
-> pipenv --two
-> pipenv install
+$ pip install pipenv
+$ pipenv --two
+$ pipenv install
 ```
 
-# importing descriptions with alignment
+# Importing descriptions with alignment
