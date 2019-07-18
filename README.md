@@ -3,9 +3,7 @@ Metabolomics and Phenotype ElasticSearch project
 
 ### Python setup
 ```
-$ pip install pipenv
-$ pipenv --two
-$ (env) bash-3.2$ pipenv install
+$ pip install -r requirements.txt
 ```
 
 ### Viewing Help File
