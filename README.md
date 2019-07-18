@@ -30,7 +30,7 @@ python main.py \
   --skip-alignment
 ```
 
-## Importing descriptions with alignment
+### Importing descriptions with alignment
 ```
 python main.py \
   --study-name 'FHS' \
