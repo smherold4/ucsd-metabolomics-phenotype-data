@@ -5,7 +5,6 @@ Metabolomics and Phenotype ElasticSearch project
 ```
 $ pip install pipenv
 $ pipenv --two
-.
 ..
 ...
 ....
