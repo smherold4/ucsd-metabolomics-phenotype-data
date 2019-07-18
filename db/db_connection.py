@@ -2,7 +2,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db import base
 import os
-from models import *
 
 def db_config():
   return "postgres://{db_username}:{db_password}@{db_host}:5432/{db_database}".format(
