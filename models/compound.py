@@ -10,13 +10,10 @@ class Compound(base.Base):
   __tablename__ = 'compound'
   id = Column(Integer, primary_key=True)
   pub_chem_cid = Column(Integer, index=True)
-  mz = Column(Numeric(precision=20, scale=12), index=True, nullable=False)
-  rt = Column(Numeric(precision=16, scale=10), index=True, nullable=False)
   created = Column(DateTime, default=datetime.datetime.utcnow)
 
-  def __init__(self, mz, rt):
-    self.mz = mz
-    self.rt = rt
+  def __init__(self, pub_chem_cid=None):
+    self.pub_chem_cid = pub_chem_cid
 
   @classmethod
   def merge(compound_to_keep, compound_to_remove):

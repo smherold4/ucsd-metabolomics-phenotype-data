@@ -11,6 +11,8 @@ class CohortCompound(base.Base):
   cohort_id = Column(Integer, ForeignKey('cohort.id', ondelete='CASCADE'), nullable=False)
   compound_id = Column(Integer, ForeignKey('compound.id'), nullable=False)
   local_compound_id = Column(String, nullable=False, index=True)
+  mz = Column(Numeric(precision=20, scale=12), index=True, nullable=False)
+  rt = Column(Numeric(precision=16, scale=10), index=True, nullable=False)
   cross_variation = Column(Numeric(precision=12, scale=6), index=True)
   ml_score = Column(Numeric(precision=9, scale=8), index=True)
   created = Column(DateTime, default=datetime.datetime.utcnow)
@@ -21,10 +23,12 @@ class CohortCompound(base.Base):
   cohort = relationship("Cohort")
   compound = relationship("Compound")
 
-  def __init__(self, cohort, compound, local_compound_id, cross_variation, ml_score):
+  def __init__(self, cohort, compound, local_compound_id, mz, rt, cross_variation, ml_score):
     self.cohort = cohort
     self.compound = compound
     self.local_compound_id = local_compound_id
+    self.mz = mz
+    self.rt = rt
     self.cross_variation = cross_variation
     self.ml_score = ml_score
   

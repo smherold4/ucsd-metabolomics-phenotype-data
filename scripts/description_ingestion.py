@@ -50,9 +50,7 @@ def find_alignment_cohort(args, session):
   return alignment_cohort
 
 def create_compound(csv_row, session):
-  mz = csv_row[COLUMNS['mz']]
-  rt = csv_row[COLUMNS['rt']]
-  compound = Compound(mz, rt)
+  compound = Compound()
   session.add(compound)
   session.commit()
   return compound
@@ -65,9 +63,11 @@ def existing_compound(csv_row, alignment_mapping, session):
 
 def create_cohort_compound(cohort, compound, csv_row, session):
   local_compound_id = csv_row[COLUMNS['local_compound_id']]
+  mz = csv_row[COLUMNS['mz']]
+  rt = csv_row[COLUMNS['rt']]
   cross_variation = csv_row[COLUMNS['cross_variation']] or None
   ml_score = csv_row[COLUMNS['ml_score']] or None
-  cohort_compound = CohortCompound(cohort, compound, local_compound_id, cross_variation, ml_score)
+  cohort_compound = CohortCompound(cohort, compound, local_compound_id, mz, rt, cross_variation, ml_score)
   session.add(cohort_compound)
   session.commit()
 
