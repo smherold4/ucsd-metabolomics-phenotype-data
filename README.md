@@ -39,6 +39,6 @@ python main.py \
   --method 'LCMS' \
   --units normalized \
   --alignment-file ~/Desktop/AlignedPeaksWithFin.csv \
-  --alignment-cohort-study 'Finsrisk' \
+  --alignment-cohort-study 'Finrisk' \
   --alignment-cohort-column B
 ```
