@@ -87,7 +87,6 @@ def run(args):
   if not args.skip_alignment:
     alignment_cohort = find_alignment_cohort(args, session)
     alignment_mapping = build_lab_id_to_compound_id_mapping(args, alignment_cohort, session)
-    print(alignment_mapping)
 
   cohort = session.query(Cohort).filter(Cohort.study_id==study.id, Cohort.method==args.method, Cohort.units==args.units).first()
   assert cohort is None, "A cohort with these parameters (study_id, method, units) already exists"
