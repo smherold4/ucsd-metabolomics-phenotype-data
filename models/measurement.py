@@ -17,13 +17,11 @@ class Measurement(base.Base):
     cohort_compound_id = Column(
         Integer,
         ForeignKey('cohort_compound.id', ondelete='CASCADE'),
-        nullable=False,
-        index=True)
+        nullable=False)
     dataset_id = Column(
         Integer,
         ForeignKey('dataset.id', ondelete='CASCADE'),
-        nullable=False,
-        index=True)
+        nullable=False)
     measurement = Column(
         Numeric(precision=80, scale=30),
         nullable=False)
@@ -47,6 +45,11 @@ class Measurement(base.Base):
             "ix_measurement_on_cohort_compound_mad",
             "cohort_compound_id",
             "median_absolute_deviation"),
+        Index(
+            "CREATE INDEX ix_measurement_on_dataset_compound",
+            "dataset_id",
+            "cohort_compound_id"),
+        )
     )
 
     subject = relationship("Subject")

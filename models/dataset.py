@@ -9,7 +9,7 @@ from sqlalchemy import Column, String, Date, Integer, Numeric, Index, DateTime, 
 class Dataset(base.Base):
     __tablename__ = 'dataset'
     id = Column(Integer, primary_key=True)
-    cohort_id = Column(Integer, ForeignKey('cohort.id'), index=True)
+    cohort_id = Column(Integer, ForeignKey('cohort.id'))
     method = Column(String, nullable=False, index=True)
     units = Column(String, nullable=False, index=True)
     created = Column(DateTime, default=datetime.datetime.utcnow)
