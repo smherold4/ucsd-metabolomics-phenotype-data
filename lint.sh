@@ -1,3 +1,3 @@
 #!/bin/bash
 
-find . -iname "*.py" | xargs autopep8 --in-place --aggressive --aggressive --max-line-length 120
+find . -iname "*.py" | xargs autopep8 --in-place --aggressive --aggressive --max-line-length 160

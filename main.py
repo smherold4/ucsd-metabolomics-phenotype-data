@@ -1,5 +1,5 @@
 from scripts import description_ingestion, measurements_ingestion
-from models import Cohort
+from models import Cohort, Dataset
 import argparse
 from dotenv import load_dotenv
 load_dotenv()
@@ -26,50 +26,33 @@ def get_command_line_args():
         type=str,
         required=True,
         help="Method used in cohort: {}" %
-        Cohort.METHODS)
+        Dataset.METHODS)
     parser.add_argument(
         '--units',
         type=str,
         required=True,
         help="Units used in cohort: {}" %
-        Cohort.UNITS)
+        Dataset.UNITS)
     parser.add_argument(
-        '--study-name',
+        '--cohort-name',
         type=str,
         required=True,
-        help="Name of study - when ingesting description")
-    parser.add_argument(
-        '--skip-alignment',
-        action='store_true',
-        default=False,
-        help="Skip alignment and immediately create new compounds - when ingesting description")
+        help="Name of cohort - when ingesting description")
     parser.add_argument(
         '--verbose',
         action='store_true',
         default=False,
         help="Show status outputs to monitor progress of script")
-    parser.add_argument(
-        '--alignment-file',
-        type=str,
-        help="Path to alignment file")
-    parser.add_argument(
-        '--alignment-cohort-study',
-        type=str,
-        help="Name of study of cohort with which to align")
-    parser.add_argument(
-        '--alignment-cohort-column',
-        type=str,
-        help="Column ('A' or 'B') of cohort with which we're aligning")
 
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     clargs = get_command_line_args()
-    assert clargs.method in Cohort.METHODS, 'Invalid study method (--method) provided. Must be one of: {}'.format(
-        Cohort.METHODS)
-    assert clargs.units in Cohort.UNITS, 'Invalid units provided. Must be one of: {}'.format(
-        Cohort.UNITS)
+    assert clargs.method in Dataset.METHODS, 'Invalid  method (--method) provided. Must be one of: {}'.format(
+        Dataset.METHODS)
+    assert clargs.units in Dataset.UNITS, 'Invalid units provided. Must be one of: {}'.format(
+        Dataset.UNITS)
 
     if clargs.mode == 'description_ingestion':
         description_ingestion.run(clargs)
