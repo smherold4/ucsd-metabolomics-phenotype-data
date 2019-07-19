@@ -7,18 +7,35 @@ FIRST_COL_WITH_MEASUREMENTS = 2
 ROW_OF_LOCAL_COMPOUND_ID = 0
 
 
-def map_local_id_to_cohort_compounds(local_compound_ids, cohort, session):
-    all_cohort_compounds = session.query(CohortCompound).filter(
+def cohort_compound_ids_by_column(local_compound_ids, cohort, session):
+    cohort_compounds = session.query(CohortCompound).filter(
         CohortCompound.cohort_id == cohort.id,
         CohortCompound.local_compound_id.in_(local_compound_ids)).all()
-    assert len(all_cohort_compounds) == len(local_compound_ids), "Some compounds could not be found.  Only found {} compounds for {} local compound IDs".format(
-        len(all_cohort_compounds), len(local_compound_ids))
-    all_cohort_compounds_dict = {
-        cc.local_compound_id: cc for cc in all_cohort_compounds}
-    import pdb
-    pdb.set_trace()
-    return [all_cohort_compounds_dict[local_compound_id]
-            for local_compound_id in local_compound_ids]
+    assert len(cohort_compounds) == len(local_compound_ids), "Some compounds could not be found.  Only found {} compounds for {} local compound IDs".format(
+        len(cohort_compounds), len(local_compound_ids))
+    id_map = {
+        cc.local_compound_id: cc.id for cc in cohort_compounds}
+    return [id_map[local_compound_id] for local_compound_id in local_compound_ids]
+
+
+def find_or_create_subject(cohort, local_subject_id, session):
+    subject = session.query(Subject).filter(
+        Subject.cohort_id == cohort.id,
+        Subject.local_subject_id == local_subject_id).first() or Subject(
+        cohort,
+        local_subject_id)
+    session.add(subject)
+    session.commit()
+    return subject
+
+
+def build_insert_samples_sql(measurements, cohort_compound_ids, subject_id):
+    # insert_values = ["({}, {}, {})".format(subject_id,
+    # cohort_compound_ids[column]., measurement) for column, measurement in
+    # enumerate(measurements) if measurement]
+    insert_values = ["({}, {}, {})".format(subject_id, cohort_compound_ids[column], measurement)
+                     for column, measurement in enumerate(measurements) if measurement]
+    return "INSERT INTO sample (subject_id, cohort_compound_id, measurement) VALUES " + ",".join(insert_values)
 
 
 def run(args):
@@ -32,24 +49,20 @@ def run(args):
         Cohort.units == args.units).first()
     assert cohort is not None, "A cohort with these parameters (study_id, method, units) does not exist"
 
-    cohort_compounds = []
+    cohort_compound_ids = []
     with open(args.file) as csvfile:
         csv_reader = csv.reader(csvfile, delimiter=',')
         for line_count, row in enumerate(csv_reader):
             row_trimmed = row[FIRST_COL_WITH_MEASUREMENTS:]
             if line_count == 0:
-                cohort_compounds = map_local_id_to_cohort_compounds(
+                cohort_compound_ids = cohort_compound_ids_by_column(
                     row_trimmed, cohort, session)
-                import pdb
-                pdb.set_trace()
             else:
-                subject = Subject(cohort, row[LOCAL_SUBJECT_ID_COL])
-                session.add(subject)
-                session.commit()
-                for column, measurement in enumerate(row_trimmed):
-                    if not measurement:
-                        continue
-                    cohort_compound = cohort_compounds[column]
-                    sample = Sample(subject, cohort_compound, measurement)
-                    session.add(sample)
-                    session.commit()
+                local_subject_id = row[LOCAL_SUBJECT_ID_COL].strip()
+                if not local_subject_id:
+                    continue
+                subject = find_or_create_subject(cohort, local_subject_id, session)
+                insert_samples_sql = build_insert_samples_sql(row_trimmed, cohort_compound_ids, subject.id)
+                if args.verbose:
+                  print "Inserting samples for row {}, subjectId {}".format(line_count, local_subject_id)
+                session.execute(insert_samples_sql)
