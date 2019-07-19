@@ -8,14 +8,11 @@ ROW_OF_LOCAL_COMPOUND_ID = 0
 
 
 def map_local_id_to_cohort_compounds(local_compound_ids, cohort, session):
-    all_cohort_compounds = session.query(CohortCompound) \
-        .filter(
+    all_cohort_compounds = session.query(CohortCompound).filter(
         CohortCompound.cohort_id == cohort.id,
-        CohortCompound.local_compound_id.in_(local_compound_ids)
-    ).all()
-    assert len(all_cohort_compounds) == len(local_compound_ids), \
-        "Some compounds could not be found.  Only found {} compounds for {} local compound IDs" \
-        .format(len(all_cohort_compounds), len(local_compound_ids))
+        CohortCompound.local_compound_id.in_(local_compound_ids)).all()
+    assert len(all_cohort_compounds) == len(local_compound_ids), "Some compounds could not be found.  Only found {} compounds for {} local compound IDs".format(
+        len(all_cohort_compounds), len(local_compound_ids))
     all_cohort_compounds_dict = {
         cc.local_compound_id: cc for cc in all_cohort_compounds}
     import pdb

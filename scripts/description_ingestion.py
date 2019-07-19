@@ -27,13 +27,10 @@ def find_alignment_cohort(args, session):
         Study.name == args.alignment_cohort_study).first()
     assert alignment_study is not None, "Could not find alignment study with name {}".format(
         args.alignment_cohort_study)
-    alignment_cohort = session \
-        .query(Cohort) \
-        .filter(
-            Cohort.study_id == alignment_study.id,
-            Cohort.method == args.method,
-            Cohort.units == args.units) \
-        .first()
+    alignment_cohort = session.query(Cohort).filter(
+        Cohort.study_id == alignment_study.id,
+        Cohort.method == args.method,
+        Cohort.units == args.units).first()
     assert alignment_cohort is not None, "Could not find alignment cohort for study: {}, method: {}, units: {}".format(
         args.alignment_cohort_study, args.method, args.units)
     return alignment_cohort
@@ -41,12 +38,8 @@ def find_alignment_cohort(args, session):
 
 def find_cohort_compound(cohort, compound, csv_row, session):
     local_compound_id = csv_row[COLUMNS['local_compound_id']]
-    return session \
-        .query(CohortCompound) \
-        .filter(
-            CohortCompound.cohort_id == cohort.id,
-            CohortCompound.local_compound_id == local_compound_id) \
-        .first()
+    return session.query(CohortCompound).filter(CohortCompound.cohort_id == cohort.id,
+                                                CohortCompound.local_compound_id == local_compound_id).first()
 
 
 def create_cohort_compound(cohort, csv_row, session):
