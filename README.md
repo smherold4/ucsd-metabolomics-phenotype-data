@@ -28,7 +28,7 @@ python main.py \
   --mode 'description_ingestion' \
   --file ~/Desktop/FR_ml_mad_norm.description.csv \
   --method LCMS \
-  --units normalized \
+  --units normalized
 ```
 
 ### Importing measurements
