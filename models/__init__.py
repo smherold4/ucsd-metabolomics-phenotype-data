@@ -1,11 +1,13 @@
 from study import Study
 from cohort import Cohort
 from cohort_compound import CohortCompound
-from compound import Compound
+from subject import Subject
+from sample import Sample
 
 __all__ = [
-  'Study',
-  'Cohort',
-  'Compound',
-  'CohortCompound',
+    'Study',
+    'Cohort',
+    'CohortCompound',
+    'Subject',
+    'Sample',
 ]
