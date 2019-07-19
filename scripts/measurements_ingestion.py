@@ -1,11 +1,12 @@
 import csv
+import pandas as pd
 from models import Study, Cohort, CohortCompound, Subject, Sample
 from db import db_connection
 
 LOCAL_SUBJECT_ID_COL = 0
 FIRST_COL_WITH_MEASUREMENTS = 2
 ROW_OF_LOCAL_COMPOUND_ID = 0
-
+CSV_CHUNKSIZE=20
 
 def cohort_compound_ids_by_column(local_compound_ids, cohort, session):
     cohort_compounds = session.query(CohortCompound).filter(
@@ -34,7 +35,7 @@ def build_insert_samples_sql(measurements, cohort_compound_ids, subject_id):
     # cohort_compound_ids[column]., measurement) for column, measurement in
     # enumerate(measurements) if measurement]
     insert_values = ["({}, {}, {})".format(subject_id, cohort_compound_ids[column], measurement)
-                     for column, measurement in enumerate(measurements) if measurement]
+                     for column, measurement in enumerate(measurements) if not pd.isnull(measurement)]
     return "INSERT INTO sample (subject_id, cohort_compound_id, measurement) VALUES " + ",".join(insert_values)
 
 
@@ -50,19 +51,19 @@ def run(args):
     assert cohort is not None, "A cohort with these parameters (study_id, method, units) does not exist"
 
     cohort_compound_ids = []
-    with open(args.file) as csvfile:
-        csv_reader = csv.reader(csvfile, delimiter=',')
-        for line_count, row in enumerate(csv_reader):
-            row_trimmed = row[FIRST_COL_WITH_MEASUREMENTS:]
-            if line_count == 0:
-                cohort_compound_ids = cohort_compound_ids_by_column(
-                    row_trimmed, cohort, session)
-            else:
-                local_subject_id = row[LOCAL_SUBJECT_ID_COL].strip()
-                if not local_subject_id:
-                    continue
-                subject = find_or_create_subject(cohort, local_subject_id, session)
-                insert_samples_sql = build_insert_samples_sql(row_trimmed, cohort_compound_ids, subject.id)
-                if args.verbose:
-                  print "Inserting samples for row {}, subjectId {}".format(line_count, local_subject_id)
-                session.execute(insert_samples_sql)
+    line_count = 0
+    for df in pd.read_csv(args.file, chunksize=CSV_CHUNKSIZE):
+      if line_count == 0:
+        local_compound_ids = df.columns[FIRST_COL_WITH_MEASUREMENTS:].tolist()
+        cohort_compound_ids = cohort_compound_ids_by_column(local_compound_ids, cohort, session)
+      for _, row in df.iterrows():
+        line_count += 1
+        row_trimmed = row[FIRST_COL_WITH_MEASUREMENTS:].tolist()
+        local_subject_id = row[LOCAL_SUBJECT_ID_COL].strip()
+        if pd.isnull(local_subject_id):
+            continue
+        subject = find_or_create_subject(cohort, local_subject_id, session)
+        insert_samples_sql = build_insert_samples_sql(row_trimmed, cohort_compound_ids, subject.id)
+        if args.verbose:
+          print "Inserting samples for row {}, subjectId {}".format(line_count, local_subject_id)
+        session.execute(insert_samples_sql)
