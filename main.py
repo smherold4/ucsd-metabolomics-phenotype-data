@@ -44,6 +44,11 @@ def get_command_line_args():
         default=False,
         help="Skip alignment and immediately create new compounds - when ingesting description")
     parser.add_argument(
+        '--verbose',
+        action='store_true',
+        default=False,
+        help="Show status outputs to monitor progress of script")
+    parser.add_argument(
         '--alignment-file',
         type=str,
         help="Path to alignment file")
