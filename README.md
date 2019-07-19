@@ -40,3 +40,15 @@ python main.py \
   --alignment-cohort-study 'Finrisk' \
   --alignment-cohort-column B
 ```
+
+### Importing measurements
+
+```
+python main.py \
+  --study-name 'Finrisk' \
+  --mode 'measurements_ingestion' \
+  --file ~/Desktop/FR_ml_mad_norm.csv \
+  --method LCMS \
+  --units normalized \
+  --verbose
+```
