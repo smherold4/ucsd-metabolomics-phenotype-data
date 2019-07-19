@@ -46,7 +46,7 @@ class Measurement(base.Base):
             "cohort_compound_id",
             "median_absolute_deviation"),
         Index(
-            "CREATE INDEX ix_measurement_on_dataset_compound",
+            "ix_measurement_on_dataset_compound",
             "dataset_id",
             "cohort_compound_id"),
         )
