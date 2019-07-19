@@ -5,7 +5,7 @@ Metabolomics and Phenotype ElasticSearch project
 ```
 $ pip install -r requirements.txt
 ```
-OR (IF ON SYNOLOGY SERVER)
+OR (if on Synology server)
 ```
 pip install -r requirements-synology.txt
 ```
