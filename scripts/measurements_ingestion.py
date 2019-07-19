@@ -31,13 +31,13 @@ def find_or_create_subject(cohort, local_subject_id, session):
     return subject
 
 
-def build_insert_measurements_sql(measurements, cohort_compound_ids, subject_id):
+def build_insert_measurements_sql(measurements, cohort_compound_ids, subject_id, dataset_id):
     # insert_values = ["({}, {}, {})".format(subject_id,
     # cohort_compound_ids[column]., measurement) for column, measurement in
     # enumerate(measurements) if measurement]
-    insert_values = ["({}, {}, {})".format(subject_id, cohort_compound_ids[column], measurement)
+    insert_values = ["({}, {}, {}, {})".format(subject_id, cohort_compound_ids[column], measurement, dataset_id)
                      for column, measurement in enumerate(measurements) if not pd.isnull(measurement)]
-    return "INSERT INTO measurement (subject_id, cohort_compound_id, measurement) VALUES " + ",".join(insert_values)
+    return "INSERT INTO measurement (subject_id, cohort_compound_id, measurement, dataset_id) VALUES " + ",".join(insert_values)
 
 
 def run(args):
@@ -64,7 +64,7 @@ def run(args):
             if pd.isnull(local_subject_id):
                 continue
             subject = find_or_create_subject(cohort, local_subject_id, session)
-            insert_measurements_sql = build_insert_measurements_sql(row_trimmed, cohort_compound_ids, subject.id)
+            insert_measurements_sql = build_insert_measurements_sql(row_trimmed, cohort_compound_ids, subject.id, dataset.id)
             if args.verbose:
                 print "Inserting measurements for row {}, subjectId {}".format(line_count, local_subject_id)
             session.execute(insert_measurements_sql)
