@@ -49,7 +49,6 @@ class Measurement(base.Base):
             "ix_measurement_on_dataset_compound",
             "dataset_id",
             "cohort_compound_id"),
-        )
     )
 
     subject = relationship("Subject")
