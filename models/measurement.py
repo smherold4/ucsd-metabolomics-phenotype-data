@@ -3,7 +3,7 @@
 import datetime
 from db import base
 from sqlalchemy.orm import validates, relationship
-from sqlalchemy import Column, String, Integer, Index, Numeric, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, String, Integer, Index, Numeric, UniqueConstraint
 
 
 class Measurement(base.Base):
@@ -11,16 +11,12 @@ class Measurement(base.Base):
     id = Column(Integer, primary_key=True)
     subject_id = Column(
         Integer,
-        ForeignKey('subject.id', ondelete='CASCADE'),
-        nullable=False,
-        index=True)
+        nullable=False)
     cohort_compound_id = Column(
         Integer,
-        ForeignKey('cohort_compound.id', ondelete='CASCADE'),
         nullable=False)
     dataset_id = Column(
         Integer,
-        ForeignKey('dataset.id', ondelete='CASCADE'),
         nullable=False)
     measurement = Column(
         Numeric(precision=80, scale=30),
@@ -37,14 +33,6 @@ class Measurement(base.Base):
             "ix_measurement_on_cohort_compound_measurement",
             "cohort_compound_id",
             "measurement"),
-        Index(
-            "ix_measurement_on_dataset_measurement",
-            "dataset_id",
-            "measurement"),
-        Index(
-            "ix_measurement_on_cohort_compound_mad",
-            "cohort_compound_id",
-            "median_absolute_deviation"),
         Index(
             "ix_measurement_on_dataset_compound",
             "dataset_id",
