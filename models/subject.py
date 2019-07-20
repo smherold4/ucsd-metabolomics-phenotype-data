@@ -15,8 +15,7 @@ class Subject(base.Base):
         ForeignKey(
             'cohort.id',
             ondelete='CASCADE'),
-        nullable=False,
-        index=True)
+        nullable=False)
     created = Column(DateTime, default=datetime.datetime.utcnow)
     __table_args__ = (
         UniqueConstraint(
