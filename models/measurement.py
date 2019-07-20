@@ -39,11 +39,7 @@ class Measurement(base.Base):
             "cohort_compound_id"),
     )
 
-    subject = relationship("Subject")
-    cohort_compound = relationship("CohortCompound")
-    dataset = relationship("Dataset")
-
     def __init__(self, subject, cohort_compound, measurement):
-        self.subject = subject
-        self.cohort_compound = cohort_compound
-        self.measurement = measurement
+        self.subject_id = subject.id
+        self.cohort_compound_id = cohort_compound.id
+        self.measurement_id = measurement.id
