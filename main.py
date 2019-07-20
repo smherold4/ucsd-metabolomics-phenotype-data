@@ -1,8 +1,8 @@
+from dotenv import load_dotenv
+load_dotenv()
 from scripts import description_ingestion, measurements_ingestion
 from models import Cohort, Dataset
 import argparse
-from dotenv import load_dotenv
-load_dotenv()
 
 
 MODES = ['description_ingestion', 'measurements_ingestion']
