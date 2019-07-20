@@ -23,21 +23,21 @@ class Measurement(base.Base):
         nullable=False)
     median_absolute_deviation = Column(
         Numeric(precision=7, scale=4), nullable=True)
-    __table_args__ = (
-        UniqueConstraint(
-            "subject_id",
-            "cohort_compound_id",
-            "dataset_id",
-            name="uniq_measurement"),
-        Index(
-            "ix_measurement_on_cohort_compound_measurement",
-            "cohort_compound_id",
-            "measurement"),
-        Index(
-            "ix_measurement_on_dataset_compound",
-            "dataset_id",
-            "cohort_compound_id"),
-    )
+    # __table_args__ = (
+    #     UniqueConstraint(
+    #         "subject_id",
+    #         "cohort_compound_id",
+    #         "dataset_id",
+    #         name="uniq_measurement"),
+    #     Index(
+    #         "ix_measurement_on_cohort_compound_measurement",
+    #         "cohort_compound_id",
+    #         "measurement"),
+    #     Index(
+    #         "ix_measurement_on_dataset_compound",
+    #         "dataset_id",
+    #         "cohort_compound_id"),
+    # )
 
     def __init__(self, subject, cohort_compound, measurement):
         self.subject_id = subject.id
