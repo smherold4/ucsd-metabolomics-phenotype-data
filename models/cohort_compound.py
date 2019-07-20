@@ -12,7 +12,7 @@ class CohortCompound(base.Base):
     cohort_id = Column(
         Integer,
         ForeignKey('cohort.id', ondelete='CASCADE'), nullable=False, index=True)
-    local_compound_id = Column(String, nullable=False, index=True)
+    local_compound_id = Column(String, nullable=False)
     mz = Column(Numeric(precision=20, scale=12), index=True, nullable=False)
     rt = Column(Numeric(precision=16, scale=10), index=True, nullable=False)
     cross_variation = Column(Numeric(precision=12, scale=6), index=True)
