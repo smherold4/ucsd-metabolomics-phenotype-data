@@ -1,7 +1,7 @@
-import argparse
-from scripts.elasticsearch import manage_subjects_index
 from dotenv import load_dotenv
 load_dotenv()
+import argparse
+from scripts.elasticsearch import manage_subjects_index
 
 INDICES = ['subjects']
 ACTIONS = ['create', 'put_settings', 'put_mapping', 'delete', 'populate']

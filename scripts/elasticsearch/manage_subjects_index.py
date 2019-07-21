@@ -4,12 +4,12 @@ from elasticsearch import Elasticsearch
 from db import db_connection
 from models import Subject, Cohort, Measurement
 from sqlalchemy.orm import joinedload
-import sys
+import sys, os
 import re
 import csv
 from helpers import string_to_boolean, is_numeric
 
-es = Elasticsearch()
+es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
 INDEX_NAME = 'subjects'
 DOC_TYPE = 'subject'
 BATCH_SIZE = 2000
