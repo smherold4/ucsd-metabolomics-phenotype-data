@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 INDICES = ['subjects']
-ACTIONS = ['create_index']
+ACTIONS = ['create', 'delete', 'populate']
 
 
 def get_command_line_args():
@@ -22,11 +22,18 @@ def get_command_line_args():
         help="Action to perform: {}" %
         ACTIONS)
     parser.add_argument(
+        '--file',
+        type=str,
+        help="Path to phenotype data file")
+    parser.add_argument(
+        '--cohort-name',
+        type=str,
+        help="Name of cohort - when ingesting description")
+    parser.add_argument(
         '--verbose',
         action='store_true',
         default=False,
         help="Show status outputs to monitor progress of script")
-
     return parser.parse_args()
 
 
