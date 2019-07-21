@@ -42,3 +42,14 @@ python main_sql.py \
   --units normalized \
   --verbose
 ```
+
+### Indexing Subjects in Elasticsearch
+
+```
+python main_es.py \
+  --index subjects \
+  --action populate \
+  --cohort-name Finrisk \
+  --file /volume1/Database/FINRISK2002/phenotype/F2015_60_Salomaa_Jain_dataFR02_FU16_2018-11-16_FR02_TL.csv \
+  --verbose
+```
