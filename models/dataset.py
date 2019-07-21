@@ -24,7 +24,7 @@ class Dataset(base.Base):
     METHODS = ['LCMS', 'Eicosanoid']
     UNITS = ['raw', 'normalized']
 
-    cohort = relationship("Cohort")
+    cohort = relationship("Cohort", backref="datasets")
 
     @validates('method')
     def validate_method(self, key, value):
@@ -40,3 +40,6 @@ class Dataset(base.Base):
         self.cohort_id = cohort.id
         self.method = method
         self.units = units
+
+    def source(self):
+        return 'plasma'

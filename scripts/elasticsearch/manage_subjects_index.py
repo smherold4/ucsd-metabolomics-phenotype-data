@@ -2,8 +2,11 @@ import indices
 from datetime import datetime
 from elasticsearch import Elasticsearch
 from db import db_connection
-from models import Subject, Cohort
-import sys, re, csv
+from models import Subject, Cohort, Measurement
+from sqlalchemy.orm import joinedload
+import sys
+import re
+import csv
 from helpers import string_to_boolean, is_numeric
 
 es = Elasticsearch()
@@ -12,13 +15,14 @@ DOC_TYPE = 'subject'
 BATCH_SIZE = 2000
 
 COLS = {
-  "PLASMA_ID": { 'col': 0, 'type': 'numeric' },
-  "BL_AGE": { 'col': 8, 'type': 'numeric' },
-  "BMI": { 'col': 18, 'type': 'numeric' },
-  "CURR_SMOKE": { 'col': 22, 'type': 'boolean' },
-  "SODIUM": { 'col': 42, 'type': 'numeric' },
-  "KY100_30": { 'col': 118, 'type': 'numeric' },
+    "PLASMA_ID": {'col': 0, 'type': 'numeric'},
+    "BL_AGE": {'col': 8, 'type': 'numeric'},
+    "BMI": {'col': 18, 'type': 'numeric'},
+    "CURR_SMOKE": {'col': 22, 'type': 'boolean'},
+    "SODIUM": {'col': 42, 'type': 'numeric'},
+    "KY100_30": {'col': 118, 'type': 'numeric'},
 }
+
 
 def map_csv_values(row):
     result = {}
@@ -32,6 +36,28 @@ def map_csv_values(row):
         else:
             result[field] = val
     return result
+
+
+def measurement_json(measurement):
+    return {
+        "local_ID": measurement.metabolyte.local_compound_id,
+        "value": measurement.measurement,
+    }
+
+
+def metabolite_dataset(subject, session):
+    result = []
+    for dataset in subject.datasets:
+        result.append({
+            "source": dataset.source(),
+            "method": dataset.method,
+            "normalization": dataset.units,
+            "measurements": [measurement_json(mmt)
+                             for mmt
+                             in session.query(Measurement).options(joinedload('metabolyte')).filter(Measurement.dataset_id == dataset.id, Measurement.subject_id == subject.id).all()]
+        })
+    return result
+
 
 def build_subject_document(row, cohort, session, args):
     data = map_csv_values(row)
@@ -48,9 +74,10 @@ def build_subject_document(row, cohort, session, args):
             print "Could not find subject: local_subject_id: {}, cohort_id: {}".format(plasma_id, cohort.id)
         return [None, None, None]
 
-    data['metabolite_dataset'] = []
+    data['metabolite_dataset'] = metabolite_dataset(subject, session)
     data['created'] = datetime.now()
     return [subject.id, plasma_id, data]
+
 
 def run(args):
     if args.action == 'create':
@@ -58,9 +85,13 @@ def run(args):
     elif args.action == 'delete':
         es.indices.delete(index=INDEX_NAME)
     elif args.action == 'put_settings':
-        es.indices.close(index=INDEX_NAME)
-        es.indices.put_settings(index=INDEX_NAME, body=indices.subjects.index)
-        es.indices.open(index=INDEX_NAME)
+        print 'Not yet tested'
+        pass
+        # es.indices.close(index=INDEX_NAME)
+        # es.indices.put_settings(index=INDEX_NAME, body='????')
+        # es.indices.open(index=INDEX_NAME)
+    elif args.action == 'put_mapping':
+        es.indices.put_mapping(index=INDEX_NAME, doc_type=DOC_TYPE, body=indices.subjects.index['mappings'][DOC_TYPE])
     elif args.action == 'populate':
         assert args.cohort_name is not None, "Missing --cohort-name"
         session = db_connection.session_factory()
@@ -77,17 +108,6 @@ def run(args):
                     if args.verbose:
                         print "Indexing line {} for plasma_id: {}".format(line_count, plasma_id)
                     es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body=document)
-
-    # UPDATE DOC_TYPE MAPPINGS
-    # es.indices.put_mapping(index=INDEX_NAME, doc_type='dog', body=dogs.index['mappings']['dog'])
-
-    # UPDATE SETTINGS (must close and open index to add analyzers)
-
-
-    # INSERT/UPDATE DOCS
-    # es.index(index=INDEX_NAME, doc_type='dog', id=1, body=dog.buddy)
-    # es.index(index=INDEX_NAME, doc_type='dog', id=2, body=dog.tuffy)
-    # es.index(index=INDEX_NAME, doc_type='dog', id=3, body=dog.minnie)
 
     # DELETE DOCS
     # es.delete(index=INDEX_NAME, doc_type='dog', id=1)

@@ -24,7 +24,8 @@ class Subject(base.Base):
             name="uniq_cohort_subject"),
     )
 
-    cohort = relationship("Cohort")
+    cohort = relationship("Cohort", backref="subjects")
+    datasets = relationship("Dataset", secondary="cohort")
 
     def __init__(self, cohort, local_subject_id):
         self.local_subject_id = local_subject_id

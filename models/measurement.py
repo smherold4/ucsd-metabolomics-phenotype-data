@@ -39,6 +39,9 @@ class Measurement(base.Base):
     #         "cohort_compound_id"),
     # )
 
+    metabolyte = relationship('CohortCompound', uselist=False, primaryjoin='foreign(CohortCompound.id) == Measurement.cohort_compound_id')
+    dataset = relationship('Dataset', primaryjoin='foreign(Dataset.id) == Measurement.dataset_id')
+
     def __init__(self, subject, cohort_compound, measurement):
         self.subject_id = subject.id
         self.cohort_compound_id = cohort_compound.id
