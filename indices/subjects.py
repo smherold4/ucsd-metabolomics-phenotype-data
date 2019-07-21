@@ -5,6 +5,9 @@ index = {
                 "PLASMA_ID": {
                     "type": "keyword"
                 },
+                "COHORT": {
+                    "type": "keyword"
+                },
                 "BL_AGE": {
                     "type": "float"
                 },

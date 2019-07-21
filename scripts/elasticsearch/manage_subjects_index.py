@@ -74,6 +74,7 @@ def build_subject_document(row, cohort, session, args):
             print "Could not find subject: local_subject_id: {}, cohort_id: {}".format(plasma_id, cohort.id)
         return [None, None, None]
 
+    data['COHORT'] = subject.cohort.name
     data['metabolite_dataset'] = metabolite_dataset(subject, session)
     data['created'] = datetime.now()
     return [subject.id, plasma_id, data]
