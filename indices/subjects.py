@@ -14,6 +14,12 @@ index = {
                 "CURR_SMOKE": {
                     "type": "boolean"
                 },
+                "SODIUM": {
+                    "type": "integer"
+                },
+                "KY100_30": {
+                    "type": "integer"
+                },
                 "metabolite_dataset": {
                     "type": "nested",
                     "properties": {

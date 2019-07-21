@@ -9,4 +9,4 @@ def string_to_boolean(string):
         return None
 
 def is_numeric(string):
-    re.search(r'\d', string)
+    return not not re.search(r'\d', string)

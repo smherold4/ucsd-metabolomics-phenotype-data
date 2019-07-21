@@ -10,26 +10,34 @@ es = Elasticsearch()
 INDEX_NAME = 'subjects'
 DOC_TYPE = 'subject'
 BATCH_SIZE = 2000
-PLASMA_ID_REGEX = r'\d{5}-\d'
 
 COLS = {
-  "PLASMA_ID": 0,
-  "BL_AGE": 8,
-  "BMI": 18,
-  "CURR_SMOKE": 22
+  "PLASMA_ID": { 'col': 0, 'type': 'numeric' },
+  "BL_AGE": { 'col': 8, 'type': 'numeric' },
+  "BMI": { 'col': 18, 'type': 'numeric' },
+  "CURR_SMOKE": { 'col': 22, 'type': 'boolean' },
+  "SODIUM": { 'col': 42, 'type': 'numeric' },
+  "KY100_30": { 'col': 118, 'type': 'numeric' },
 }
 
-def parse_csv_row(row):
-    plasma_id = row[COLS['PLASMA_ID']] if re.search(PLASMA_ID_REGEX, row[COLS['PLASMA_ID']]) else None
-    bl_age = row[COLS['BL_AGE']] if is_numeric(row[COLS['BL_AGE']]) else None
-    bmi = row[COLS['BMI']] if is_numeric(row[COLS['BMI']]) else None
-    curr_smoke = string_to_boolean(row[COLS['CURR_SMOKE']]) if is_numeric(row[COLS['CURR_SMOKE']]) else None
-    return [plasma_id, bl_age, bmi, curr_smoke]
+def map_csv_values(row):
+    result = {}
+    for field, meta in COLS.items():
+        val = row[meta['col']]
+        dtype = meta['type']
+        if dtype == 'numeric':
+            result[field] = val if is_numeric(val) else None
+        elif dtype == 'boolean':
+            result[field] = string_to_boolean(val)
+        else:
+            result[field] = val
+    return result
 
 def build_subject_document(row, cohort, session, args):
-    plasma_id, bl_age, bmi, curr_smoke = parse_csv_row(row)
+    data = map_csv_values(row)
+    plasma_id = data['PLASMA_ID']
     if plasma_id is None:
-      return [None, None, None]
+        return [None, None, None]
 
     subject = session.query(Subject).filter(
         Subject.local_subject_id == plasma_id,
@@ -40,20 +48,19 @@ def build_subject_document(row, cohort, session, args):
             print "Could not find subject: local_subject_id: {}, cohort_id: {}".format(plasma_id, cohort.id)
         return [None, None, None]
 
-    document = {
-      "PLASMA_ID": plasma_id,
-      "BL_AGE": bl_age,
-      "BMI": bmi,
-      "CURR_SMOKE": curr_smoke,
-      "metabolite_dataset": []
-    }
-    return [subject.id, plasma_id, document]
+    data['metabolite_dataset'] = []
+    data['created'] = datetime.now()
+    return [subject.id, plasma_id, data]
 
 def run(args):
     if args.action == 'create':
         es.indices.create(index=INDEX_NAME, body=indices.subjects.index)
     elif args.action == 'delete':
         es.indices.delete(index=INDEX_NAME)
+    elif args.action == 'put_settings':
+        es.indices.close(index=INDEX_NAME)
+        es.indices.put_settings(index=INDEX_NAME, body=indices.subjects.index)
+        es.indices.open(index=INDEX_NAME)
     elif args.action == 'populate':
         assert args.cohort_name is not None, "Missing --cohort-name"
         session = db_connection.session_factory()
@@ -75,9 +82,7 @@ def run(args):
     # es.indices.put_mapping(index=INDEX_NAME, doc_type='dog', body=dogs.index['mappings']['dog'])
 
     # UPDATE SETTINGS (must close and open index to add analyzers)
-    # es.indices.close(index=INDEX_NAME)
-    # es.indices.put_settings(index=INDEX_NAME, body=dogs.index['settings'])
-    # es.indices.open(index=INDEX_NAME)
+
 
     # INSERT/UPDATE DOCS
     # es.index(index=INDEX_NAME, doc_type='dog', id=1, body=dog.buddy)

@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 INDICES = ['subjects']
-ACTIONS = ['create', 'delete', 'populate']
+ACTIONS = ['create', 'put_settings', 'delete', 'populate']
 
 
 def get_command_line_args():
