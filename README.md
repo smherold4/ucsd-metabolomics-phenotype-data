@@ -23,7 +23,7 @@ INSERT INTO cohort (name) VALUES ('FHS');
 
 ### Importing descriptions
 ```
-python main.py \
+python main_sql.py \
   --cohort-name 'Finrisk' \
   --mode 'description_ingestion' \
   --file ~/Desktop/FR_ml_mad_norm.description.csv \
@@ -34,7 +34,7 @@ python main.py \
 ### Importing measurements
 
 ```
-python main.py \
+python main_sql.py \
   --cohort-name 'Finrisk' \
   --mode 'measurements_ingestion' \
   --file ~/Desktop/FR_ml_mad_norm.csv \
