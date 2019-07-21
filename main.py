@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 load_dotenv()
-from scripts import description_ingestion, measurements_ingestion
+from scripts.sql import description_ingestion, measurements_ingestion
 from models import Cohort, Dataset
 import argparse
 
