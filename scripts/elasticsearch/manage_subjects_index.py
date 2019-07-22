@@ -4,7 +4,8 @@ from elasticsearch import Elasticsearch
 from db import db_connection
 from models import Subject, Cohort, Measurement
 from sqlalchemy.orm import joinedload
-import sys, os
+import sys
+import os
 import re
 import csv
 from helpers import string_to_boolean, is_numeric
@@ -45,17 +46,25 @@ def measurement_json(measurement):
     }
 
 
-def metabolite_dataset(subject, session):
+def find_measurements(dataset, subject, session):
+    return session.query(
+        Measurement
+    ).options(
+        joinedload('metabolyte')
+    ).filter(
+        Measurement.dataset_id == dataset.id, Measurement.subject_id == subject.id
+    ).all()
+
+
+def metabolite_dataset(subject, cohort, session):
     result = []
     for dataset in subject.datasets:
+        measurements = find_measurements(dataset, subject, session)
         result.append({
-            "source": dataset.source(),
-            "method": dataset.method,
+            "source": cohort.source(),
+            "method": cohort.ms_method(),
             "normalization": dataset.units,
-            "measurements": [measurement_json(mmt)
-                             for mmt
-                             in session.query(Measurement).options(joinedload('metabolyte')).filter(Measurement.dataset_id == dataset.id, Measurement.subject_id == subject.id).all()]
-        })
+            "measurements": [measurement_json(mmt) for mmt in measurements]})
     return result
 
 
@@ -75,7 +84,7 @@ def build_subject_document(row, cohort, session, args):
         return [None, None, None]
 
     data['COHORT'] = subject.cohort.name
-    data['metabolite_dataset'] = metabolite_dataset(subject, session)
+    data['metabolite_dataset'] = metabolite_dataset(subject, cohort, session)
     data['created'] = datetime.now()
     return [subject.id, plasma_id, data]
 
@@ -107,7 +116,7 @@ def run(args):
                 doc_id, plasma_id, document = build_subject_document(row, cohort, session, args)
                 if document:
                     if args.verbose:
-                        print "Indexing line {} for plasma_id: {}".format(line_count, plasma_id)
+                        print "Indexing {} for plasma_id: {}. Count is {}".format(doc_id, plasma_id, line_count)
                     es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body=document)
 
     # DELETE DOCS

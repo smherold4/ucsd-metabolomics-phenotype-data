@@ -1,9 +1,9 @@
 from dotenv import load_dotenv
 load_dotenv()
+from scripts.elasticsearch import manage_subjects_index, manage_metabolomics_index
 import argparse
-from scripts.elasticsearch import manage_subjects_index
 
-INDICES = ['subjects']
+INDICES = ['subjects', 'metabolomics']
 ACTIONS = ['create', 'put_settings', 'put_mapping', 'delete', 'populate']
 
 
@@ -46,5 +46,7 @@ if __name__ == '__main__':
 
     if clargs.index == 'subjects':
         manage_subjects_index.run(clargs)
+    elif clargs.index == 'metabolomics':
+        manage_metabolomics_index.run(clargs)
     else:
         raise Exception('Script is confused')

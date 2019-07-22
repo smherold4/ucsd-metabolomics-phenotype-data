@@ -24,7 +24,8 @@ class CohortCompound(base.Base):
         Index("ix_cohort_compound_on_cohort_id_mz", "cohort_id", "mz"),
         Index("ix_cohort_compound_on_cohort_id_rt", "cohort_id", "rt"), )
 
-    cohort = relationship("Cohort")
+    cohort = relationship("Cohort", backref="cohort_compounds")
+    subjects = relationship("Subject", secondary="cohort")
 
     def __init__(self, cohort, local_compound_id, mz, rt, cross_variation, ml_score):
         self.cohort = cohort

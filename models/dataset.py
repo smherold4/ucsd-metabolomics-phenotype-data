@@ -40,6 +40,3 @@ class Dataset(base.Base):
         self.cohort_id = cohort.id
         self.method = method
         self.units = units
-
-    def source(self):
-        return 'plasma'

@@ -13,3 +13,11 @@ class Cohort(base.Base):
 
     def __init__(self, name):
         self.name = name
+
+    def ms_method(self):
+        # This is a shim until I move the method field from dataset to cohort table
+        return 'LCMS'
+
+    def source(self):
+        # This is a shim until I add the method 'source' to the cohort table
+        return 'plasma'
