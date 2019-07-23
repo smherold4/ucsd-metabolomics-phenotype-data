@@ -14,7 +14,7 @@ es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200
 INDEX_NAME = 'metabolomics'
 DOC_TYPE = 'metabolyte'
 DEFAULT_BATCH_SIZE = 10000
-MAX_THREAD_COUNT = 10
+MAX_THREAD_COUNT = 4
 
 
 def find_measurements(metabolyte, subject, cohort, session):

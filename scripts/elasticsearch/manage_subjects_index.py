@@ -2,7 +2,7 @@ import indices
 from datetime import datetime
 from elasticsearch import Elasticsearch
 from db import db_connection
-from models import Subject, Cohort, Measurement
+from models import *
 from sqlalchemy.orm import joinedload
 import sys
 import os
@@ -41,19 +41,20 @@ def map_csv_values(row):
 
 def measurement_json(measurement):
     return {
-        "local_ID": measurement.metabolyte.local_compound_id,
+        "local_ID": measurement.local_compound_id,
         "value": measurement.measurement,
     }
 
 
 def find_measurements(dataset, subject, session):
-    return session.query(
+    sql = session.query(
         Measurement
-    ).options(
-        joinedload('metabolyte')
     ).filter(
-        Measurement.dataset_id == dataset.id, Measurement.subject_id == subject.id
-    ).all()
+        Measurement.dataset_id == dataset.id,
+        Measurement.subject_id == subject.id,
+        Measurement.cohort_compound_id == CohortCompound.id,
+    ).with_entities(Measurement.measurement, CohortCompound.local_compound_id)
+    return sql.all()
 
 
 def metabolite_dataset(subject, cohort, session):
