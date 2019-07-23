@@ -1,6 +1,6 @@
 index = {
     "mappings": {
-        "metabolyte": {
+        "metabolite": {
             "properties": {
                 "COHORT": {
                     "type": "keyword"

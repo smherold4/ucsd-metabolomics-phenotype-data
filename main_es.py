@@ -42,9 +42,9 @@ def get_command_line_args():
     parser.add_argument(
         '--multithread-batch-size',
         type=int,
-        help="Specify batch size (e.g. number metabolytes per thread) when multi-threading")
+        help="Specify batch size (e.g. number of metabolites per thread) when multi-threading")
     parser.add_argument(
-        '--metabolyte-id-range',
+        '--metabolite-id-range',
         type=int,
         nargs=2,
         help="Specify cohort_compound_id range over which to index")

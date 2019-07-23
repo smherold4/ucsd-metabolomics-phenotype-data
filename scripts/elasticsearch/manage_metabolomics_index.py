@@ -12,31 +12,31 @@ from helpers import string_to_boolean, is_numeric
 
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
 INDEX_NAME = 'metabolomics'
-DOC_TYPE = 'metabolyte'
+DOC_TYPE = 'metabolite'
 DEFAULT_BATCH_SIZE = 10000
 MAX_THREAD_COUNT = 4
 
 
-def find_measurements(metabolyte, subject, cohort, session):
+def find_measurements(metabolite, subject, cohort, session):
     return session.query(Measurement).options(
         joinedload("dataset")
     ).filter(
         Measurement.subject_id == subject.id,
-        Measurement.cohort_compound_id == metabolyte.id,
+        Measurement.cohort_compound_id == metabolite.id,
     ).all()
 
 
-def build_metabolyte_document(metabolyte, subject, cohort, measurements):
-    document_id = 'm' + str(metabolyte.id) + '_s' + str(subject.id)
+def build_metabolite_document(metabolite, subject, cohort, measurements):
+    document_id = 'm' + str(metabolite.id) + '_s' + str(subject.id)
     document = {}
     document['COHORT'] = cohort.name
     document['subject'] = subject.local_subject_id
     document['source'] = cohort.source()
     document['MS_method'] = cohort.ms_method()
-    document['local_ID'] = metabolyte.local_compound_id
-    document['MZ'] = metabolyte.mz
-    document['RT'] = metabolyte.rt
-    document['ML_score'] = metabolyte.ml_score
+    document['local_ID'] = metabolite.local_compound_id
+    document['MZ'] = metabolite.mz
+    document['RT'] = metabolite.rt
+    document['ML_score'] = metabolite.ml_score
     document['measurement'] = [
         {'normalization': mmt.dataset.units, 'value': mmt.measurement}
         for mmt
@@ -45,8 +45,8 @@ def build_metabolyte_document(metabolyte, subject, cohort, measurements):
     document['created'] = datetime.now()
     return [document_id, document]
 
-def find_metabolytes(cohort, args, session):
-    min_id, max_id = args.metabolyte_id_range or [0, 1e20]
+def find_metabolites(cohort, args, session):
+    min_id, max_id = args.metabolite_id_range or [0, 1e20]
     return session.query(CohortCompound).filter(
         CohortCompound.cohort_id == cohort.id,
         CohortCompound.id >= min_id,
@@ -61,7 +61,7 @@ def multithread(cohort, args, session):
     batch_size = args.multithread_batch_size or DEFAULT_BATCH_SIZE
     min_id, max_id = [0, batch_size]
     while thread_count < MAX_THREAD_COUNT and session.query(CohortCompound).filter(CohortCompound.cohort_id == cohort.id, CohortCompound.id >= min_id).first() is not None:
-        cmd = 'python ' + ' '.join(sys.argv) + ' --metabolyte-id-range {} {} > metab_populate_{}.{}.{}.out 2>&1 &'.format(min_id, max_id, args.cohort_name, min_id, max_id)
+        cmd = 'python ' + ' '.join(sys.argv) + ' --metabolite-id-range {} {} > metab_populate_{}.{}.{}.out 2>&1 &'.format(min_id, max_id, args.cohort_name, min_id, max_id)
         print "os.sytem({})".format(cmd)
         os.system(cmd)
         thread_count += 1
@@ -86,11 +86,11 @@ def run(args):
         line_count = 0
         if args.multithread:
             return multithread(cohort, args, session)
-        for metabolyte in find_metabolytes(cohort, args, session):
-            for subject in metabolyte.subjects:
+        for metabolite in find_metabolites(cohort, args, session):
+            for subject in metabolite.subjects:
                 line_count += 1
-                measurements = find_measurements(metabolyte, subject, cohort, session)
-                doc_id, document = build_metabolyte_document(metabolyte, subject, cohort, measurements)
+                measurements = find_measurements(metabolite, subject, cohort, session)
+                doc_id, document = build_metabolite_document(metabolite, subject, cohort, measurements)
                 if args.verbose:
                     print "Indexing {} for (subject, local_ID) ({}, {}). Count is {}".format(doc_id, document['subject'], document['local_ID'], line_count)
                 es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body=document)

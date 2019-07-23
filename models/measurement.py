@@ -39,7 +39,7 @@ class Measurement(base.Base):
     #         "cohort_compound_id"),
     # )
 
-    metabolyte = relationship('CohortCompound', uselist=False, primaryjoin='foreign(CohortCompound.id) == Measurement.cohort_compound_id')
+    metabolite = relationship('CohortCompound', uselist=False, primaryjoin='foreign(CohortCompound.id) == Measurement.cohort_compound_id')
     dataset = relationship('Dataset', uselist=False, primaryjoin='foreign(Dataset.id) == Measurement.dataset_id')
     subject = relationship('Subject', uselist=False, primaryjoin='foreign(Subject.id) == Measurement.subject_id')
 

@@ -3,11 +3,7 @@ from datetime import datetime
 from elasticsearch import Elasticsearch
 from db import db_connection
 from models import *
-from sqlalchemy.orm import joinedload
-import sys
-import os
-import re
-import csv
+import sys, os, re, csv
 from helpers import string_to_boolean, is_numeric
 
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
