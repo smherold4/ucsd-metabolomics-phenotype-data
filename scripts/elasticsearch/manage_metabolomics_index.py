@@ -8,7 +8,7 @@ import sys
 import os
 import re
 import csv
-from helpers import string_to_boolean, is_numeric
+from helpers import string_to_boolean
 
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
 INDEX_NAME = 'metabolomics'
