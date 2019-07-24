@@ -3,36 +3,25 @@ from datetime import datetime
 from elasticsearch import Elasticsearch
 from db import db_connection
 from models import *
-import sys, os, re, csv
-from helpers import string_to_boolean, is_numeric
+import sys
+import os
+import re
+import csv
+import pandas as pd
+from helpers import string_to_boolean
 
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
 INDEX_NAME = 'subjects'
 DOC_TYPE = 'subject'
 BATCH_SIZE = 2000
+CSV_CHUNKSIZE = 1
 
-COLS = {
-    "PLASMA_ID": {'col': 0, 'type': 'numeric'},
-    "BL_AGE": {'col': 8, 'type': 'numeric'},
-    "BMI": {'col': 18, 'type': 'numeric'},
-    "CURR_SMOKE": {'col': 22, 'type': 'boolean'},
-    "SODIUM": {'col': 42, 'type': 'numeric'},
-    "KY100_30": {'col': 118, 'type': 'numeric'},
-}
-
-
-def map_csv_values(row):
-    result = {}
-    for field, meta in COLS.items():
-        val = row[meta['col']]
-        dtype = meta['type']
-        if dtype == 'numeric':
-            result[field] = val if is_numeric(val) else None
-        elif dtype == 'boolean':
-            result[field] = string_to_boolean(val)
-        else:
-            result[field] = val
-    return result
+TOP_LEVEL_FIELDS = [
+    "PLASMA_ID",
+    "BL_AGE",
+    "BMI",
+    "CURR_SMOKE",
+]
 
 
 def measurement_json(measurement):
@@ -65,25 +54,28 @@ def metabolite_dataset(subject, cohort, session):
     return result
 
 
-def build_subject_document(row, cohort, session, args):
-    data = map_csv_values(row)
-    plasma_id = data['PLASMA_ID']
-    if plasma_id is None:
+def build_subject_document(pandas_series, cohort, session, args):
+    csv_data = pandas_series.dropna().to_dict()
+    data = {}
+    for field in TOP_LEVEL_FIELDS:
+        if field in csv_data:
+            data[field] = csv_data.pop(field)
+    if pd.isnull(data.get('PLASMA_ID')):
         return [None, None, None]
-
     subject = session.query(Subject).filter(
-        Subject.local_subject_id == plasma_id,
+        Subject.local_subject_id == data['PLASMA_ID'],
         Subject.cohort_id == cohort.id
     ).first()
     if subject is None:
         if args.verbose:
-            print "Could not find subject: local_subject_id: {}, cohort_id: {}".format(plasma_id, cohort.id)
+            print "Could not find subject: local_subject_id: {}, cohort_id: {}".format(data['PLASMA_ID'], cohort.id)
         return [None, None, None]
 
     data['COHORT'] = subject.cohort.name
+    data['phenotypes'] = [{'name': key, 'value': val } for key, val in csv_data.iteritems() if key and type(val) in [int, float]]
     data['metabolite_dataset'] = metabolite_dataset(subject, cohort, session)
     data['created'] = datetime.now()
-    return [subject.id, plasma_id, data]
+    return [subject.id, data['PLASMA_ID'], data]
 
 
 def run(args):
@@ -105,24 +97,12 @@ def run(args):
         cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
         assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
         assert args.file is not None, "Must specify --file path for phenotype data"
-        with open(args.file) as csvfile:
-            csv_reader = csv.reader(csvfile, delimiter=',')
-            for line_count, row in enumerate(csv_reader):
-                if line_count == 0:
-                    continue
+        line_count = 0
+        for df in pd.read_csv(args.file, chunksize=CSV_CHUNKSIZE):
+            for _, row in df.iterrows():
+                line_count += 1
                 doc_id, plasma_id, document = build_subject_document(row, cohort, session, args)
                 if document:
                     if args.verbose:
                         print "Indexing {} for plasma_id: {}. Count is {}".format(doc_id, plasma_id, line_count)
                     es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body=document)
-
-    # DELETE DOCS
-    # es.delete(index=INDEX_NAME, doc_type='dog', id=1)
-    # es.delete(index=INDEX_NAME, doc_type='dog', id=2)
-
-    # UPDATE DOCS
-    # es.update(
-    #   index=INDEX_NAME,
-    #   doc_type='dog',
-    #   id='W_uSzmsBUhRInbGHV2mc',
-    #   body={'doc': dog.buddy})

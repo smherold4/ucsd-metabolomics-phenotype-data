@@ -8,20 +8,16 @@ index = {
                 "COHORT": {
                     "type": "keyword"
                 },
-                "BL_AGE": {
-                    "type": "float"
-                },
-                "BMI": {
-                    "type": "float"
-                },
-                "CURR_SMOKE": {
-                    "type": "boolean"
-                },
-                "SODIUM": {
-                    "type": "integer"
-                },
-                "KY100_30": {
-                    "type": "integer"
+                "phenotypes": {
+                    "type": "nested",
+                    "properties": {
+                        "name": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "float"
+                        }
+                    }
                 },
                 "metabolite_dataset": {
                     "type": "nested",

@@ -8,7 +8,3 @@ def string_to_boolean(string):
         return False
     else:
         return None
-
-
-def is_numeric(string):
-    return not not re.search(r'\d', string)
