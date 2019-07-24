@@ -48,6 +48,14 @@ def get_command_line_args():
         type=int,
         nargs=2,
         help="Specify cohort_compound_id range over which to index")
+    parser.add_argument(
+        '--alignment-cohort-name',
+        type=str,
+        help="Specify cohort name of cohort to which we're doing alignment")
+    parser.add_argument(
+        '--alignment-file',
+        type=str,
+        help="Path to file used for cohort alignment")
     return parser.parse_args()
 
 

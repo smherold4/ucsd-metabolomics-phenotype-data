@@ -26,7 +26,7 @@ def find_measurements(metabolite, subject, cohort, session):
     ).all()
 
 
-def build_metabolite_document(metabolite, subject, cohort, measurements):
+def build_metabolite_document(metabolite, subject, cohort, measurements, alignments, alignment_cohort):
     document_id = 'm' + str(metabolite.id) + '_s' + str(subject.id)
     document = {}
     document['COHORT'] = cohort.name
@@ -42,6 +42,11 @@ def build_metabolite_document(metabolite, subject, cohort, measurements):
         for mmt
         in measurements
     ]
+    document['alignment'] = [
+        { 'cohort': alignment_cohort.name, 'local_ID': local_ID }
+        for local_ID
+        in (alignments.get(metabolite.local_compound_id) or [])
+    ]
     document['created'] = datetime.now()
     return [document_id, document]
 
@@ -54,6 +59,24 @@ def find_metabolites(cohort, args, session):
     ).order_by(
         CohortCompound.id.asc()
     ).all()
+
+def build_alignment_dict(args):
+    this_cohort_col = 0
+    alignment_cohort_col = 1
+    assert args.alignment_file, "Must provide an alignment CSV with --alignment-file"
+    alignments = {}
+    with open(args.alignment_file) as csvfile:
+        line_count = 0
+        csv_reader = csv.reader(csvfile, delimiter=',')
+        for row in csv_reader:
+            line_count += 1
+            if line_count == 1 or not row[this_cohort_col] or not row[alignment_cohort_col]:
+                continue
+            elif alignments.get(row[this_cohort_col]):
+                alignments[row[this_cohort_col]].append(row[alignment_cohort_col])
+            else:
+                alignments[row[this_cohort_col]] = [row[alignment_cohort_col]]
+    return alignments
 
 def multithread(cohort, args, session):
     thread_count = 0
@@ -84,13 +107,21 @@ def run(args):
         cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
         assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
         line_count = 0
+        alignments = {}
+        alignment_cohort = None
+        if args.alignment_cohort_name or args.alignment_file:
+            alignment_cohort = session.query(Cohort).filter(Cohort.name == args.alignment_cohort_name).first()
+            assert alignment_cohort is not None, "Could not find alignment cohort (--alignment-cohort-name) '{}'".format(args.alignment_cohort_name)
+            assert cohort != alignment_cohort, "Alignment cohort must be different from cohort"
+            alignments = build_alignment_dict(args)
+
         if args.multithread:
             return multithread(cohort, args, session)
         for metabolite in find_metabolites(cohort, args, session):
             for subject in metabolite.subjects:
                 line_count += 1
                 measurements = find_measurements(metabolite, subject, cohort, session)
-                doc_id, document = build_metabolite_document(metabolite, subject, cohort, measurements)
+                doc_id, document = build_metabolite_document(metabolite, subject, cohort, measurements, alignments, alignment_cohort)
                 if args.verbose:
                     print "Indexing {} for (subject, local_ID) ({}, {}). Count is {}".format(doc_id, document['subject'], document['local_ID'], line_count)
                 es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body=document)
