@@ -30,6 +30,11 @@ def get_command_line_args():
         type=str,
         help="Name of cohort - when ingesting description")
     parser.add_argument(
+        '--subject-id-label',
+        type=str,
+        default='PLASMA_ID',
+        help="In phenotype CSV, the label of the subject ID (default is PLASMA_ID)")
+    parser.add_argument(
         '--verbose',
         action='store_true',
         default=False,

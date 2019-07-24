@@ -16,13 +16,6 @@ DOC_TYPE = 'subject'
 BATCH_SIZE = 2000
 CSV_CHUNKSIZE = 1
 
-TOP_LEVEL_FIELDS = [
-    "PLASMA_ID",
-    "BL_AGE",
-    "BMI",
-    "CURR_SMOKE",
-]
-
 
 def measurement_json(measurement):
     return {
@@ -56,26 +49,25 @@ def metabolite_dataset(subject, cohort, session):
 
 def build_subject_document(pandas_series, cohort, session, args):
     csv_data = pandas_series.dropna().to_dict()
-    data = {}
-    for field in TOP_LEVEL_FIELDS:
-        if field in csv_data:
-            data[field] = csv_data.pop(field)
-    if pd.isnull(data.get('PLASMA_ID')):
+    subject_id = csv_data[args.subject_id_label]
+    if pd.isnull(subject_id):
         return [None, None, None]
     subject = session.query(Subject).filter(
-        Subject.local_subject_id == data['PLASMA_ID'],
+        Subject.local_subject_id == subject_id,
         Subject.cohort_id == cohort.id
     ).first()
     if subject is None:
         if args.verbose:
-            print "Could not find subject: local_subject_id: {}, cohort_id: {}".format(data['PLASMA_ID'], cohort.id)
+            print "Could not find subject: local_subject_id: {}, cohort_id: {}".format(subject_id, cohort.id)
         return [None, None, None]
 
+    data = {}
+    data['SUBJECT'] = subject_id
     data['COHORT'] = subject.cohort.name
     data['phenotypes'] = [{'name': key, 'value': val } for key, val in csv_data.iteritems() if key and type(val) in [int, float]]
     data['metabolite_dataset'] = metabolite_dataset(subject, cohort, session)
     data['created'] = datetime.now()
-    return [subject.id, data['PLASMA_ID'], data]
+    return [subject.id, subject_id, data]
 
 
 def run(args):
@@ -101,8 +93,8 @@ def run(args):
         for df in pd.read_csv(args.file, chunksize=CSV_CHUNKSIZE):
             for _, row in df.iterrows():
                 line_count += 1
-                doc_id, plasma_id, document = build_subject_document(row, cohort, session, args)
+                doc_id, subject_id, document = build_subject_document(row, cohort, session, args)
                 if document:
                     if args.verbose:
-                        print "Indexing {} for plasma_id: {}. Count is {}".format(doc_id, plasma_id, line_count)
+                        print "Indexing doc {} for subject: {}. Count is {}".format(doc_id, subject_id, line_count)
                     es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body=document)
