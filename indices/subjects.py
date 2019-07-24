@@ -2,7 +2,7 @@ index = {
     "mappings": {
         "subject": {
             "properties": {
-                "PLASMA_ID": {
+                "SUBJECT": {
                     "type": "keyword"
                 },
                 "COHORT": {
