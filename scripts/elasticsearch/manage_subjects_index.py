@@ -49,7 +49,7 @@ def metabolite_dataset(subject, cohort, session):
 
 def build_subject_document(pandas_series, cohort, session, args):
     csv_data = pandas_series.dropna().to_dict()
-    subject_id = csv_data[args.subject_id_label]
+    subject_id = csv_data.get(args.subject_id_label)
     if pd.isnull(subject_id):
         return [None, None, None]
     subject = session.query(Subject).filter(

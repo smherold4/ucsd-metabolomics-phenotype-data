@@ -1,0 +1,8 @@
+curl -XGET "https://elastic:w5VeVtrfyYA8D5go8lR9Pzd6@967dbe89a5714d9bb108e1d23ff30824.us-west-1.aws.found.io:9243/metabolomics/metabolite/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+  "query": {
+    "term": {
+      "COHORT": "FHS"
+    }
+  }
+}'
