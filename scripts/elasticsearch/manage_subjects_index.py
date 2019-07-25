@@ -14,7 +14,7 @@ from helpers.data_types import determine_dtype_of_df_column
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
 INDEX_NAME = 'subjects'
 DOC_TYPE = 'subject'
-CSV_CHUNKSIZE = 2000
+CSV_CHUNKSIZE = 300
 
 
 def measurement_json(measurement):
