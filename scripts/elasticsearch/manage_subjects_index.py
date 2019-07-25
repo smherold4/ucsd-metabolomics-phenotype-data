@@ -8,13 +8,14 @@ import os
 import re
 import csv
 import pandas as pd
-from helpers import string_to_boolean
+import numpy
+from helpers.data_types import determine_dtype_of_df_column
 
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
 INDEX_NAME = 'subjects'
 DOC_TYPE = 'subject'
 BATCH_SIZE = 2000
-CSV_CHUNKSIZE = 1
+CSV_CHUNKSIZE = 99
 
 
 def measurement_json(measurement):
@@ -46,10 +47,18 @@ def metabolite_dataset(subject, cohort, session):
             "measurements": [measurement_json(mmt) for mmt in measurements]})
     return result
 
+def determine_data_types_by_column(df):
+    result = {}
+    for col in df.columns:
+        dtype, dseries = determine_dtype_of_df_column(df, col)
+        result[col] = {
+            'type': dtype,
+            'series': dseries
+        }
+    return result
 
-def build_subject_document(pandas_series, cohort, session, args):
-    csv_data = pandas_series.dropna().to_dict()
-    subject_id = csv_data.get(args.subject_id_label)
+def build_subject_document(phenotype_data, cohort, session, args):
+    subject_id = phenotype_data.get(args.subject_id_label) and phenotype_data.get(args.subject_id_label).get('value')
     if pd.isnull(subject_id):
         return [None, None, None]
     subject = session.query(Subject).filter(
@@ -64,11 +73,22 @@ def build_subject_document(pandas_series, cohort, session, args):
     data = {}
     data['SUBJECT'] = subject_id
     data['COHORT'] = subject.cohort.name
-    data['phenotypes'] = [{'name': key, 'value': val } for key, val in csv_data.iteritems() if key and type(val) in [int, float]]
+    data['phenotypes'] = [{'name': key, val['type']: val['value'] } for key, val in phenotype_data.iteritems() if key]
     data['metabolite_dataset'] = metabolite_dataset(subject, cohort, session)
     data['created'] = datetime.now()
     return [subject.id, subject_id, data]
 
+def row_with_proper_types(data_typed_by_col, row_idx):
+    result = {}
+    for col in data_typed_by_col:
+        if row_idx not in data_typed_by_col[col]['series']:
+            continue
+        value = data_typed_by_col[col]['series'][row_idx]
+        # numpy booleans can't be serialized
+        if type(value) == numpy.bool_:
+            value = not not value
+        result[col] = { 'type': data_typed_by_col[col]['type'], 'value': value }
+    return result
 
 def run(args):
     if args.action == 'create':
@@ -91,9 +111,11 @@ def run(args):
         assert args.file is not None, "Must specify --file path for phenotype data"
         line_count = 0
         for df in pd.read_csv(args.file, chunksize=CSV_CHUNKSIZE):
+            data_typed_by_col = determine_data_types_by_column(df)
             for _, row in df.iterrows():
                 line_count += 1
-                doc_id, subject_id, document = build_subject_document(row, cohort, session, args)
+                row_data = row_with_proper_types(data_typed_by_col, row.name)
+                doc_id, subject_id, document = build_subject_document(row_data, cohort, session, args)
                 if document:
                     if args.verbose:
                         print "Indexing doc {} for subject: {}. Count is {}".format(doc_id, subject_id, line_count)

@@ -14,8 +14,17 @@ index = {
                         "name": {
                             "type": "keyword"
                         },
-                        "value": {
-                            "type": "float"
+                        "float": {
+                            "type": "double"
+                        },
+                        "integer": {
+                            "type": "integer"
+                        },
+                        "boolean": {
+                            "type": "boolean"
+                        },
+                        "string": {
+                            "type": "keyword"
                         }
                     }
                 },
