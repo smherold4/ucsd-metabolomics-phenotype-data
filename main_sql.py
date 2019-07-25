@@ -24,7 +24,6 @@ def get_command_line_args():
     parser.add_argument(
         '--units',
         type=str,
-        required=True,
         help="Units used in cohort: {}" %
         Dataset.UNITS)
     parser.add_argument(
@@ -43,9 +42,6 @@ def get_command_line_args():
 
 if __name__ == '__main__':
     clargs = get_command_line_args()
-    assert clargs.units in Dataset.UNITS, 'Invalid units provided. Must be one of: {}'.format(
-        Dataset.UNITS)
-
     if clargs.mode == 'description_ingestion':
         description_ingestion.run(clargs)
     elif clargs.mode == 'measurements_ingestion':

@@ -45,14 +45,6 @@ def run(args):
     assert cohort is not None, "Could not find cohort with name '{}'".format(
         args.cohort_name)
 
-    dataset = session.query(Dataset).filter(
-        Dataset.cohort_id == cohort.id,
-        Dataset.units == args.units).first()
-    assert dataset is None, "A dataset with these parameters ('{}', '{}') already exists".format(cohort.name, args.units)
-    dataset = Dataset(cohort, args.units)
-    session.add(dataset)
-    session.commit()
-
     with open(args.file) as csvfile:
         csv_reader = csv.reader(csvfile, delimiter=',')
         for line_count, row in enumerate(csv_reader):
