@@ -59,7 +59,8 @@ python main_es.py \
 python main_es.py \
   --index subjects \
   --action populate \
-  --file /volume1/Database/Framingham/phenotype/pheno_data_fhs_20171210_TL.csv \
   --cohort-name FHS \
-  --subject-id-label SubjectID
+  --file /volume1/Database/Framingham/phenotype/pheno_data_fhs_20171210_TL.csv \
+  --subject-id-label SubjectID \
+  --verbose
 ```
