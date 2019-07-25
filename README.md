@@ -17,8 +17,8 @@ python main.py -h
 
 ### Adding new study names
 ```
-INSERT INTO cohort (name) VALUES ('Finrisk');
-INSERT INTO cohort (name) VALUES ('FHS');
+INSERT INTO cohort (name, method) VALUES ('Finrisk', 'LCMS');
+INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS');
 ```
 
 ### Importing descriptions
@@ -27,7 +27,6 @@ python main_sql.py \
   --cohort-name 'Finrisk' \
   --mode 'description_ingestion' \
   --file ~/Desktop/FR_ml_mad_norm.description.csv \
-  --method LCMS \
   --units normalized
 ```
 
@@ -38,7 +37,6 @@ python main_sql.py \
   --cohort-name 'Finrisk' \
   --mode 'measurements_ingestion' \
   --file ~/Desktop/FR_ml_mad_norm.csv \
-  --method LCMS \
   --units normalized \
   --verbose
 ```
