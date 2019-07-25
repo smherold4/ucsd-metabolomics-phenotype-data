@@ -57,10 +57,7 @@ def determine_data_types_by_column(df):
         }
     return result
 
-def build_subject_document(phenotype_data, cohort, session, args):
-    subject_id = phenotype_data.get(args.subject_id_label) and phenotype_data.get(args.subject_id_label).get('value')
-    if pd.isnull(subject_id):
-        return [None, None, None]
+def build_subject_document(subject_id, phenotype_data, cohort, session, args):
     subject = session.query(Subject).filter(
         Subject.local_subject_id == subject_id,
         Subject.cohort_id == cohort.id
@@ -68,7 +65,7 @@ def build_subject_document(phenotype_data, cohort, session, args):
     if subject is None:
         if args.verbose:
             print "Could not find subject: local_subject_id: {}, cohort_id: {}".format(subject_id, cohort.id)
-        return [None, None, None]
+        return [None, None]
 
     data = {}
     data['SUBJECT'] = subject_id
@@ -76,7 +73,7 @@ def build_subject_document(phenotype_data, cohort, session, args):
     data['phenotypes'] = [{'name': key, val['type']: val['value'] } for key, val in phenotype_data.iteritems() if key]
     data['metabolite_dataset'] = metabolite_dataset(subject, cohort, session)
     data['created'] = datetime.now()
-    return [subject.id, subject_id, data]
+    return [subject.id, data]
 
 def row_with_proper_types(data_typed_by_col, row_idx):
     result = {}
@@ -115,7 +112,10 @@ def run(args):
             for _, row in df.iterrows():
                 line_count += 1
                 row_data = row_with_proper_types(data_typed_by_col, row.name)
-                doc_id, subject_id, document = build_subject_document(row_data, cohort, session, args)
+                subject_id = row[args.subject_id_label]
+                if pd.isnull(subject_id):
+                    continue
+                doc_id, document = build_subject_document(subject_id, row_data, cohort, session, args)
                 if document:
                     if args.verbose:
                         print "Indexing doc {} for subject: {}. Count is {}".format(doc_id, subject_id, line_count)
