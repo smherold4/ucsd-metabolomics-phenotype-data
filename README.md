@@ -51,5 +51,15 @@ python main_es.py \
   --action populate \
   --cohort-name Finrisk \
   --file /volume1/Database/FINRISK2002/phenotype/F2015_60_Salomaa_Jain_dataFR02_FU16_2018-11-16_FR02_TL.csv \
+  --subject-id-label PLASMA_ID
   --verbose
+```
+
+```
+python main_es.py \
+  --index subjects \
+  --action populate \
+  --file /volume1/Database/Framingham/phenotype/pheno_data_fhs_20171210_TL.csv \
+  --cohort-name FHS \
+  --subject-id-label SubjectID
 ```
