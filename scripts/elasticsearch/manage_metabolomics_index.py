@@ -31,7 +31,7 @@ def build_metabolite_document(metabolite, subject, cohort, measurements, alignme
     document['COHORT'] = cohort.name
     document['subject'] = subject.local_subject_id
     document['source'] = cohort.source()
-    document['MS_method'] = cohort.ms_method()
+    document['MS_method'] = cohort.method
     document['local_ID'] = metabolite.local_compound_id
     document['MZ'] = metabolite.mz
     document['RT'] = metabolite.rt

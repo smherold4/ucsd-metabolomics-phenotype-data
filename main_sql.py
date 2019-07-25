@@ -22,12 +22,6 @@ def get_command_line_args():
         type=str,
         help="Path to input file")
     parser.add_argument(
-        '--method',
-        type=str,
-        required=True,
-        help="Method used in cohort: {}" %
-        Dataset.METHODS)
-    parser.add_argument(
         '--units',
         type=str,
         required=True,
@@ -49,8 +43,6 @@ def get_command_line_args():
 
 if __name__ == '__main__':
     clargs = get_command_line_args()
-    assert clargs.method in Dataset.METHODS, 'Invalid  method (--method) provided. Must be one of: {}'.format(
-        Dataset.METHODS)
     assert clargs.units in Dataset.UNITS, 'Invalid units provided. Must be one of: {}'.format(
         Dataset.UNITS)
 

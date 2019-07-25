@@ -47,10 +47,9 @@ def run(args):
 
     dataset = session.query(Dataset).filter(
         Dataset.cohort_id == cohort.id,
-        Dataset.method == args.method,
         Dataset.units == args.units).first()
-    assert dataset is None, "A dataset with these parameters ('{}', '{}', '{}') already exists".format(cohort.name, args.method, args.units)
-    dataset = Dataset(cohort, args.method, args.units)
+    assert dataset is None, "A dataset with these parameters ('{}', '{}') already exists".format(cohort.name, args.units)
+    dataset = Dataset(cohort, args.units)
     session.add(dataset)
     session.commit()
 

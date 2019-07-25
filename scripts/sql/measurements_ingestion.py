@@ -47,9 +47,8 @@ def run(args):
         args.cohort_name)
     dataset = session.query(Dataset).filter(
         Dataset.cohort_id == cohort.id,
-        Dataset.method == args.method,
         Dataset.units == args.units).first()
-    assert dataset is not None, "A dataset with these parameters ({}, {}, {}) does not exist".format(cohort.name, args.method, args.units)
+    assert dataset is not None, "A dataset with these parameters ({}, {}) does not exist".format(cohort.name, args.units)
 
     cohort_compound_ids = []
     line_count = 0

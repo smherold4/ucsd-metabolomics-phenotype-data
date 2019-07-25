@@ -41,7 +41,7 @@ def metabolite_dataset(subject, cohort, session):
         measurements = find_measurements(dataset, subject, session)
         result.append({
             "source": cohort.source(),
-            "method": cohort.ms_method(),
+            "method": cohort.method,
             "normalization": dataset.units,
             "measurements": [measurement_json(mmt) for mmt in measurements]})
     return result
