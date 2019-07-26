@@ -1,8 +1,8 @@
+from dotenv import load_dotenv
+load_dotenv()
 import argparse
 from models import Cohort, Dataset
 from scripts.sql import description_ingestion, measurements_ingestion, sample_key_ingestion
-from dotenv import load_dotenv
-load_dotenv()
 
 
 MODES = ['description_ingestion', 'sample_key_ingestion', 'measurements_ingestion']
