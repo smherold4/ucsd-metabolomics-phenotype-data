@@ -71,3 +71,16 @@ python main_es.py \
   --age-at-sample-collection-label BL_AGE \
   --verbose
 ```
+
+### Indexing Subjects in Elasticsearch
+
+```
+python main_es.py \
+  --index metabolomics \
+  --action populate \
+  --cohort-name Finrisk \
+  --alignment-cohort-name FHS \
+  --alignment-file /volume1/Database/Framingham/metabolomics/LCMS_EIC/AlignedPeaksWithFin.csv \
+  --alignment-cohort-col A \
+  --verbose
+```
