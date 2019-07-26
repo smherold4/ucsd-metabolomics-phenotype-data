@@ -2,7 +2,6 @@
 
 import datetime
 from db import base
-from sqlalchemy.orm import validates
 from sqlalchemy import Column, String, Integer, Index
 
 
@@ -12,8 +11,6 @@ class Cohort(base.Base):
     name = Column(String, nullable=False, unique=True)
     method = Column(String, nullable=False)
 
-    METHODS = ['LCMS']
-
     def __init__(self, name, method):
         self.name = name
         self.method = method
@@ -21,8 +18,3 @@ class Cohort(base.Base):
     def source(self):
         # This is a shim until I add the method 'source' to the cohort table
         return 'plasma'
-
-    @validates('method')
-    def validate_method(self, key, value):
-        assert value in Cohort.METHODS
-        return value
