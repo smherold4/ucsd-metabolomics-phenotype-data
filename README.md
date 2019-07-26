@@ -72,7 +72,7 @@ python main_es.py \
   --verbose
 ```
 
-### Indexing Subjects in Elasticsearch
+### Indexing Metabolomics in Elasticsearch
 
 ```
 python main_es.py \
