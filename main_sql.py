@@ -1,11 +1,11 @@
+import argparse
+from models import Cohort, Dataset
+from scripts.sql import description_ingestion, measurements_ingestion, sample_key_ingestion
 from dotenv import load_dotenv
 load_dotenv()
-from scripts.sql import description_ingestion, measurements_ingestion
-from models import Cohort, Dataset
-import argparse
 
 
-MODES = ['description_ingestion', 'measurements_ingestion']
+MODES = ['description_ingestion', 'sample_key_ingestion', 'measurements_ingestion']
 
 
 def get_command_line_args():
@@ -44,7 +44,9 @@ if __name__ == '__main__':
     clargs = get_command_line_args()
     if clargs.mode == 'description_ingestion':
         description_ingestion.run(clargs)
+    elif clargs.mode == 'sample_key_ingestion':
+        sample_key_ingestion.run(clargs)
     elif clargs.mode == 'measurements_ingestion':
         measurements_ingestion.run(clargs)
     else:
-        raise Exception('Unknown --mode {}'.format(args.mode))
+        raise Exception('Unknown --mode {}'.format(clargs.mode))

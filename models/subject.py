@@ -3,7 +3,7 @@
 import datetime
 from db import base
 from sqlalchemy.orm import validates, relationship
-from sqlalchemy import Column, String, Integer, Index, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, String, Integer, Numeric, Index, DateTime, ForeignKey, UniqueConstraint
 
 
 class Subject(base.Base):
@@ -16,6 +16,9 @@ class Subject(base.Base):
             'cohort.id',
             ondelete='CASCADE'),
         nullable=False)
+    sample_barcode = Column(String)
+    plate_well = Column(String)
+    age_at_sample_collection = Column(Numeric(precision=8, scale=4))
     created = Column(DateTime, default=datetime.datetime.utcnow)
     __table_args__ = (
         UniqueConstraint(

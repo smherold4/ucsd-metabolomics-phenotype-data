@@ -37,7 +37,13 @@ def build_metabolite_document(metabolite, subject, cohort, measurements, alignme
     document['RT'] = metabolite.rt
     document['ML_score'] = metabolite.ml_score
     document['measurement'] = [
-        {'normalization': mmt.dataset.units, 'value': mmt.measurement}
+        {
+            'normalization': mmt.dataset.units,
+            'value': mmt.measurement,
+            'sample_barcode': subject.sample_barcode,
+            'plate_well': subject.plate_well,
+            'age_at_sample_collection': subject.age_at_sample_collection,
+        }
         for mmt
         in measurements
     ]

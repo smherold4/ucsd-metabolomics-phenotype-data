@@ -41,10 +41,14 @@ def metabolite_dataset(subject, cohort, session):
         measurements = find_measurements(dataset, subject, session)
         result.append({
             "source": cohort.source(),
+            "sample_barcode": subject.sample_barcode,
             "method": cohort.method,
+            "plate_well": subject.plate_well,
+            "age_at_sample_collection": subject.age_at_sample_collection,
             "normalization": dataset.units,
             "measurements": [measurement_json(mmt) for mmt in measurements]})
     return result
+
 
 def determine_data_types_by_column(df):
     result = {}
@@ -56,7 +60,8 @@ def determine_data_types_by_column(df):
         }
     return result
 
-def build_subject_document(subject_id, phenotype_data, cohort, session, args):
+
+def build_subject_document(subject_id, age_at_sample_collection, phenotype_data, cohort, session, args):
     subject = session.query(Subject).filter(
         Subject.local_subject_id == subject_id,
         Subject.cohort_id == cohort.id
@@ -65,14 +70,17 @@ def build_subject_document(subject_id, phenotype_data, cohort, session, args):
         if args.verbose:
             print "Could not find subject: local_subject_id: {}, cohort_id: {}".format(subject_id, cohort.id)
         return [None, None]
-
+    subject.age_at_sample_collection = age_at_sample_collection
+    session.add(subject)
+    session.commit()
     data = {}
     data['SUBJECT'] = subject_id
     data['COHORT'] = subject.cohort.name
-    data['phenotypes'] = [{'name': key, val['type']: val['value'] } for key, val in phenotype_data.iteritems() if key]
+    data['phenotypes'] = [{'name': key, val['type']: val['value']} for key, val in phenotype_data.iteritems() if key]
     data['metabolite_dataset'] = metabolite_dataset(subject, cohort, session)
     data['created'] = datetime.now()
     return [subject.id, data]
+
 
 def row_with_proper_types(data_typed_by_col, row_idx):
     result = {}
@@ -81,10 +89,11 @@ def row_with_proper_types(data_typed_by_col, row_idx):
             continue
         value = data_typed_by_col[col]['series'][row_idx]
         # numpy booleans can't be serialized
-        if type(value) == numpy.bool_:
+        if isinstance(value, numpy.bool_):
             value = not not value
-        result[col] = { 'type': data_typed_by_col[col]['type'], 'value': value }
+        result[col] = {'type': data_typed_by_col[col]['type'], 'value': value}
     return result
+
 
 def run(args):
     if args.action == 'create':
@@ -105,16 +114,25 @@ def run(args):
         cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
         assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
         assert args.file is not None, "Must specify --file path for phenotype data"
+        assert args.age_at_sample_collection_label is not None, "Must specify --age-at-sample-collection-label"
         line_count = 0
         for df in pd.read_csv(args.file, chunksize=CSV_CHUNKSIZE):
             data_typed_by_col = determine_data_types_by_column(df)
             for _, row in df.iterrows():
                 line_count += 1
                 row_data = row_with_proper_types(data_typed_by_col, row.name)
-                subject_id = row[args.subject_id_label]
+                # for Finrisk and FHS the subject_id and sample_id are the same thing
+                subject_id = row[args.subject_id_label or cohort.cohort_sample_id_label]
+                age_at_sample_collection = row[args.age_at_sample_collection_label]
                 if pd.isnull(subject_id):
                     continue
-                doc_id, document = build_subject_document(subject_id, row_data, cohort, session, args)
+                doc_id, document = build_subject_document(
+                    subject_id,
+                    age_at_sample_collection,
+                    row_data,
+                    cohort,
+                    session,
+                    args)
                 if document:
                     if args.verbose:
                         print "Indexing doc {} for subject: {}. Count is {}".format(doc_id, subject_id, line_count)

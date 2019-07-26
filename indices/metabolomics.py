@@ -8,15 +8,6 @@ index = {
                 "subject": {
                     "type": "keyword"
                 },
-                "sample_barcode": {
-                    "type": "keyword"
-                },
-                "plate_well": {
-                    "type": "keyword"
-                },
-                "age_at_sample_collection": {
-                    "type": "float"
-                },
                 "source": {
                     "type": "keyword"
                 },
@@ -43,6 +34,15 @@ index = {
                         },
                         "value": {
                             "type": "double"
+                        },
+                        "sample_barcode": {
+                            "type": "keyword"
+                        },
+                        "plate_well": {
+                            "type": "keyword"
+                        },
+                        "age_at_sample_collection": {
+                            "type": "float"
                         }
                     }
                 },

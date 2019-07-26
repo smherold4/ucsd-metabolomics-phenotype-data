@@ -32,14 +32,12 @@ def get_command_line_args():
     parser.add_argument(
         '--subject-id-label',
         type=str,
-        default='PLASMA_ID',
-        help="In phenotype CSV, the label of the subject ID (default is PLASMA_ID)")
+        help="In phenotype CSV, the label of the subject ID.  Will fall back to cohort.cohort_sample_id_label")
     parser.add_argument(
         '--age-at-sample-collection-label',
         type=str,
         default='BL_AGE',
         help="In phenotype CSV, the label of the age_at_sample_collection")
-    )
     parser.add_argument(
         '--verbose',
         action='store_true',
