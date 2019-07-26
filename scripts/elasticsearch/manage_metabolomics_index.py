@@ -42,12 +42,13 @@ def build_metabolite_document(metabolite, subject, cohort, measurements, alignme
         in measurements
     ]
     document['alignment'] = [
-        { 'cohort': alignment_cohort.name, 'local_ID': local_ID }
+        {'cohort': alignment_cohort.name, 'local_ID': local_ID}
         for local_ID
         in (alignments.get(metabolite.local_compound_id) or [])
     ]
     document['created'] = datetime.now()
     return [document_id, document]
+
 
 def find_metabolites(cohort, args, session):
     min_id, max_id = args.metabolite_id_range or [0, 1e20]
@@ -58,6 +59,7 @@ def find_metabolites(cohort, args, session):
     ).order_by(
         CohortCompound.id.asc()
     ).all()
+
 
 def build_alignment_dict(args):
     this_cohort_col = 0
@@ -77,18 +79,22 @@ def build_alignment_dict(args):
                 alignments[row[this_cohort_col]] = [row[alignment_cohort_col]]
     return alignments
 
+
 def multithread(cohort, args, session):
     thread_count = 0
     args.auto_batch = False
     batch_size = args.multithread_batch_size or DEFAULT_BATCH_SIZE
     min_id, max_id = [0, batch_size]
-    while thread_count < MAX_THREAD_COUNT and session.query(CohortCompound).filter(CohortCompound.cohort_id == cohort.id, CohortCompound.id >= min_id).first() is not None:
-        cmd = 'python ' + ' '.join(sys.argv) + ' --metabolite-id-range {} {} > metab_populate_{}.{}.{}.out 2>&1 &'.format(min_id, max_id, args.cohort_name, min_id, max_id)
+    while thread_count < MAX_THREAD_COUNT and session.query(CohortCompound).filter(
+            CohortCompound.cohort_id == cohort.id, CohortCompound.id >= min_id).first() is not None:
+        cmd = 'python ' + ' '.join(sys.argv) + ' --metabolite-id-range {} {} > metab_populate_{}.{}.{}.out 2>&1 &'.format(min_id,
+                                                                                                                          max_id, args.cohort_name, min_id, max_id)
         print "os.sytem({})".format(cmd)
         os.system(cmd)
         thread_count += 1
         min_id += batch_size
         max_id += batch_size
+
 
 def run(args):
     if args.action == 'create':

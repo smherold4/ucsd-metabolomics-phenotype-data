@@ -10,6 +10,7 @@ class Cohort(base.Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True)
     method = Column(String, nullable=False)
+    cohort_sample_id_label = Column(String)
 
     def __init__(self, name, method):
         self.name = name

@@ -46,8 +46,8 @@ def run(args):
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
     dataset = session.query(Dataset).filter(
-      Dataset.cohort_id == cohort.id,
-      Dataset.units == args.units).first()
+        Dataset.cohort_id == cohort.id,
+        Dataset.units == args.units).first()
     assert dataset is None, "A dataset with these parameters ('{}', '{}') already exists".format(cohort.name, args.units)
     dataset = Dataset(cohort, args.units)
     session.add(dataset)
