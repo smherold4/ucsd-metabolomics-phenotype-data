@@ -65,6 +65,10 @@ def get_command_line_args():
         '--alignment-file',
         type=str,
         help="Path to file used for cohort alignment")
+    parser.add_argument(
+        '--alignment-cohort-col',
+        type=str,
+        help="Column (A or B) of alignment cohort in alignment file.  If B, then this cohort is assumed to be in column A")
     return parser.parse_args()
 
 

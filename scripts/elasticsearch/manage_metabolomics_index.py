@@ -68,8 +68,12 @@ def find_metabolites(cohort, args, session):
 
 
 def build_alignment_dict(args):
-    this_cohort_col = 0
-    alignment_cohort_col = 1
+    this_cohort_col, alignment_cohort_col = (None, None)
+    if args.alignment_cohort_col == 'A':
+        this_cohort_col, alignment_cohort_col = (1, 0)
+    elif args.alignment_cohort_col == 'B':
+        this_cohort_col, alignment_cohort_col = (0, 1)
+
     assert args.alignment_file, "Must provide an alignment CSV with --alignment-file"
     alignments = {}
     with open(args.alignment_file) as csvfile:
@@ -121,6 +125,7 @@ def run(args):
         alignments = {}
         alignment_cohort = None
         if args.alignment_cohort_name or args.alignment_file:
+            assert args.alignment_cohort_col in ('A', 'B'), "--alignment-cohort-col must be specified (column A or B)"
             alignment_cohort = session.query(Cohort).filter(Cohort.name == args.alignment_cohort_name).first()
             assert alignment_cohort is not None, "Could not find alignment cohort (--alignment-cohort-name) '{}'".format(args.alignment_cohort_name)
             assert cohort != alignment_cohort, "Alignment cohort must be different from cohort"
