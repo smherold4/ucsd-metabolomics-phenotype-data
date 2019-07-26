@@ -17,8 +17,8 @@ python main.py -h
 
 ### Adding new study names
 ```
-INSERT INTO cohort (name, method) VALUES ('Finrisk', 'LCMS');
-INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS');
+INSERT INTO cohort (name, method) VALUES ('Finrisk', 'LCMS_BAL');
+INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS_BAL');
 ```
 
 ### Importing descriptions
@@ -48,6 +48,7 @@ python main_sql.py \
 ```
 
 ### Indexing Subjects in Elasticsearch
+#### (this step will read the 'Age At Sample Collection' from the phenotype data and save it to the subject)
 
 ```
 python main_es.py \
@@ -55,7 +56,8 @@ python main_es.py \
   --action populate \
   --cohort-name Finrisk \
   --file /volume1/Database/FINRISK2002/phenotype/F2015_60_Salomaa_Jain_dataFR02_FU16_2018-11-16_FR02_TL.csv \
-  --subject-id-label PLASMA_ID
+  --subject-id-label PLASMA_ID \
+  --age-at-sample-collection-label BL_AGE \
   --verbose
 ```
 
@@ -66,5 +68,6 @@ python main_es.py \
   --cohort-name FHS \
   --file /volume1/Database/Framingham/phenotype/pheno_data_fhs_20171210_TL.csv \
   --subject-id-label SubjectID \
+  --age-at-sample-collection-label BL_AGE \
   --verbose
 ```
