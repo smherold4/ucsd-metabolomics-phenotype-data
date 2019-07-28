@@ -26,7 +26,7 @@ INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS_BAL');
 python main_sql.py \
   --cohort-name 'Finrisk' \
   --mode 'description_ingestion' \
-  --file ~/Desktop/FR_ml_mad_norm.description.csv \
+  --file /volume1/Database/FINRISK2002/metabolomics/LCMS_EIC/FR_ml_mad_norm.description.csv \
 ```
 
 ### Mapping Keys (Subjects, Samples, Sample Barcodes, Plate Wells)
