@@ -33,7 +33,11 @@ python main_sql.py \
 ### Mapping Keys (Subjects, Samples, Sample Barcodes, Plate Wells)
 
 ```
-python main_sql.py --mode sample_key_ingestion  --file /volume1/Database/FINRISK2002/metabolomics/FINRISK_Example_Key.csv --cohort-name Finrisk --verbose
+python main_sql.py \
+  --mode sample_key_ingestion  \
+  --file /volume1/Database/FINRISK2002/metabolomics/FINRISK_Example_Key.csv \
+  --cohort-name Finrisk \
+  --verbose
 ```
 
 ### Importing measurements
