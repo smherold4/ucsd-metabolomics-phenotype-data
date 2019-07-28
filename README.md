@@ -27,7 +27,6 @@ python main_sql.py \
   --cohort-name 'Finrisk' \
   --mode 'description_ingestion' \
   --file ~/Desktop/FR_ml_mad_norm.description.csv \
-  --units normalized
 ```
 
 ### Mapping Keys (Subjects, Samples, Sample Barcodes, Plate Wells)
