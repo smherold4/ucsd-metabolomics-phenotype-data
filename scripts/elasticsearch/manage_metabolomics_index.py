@@ -38,8 +38,8 @@ def feature_json(metabolite, alignments, alignment_cohort):
         ]
     }
 
-def build_metabolite_document(metabolite, subject, cohort, measurements, alignments, alignment_cohort):
-    document_id = 'm' + str(metabolite.id) + '_s' + str(subject.id)
+def build_metabolite_document(metabolite, cohort, alignments, alignment_cohort):
+    document_id = metabolite.id
     document = {}
     document['cohort'] = cohort.name
     document['MS_method'] = cohort.method
@@ -129,10 +129,8 @@ def run(args):
         if args.multithread:
             return multithread(cohort, args, session)
         for metabolite in find_metabolites(cohort, args, session):
-            for subject in metabolite.subjects:
-                line_count += 1
-                measurements = find_measurements(metabolite, subject, cohort, session)
-                doc_id, document = build_metabolite_document(metabolite, subject, cohort, measurements, alignments, alignment_cohort)
-                if args.verbose:
-                    print "Indexing {} for (subject, local_ID) ({}, {}). Count is {}".format(doc_id, document['subject'], document['local_ID'], line_count)
-                es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body=document)
+            line_count += 1
+            doc_id, document = build_metabolite_document(metabolite, cohort, alignments, alignment_cohort)
+            if args.verbose:
+                print "Indexing document _id: {} for localID {}. Count is {}".format(doc_id, metabolite.local_compound_id, line_count)
+            es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body=document)
