@@ -40,6 +40,26 @@ index = {
                         "age_at_sample_collection": {
                             "type": "float"
                         },
+                        "sample_phenotypes": {
+                            "type": "nested",
+                            "properties": {
+                                "name": {
+                                    "type": "keyword"
+                                },
+                                "float": {
+                                    "type": "double"
+                                },
+                                "integer": {
+                                    "type": "integer"
+                                },
+                                "boolean": {
+                                    "type": "boolean"
+                                },
+                                "string": {
+                                    "type": "keyword"
+                                }
+                            }
+                        },
                         "metabolite_dataset": {
                             "type": "nested",
                             "properties": {
@@ -54,6 +74,12 @@ index = {
                                     "properties": {
                                         "local_ID": {
                                             "type": "keyword"
+                                        },
+                                         "MZ": {
+                                            "type": "double"
+                                        },
+                                        "RT": {
+                                            "type": "double"
                                         },
                                         "measurements": {
                                             "type": "nested",

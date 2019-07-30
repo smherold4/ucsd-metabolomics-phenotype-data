@@ -17,46 +17,74 @@ INDEX_NAME = 'subjects'
 DOC_TYPE = 'subject'
 CSV_CHUNKSIZE = 2000
 
+class CompoundMeasurementGroup:
 
-def feature_json(local_compound_id, measurements):
+  def __init__(self):
+      self.measurements = []
+      self.local_compound_id = None
+      self.MZ = None
+      self.RT = None
+
+  def add(self, mmt):
+      self.measurements.append(mmt)
+      self.local_compound_id = mmt.local_compound_id
+      self.MZ = mmt.mz
+      self.RT = mmt.rt
+
+
+def feature_json(group):
     return {
-        "local_ID": local_compound_id,
-        "measurements": [{"value": mmt.measurement, "normalization": mmt.units} for mmt in measurements]
+        "local_ID": group.local_compound_id,
+        "MZ": group.MZ,
+        "RT": group.RT,
+        "measurements": [{"value": mmt.measurement, "normalization": mmt.units} for mmt in group.measurements]
     }
 
 
-def measurements_by_local_compound_id(sample, session):
+def measurements_by_compound(sample, session):
+    # We could use a SQL group by here
     sql = session.query(
         Measurement
     ).filter(
         Measurement.sample_id == sample.id,
         Measurement.cohort_compound_id == CohortCompound.id,
         Measurement.dataset_id == Dataset.id,
-    ).with_entities(Measurement.measurement, CohortCompound.local_compound_id, Dataset.units)
-    result = defaultdict(list)
+    ).with_entities(
+        Measurement.measurement,
+        CohortCompound.local_compound_id,
+        CohortCompound.mz,
+        CohortCompound.rt,
+        Dataset.units,
+    )
+    result = defaultdict(CompoundMeasurementGroup)
     for mmt in sql.all():
-        result[mmt.local_compound_id].append(mmt)
+        result[mmt.local_compound_id].add(mmt)
     return result
 
 
 def sample_json(session, sample, cohort, age_at_sample_collection):
-    measurements_grouped = measurements_by_local_compound_id(sample, session)
-    return {
-        "sample_barcode": sample.sample_barcode,
+    result = {
         "source": cohort.source(),
-        "age_at_sample_collection": age_at_sample_collection,
+        "sample_barcode": sample.sample_barcode,
         "metabolite_dataset": [
             {
                 "plate_well": sample.plate_well,
                 "method": cohort.method,
                 "features": [
-                    feature_json(local_compound_id, measurements)
-                    for local_compound_id, measurements
-                    in measurements_grouped.iteritems()
+                    feature_json(compound_measurement_group)
+                    for _, compound_measurement_group
+                    in measurements_by_compound(sample, session).iteritems()
                 ]
             }
         ]
     }
+    if age_at_sample_collection:
+        result["age_at_sample_collection"] = age_at_sample_collection
+        result["sample_phenotypes"] = [{
+            "name": "age_at_sample_collection",
+            "float": age_at_sample_collection,
+        }]
+    return result
 
 
 def determine_data_types_by_column(df):

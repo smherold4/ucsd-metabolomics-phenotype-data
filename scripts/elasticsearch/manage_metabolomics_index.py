@@ -25,33 +25,29 @@ def find_measurements(metabolite, subject, cohort, session):
     ).all()
 
 
+def feature_json(metabolite, alignments, alignment_cohort):
+    return {
+        'local_ID': metabolite.local_compound_id,
+        'MZ': metabolite.mz,
+        'RT': metabolite.rt,
+        'ML_score': metabolite.ml_score,
+        'alignment': [
+            {'cohort': alignment_cohort.name, 'local_ID': local_ID}
+            for local_ID
+            in (alignments.get(metabolite.local_compound_id) or [])
+        ]
+    }
+
 def build_metabolite_document(metabolite, subject, cohort, measurements, alignments, alignment_cohort):
     document_id = 'm' + str(metabolite.id) + '_s' + str(subject.id)
     document = {}
-    document['COHORT'] = cohort.name
-    document['subject'] = subject.local_subject_id
-    document['source'] = cohort.source()
+    document['cohort'] = cohort.name
     document['MS_method'] = cohort.method
-    document['local_ID'] = metabolite.local_compound_id
-    document['MZ'] = metabolite.mz
-    document['RT'] = metabolite.rt
-    document['ML_score'] = metabolite.ml_score
-    document['measurement'] = [
-        {
-            'normalization': mmt.dataset.units,
-            'value': mmt.measurement,
-            'sample_barcode': subject.sample_barcode,
-            'plate_well': subject.plate_well,
-        }
-        for mmt
-        in measurements
-    ]
-    document['alignment'] = [
-        {'cohort': alignment_cohort.name, 'local_ID': local_ID}
-        for local_ID
-        in (alignments.get(metabolite.local_compound_id) or [])
-    ]
     document['created'] = datetime.now()
+    document['features'] = [
+        feature_json(metabolite, alignments, alignment_cohort)
+        for metabolite in cohort.metabolites
+    ]
     return [document_id, document]
 
 
