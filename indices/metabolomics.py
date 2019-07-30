@@ -26,6 +26,9 @@ index = {
                 "ML_score": {
                     "type": "float"
                 },
+                "median_raw_measurement": {
+                    "type": "double"
+                },
                 "measurement": {
                     "type": "nested",
                     "properties": {

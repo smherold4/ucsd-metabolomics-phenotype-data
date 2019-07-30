@@ -10,6 +10,7 @@ import csv
 import pandas as pd
 import numpy
 from helpers.data_types import determine_dtype_of_df_column
+from collections import defaultdict
 
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
 INDEX_NAME = 'subjects'
@@ -17,37 +18,45 @@ DOC_TYPE = 'subject'
 CSV_CHUNKSIZE = 2000
 
 
-def measurement_json(measurement):
+def feature_json(local_compound_id, measurements):
     return {
-        "local_ID": measurement.local_compound_id,
-        "value": measurement.measurement,
+        "local_ID": local_compound_id,
+        "measurements": [{"value": mmt.measurement, "normalization": mmt.units} for mmt in measurements]
     }
 
 
-def find_measurements(dataset, subject, session):
+def measurements_by_local_compound_id(sample, session):
     sql = session.query(
         Measurement
     ).filter(
-        Measurement.dataset_id == dataset.id,
-        Measurement.subject_id == subject.id,
+        Measurement.sample_id == sample.id,
         Measurement.cohort_compound_id == CohortCompound.id,
-    ).with_entities(Measurement.measurement, CohortCompound.local_compound_id)
-    return sql.all()
-
-
-def metabolite_dataset(subject, cohort, session):
-    result = []
-    for dataset in subject.datasets:
-        measurements = find_measurements(dataset, subject, session)
-        result.append({
-            "source": cohort.source(),
-            "sample_barcode": subject.sample_barcode,
-            "method": cohort.method,
-            "plate_well": subject.plate_well,
-            "age_at_sample_collection": subject.age_at_sample_collection,
-            "normalization": dataset.units,
-            "measurements": [measurement_json(mmt) for mmt in measurements]})
+        Measurement.dataset_id == Dataset.id,
+    ).with_entities(Measurement.measurement, CohortCompound.local_compound_id, Dataset.units)
+    result = defaultdict(list)
+    for mmt in sql.all():
+        result[mmt.local_compound_id].append(mmt)
     return result
+
+
+def sample_json(session, sample, cohort, age_at_sample_collection):
+    measurements_grouped = measurements_by_local_compound_id(sample, session)
+    return {
+        "sample_barcode": sample.sample_barcode,
+        "source": cohort.source(),
+        "age_at_sample_collection": age_at_sample_collection,
+        "metabolite_dataset": [
+            {
+                "plate_well": sample.plate_well,
+                "method": cohort.method,
+                "features": [
+                    feature_json(local_compound_id, measurements)
+                    for local_compound_id, measurements
+                    in measurements_grouped.iteritems()
+                ]
+            }
+        ]
+    }
 
 
 def determine_data_types_by_column(df):
@@ -61,23 +70,16 @@ def determine_data_types_by_column(df):
     return result
 
 
-def build_subject_document(subject_id, age_at_sample_collection, phenotype_data, cohort, session, args):
-    subject = session.query(Subject).filter(
-        Subject.local_subject_id == subject_id,
-        Subject.cohort_id == cohort.id
-    ).first()
-    if subject is None:
-        if args.verbose:
-            print "Could not find subject: local_subject_id: {}, cohort_id: {}".format(subject_id, cohort.id)
-        return [None, None]
-    subject.age_at_sample_collection = age_at_sample_collection
-    session.add(subject)
-    session.commit()
+def build_subject_document(subject, age_at_sample_collection, phenotype_data, cohort, session):
     data = {}
-    data['SUBJECT'] = subject_id
-    data['COHORT'] = subject.cohort.name
+    data['subject'] = subject.local_subject_id
+    data['cohort'] = cohort.name
+    data['samples'] = [
+        sample_json(session, sample, cohort, age_at_sample_collection)
+        for sample
+        in subject.samples
+    ]
     data['phenotypes'] = [{'name': key, val['type']: val['value']} for key, val in phenotype_data.iteritems() if key]
-    data['metabolite_dataset'] = metabolite_dataset(subject, cohort, session)
     data['created'] = datetime.now()
     return [subject.id, data]
 
@@ -115,25 +117,30 @@ def run(args):
         assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
         assert args.file is not None, "Must specify --file path for phenotype data"
         assert args.age_at_sample_collection_label is not None, "Must specify --age-at-sample-collection-label"
+        assert args.subject_id_label is not None, "Must specify --subject-id-label"
         line_count = 0
         for df in pd.read_csv(args.file, chunksize=CSV_CHUNKSIZE):
             data_typed_by_col = determine_data_types_by_column(df)
             for _, row in df.iterrows():
                 line_count += 1
                 row_data = row_with_proper_types(data_typed_by_col, row.name)
-                # for Finrisk and FHS the subject_id and sample_id are the same thing
-                subject_id = row[args.subject_id_label or cohort.cohort_sample_id_label]
+                subject_id = row[args.subject_id_label]
                 age_at_sample_collection = row[args.age_at_sample_collection_label]
                 if pd.isnull(subject_id):
                     continue
+                subject = session.query(Subject).filter(
+                    Subject.cohort_id == cohort.id,
+                    Subject.local_subject_id == subject_id
+                ).first()
+                if subject is None:
+                    continue
                 doc_id, document = build_subject_document(
-                    subject_id,
+                    subject,
                     age_at_sample_collection,
                     row_data,
                     cohort,
-                    session,
-                    args)
+                    session)
                 if document:
                     if args.verbose:
-                        print "Indexing doc {} for subject: {}. Count is {}".format(doc_id, subject_id, line_count)
+                        print "Indexing doc {} for subject_id: {}. Count is {}".format(doc_id, subject.local_subject_id, line_count)
                     es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body=document)

@@ -42,7 +42,6 @@ def build_metabolite_document(metabolite, subject, cohort, measurements, alignme
             'value': mmt.measurement,
             'sample_barcode': subject.sample_barcode,
             'plate_well': subject.plate_well,
-            'age_at_sample_collection': subject.age_at_sample_collection,
         }
         for mmt
         in measurements

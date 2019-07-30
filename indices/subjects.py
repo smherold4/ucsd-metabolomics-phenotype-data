@@ -2,10 +2,10 @@ index = {
     "mappings": {
         "subject": {
             "properties": {
-                "SUBJECT": {
+                "cohort": {
                     "type": "keyword"
                 },
-                "COHORT": {
+                "subject": {
                     "type": "keyword"
                 },
                 "phenotypes": {
@@ -28,35 +28,45 @@ index = {
                         }
                     }
                 },
-                "metabolite_dataset": {
+                "samples": {
                     "type": "nested",
                     "properties": {
-                        "source": {
+                        "sample_barcode": {
                             "type": "keyword"
                         },
-                        "sample_barcode": {
+                        "source": {
                             "type": "keyword"
                         },
                         "age_at_sample_collection": {
                             "type": "float"
                         },
-                        "plate_well": {
-                            "type": "keyword"
-                        },
-                        "method": {
-                            "type": "keyword"
-                        },
-                        "normalization": {
-                            "type": "keyword"
-                        },
-                        "measurements": {
+                        "metabolite_dataset": {
                             "type": "nested",
                             "properties": {
-                                "local_ID": {
+                                "plate_well": {
                                     "type": "keyword"
                                 },
-                                "value": {
-                                    "type": "float"
+                                "method": {
+                                    "type": "keyword"
+                                },
+                                "features": {
+                                    "type": "nested",
+                                    "properties": {
+                                        "local_ID": {
+                                            "type": "keyword"
+                                        },
+                                        "measurements": {
+                                            "type": "nested",
+                                            "properties": {
+                                                "value": {
+                                                    "type": "float"
+                                                },
+                                                "normalization": {
+                                                    "type": "keyword"
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

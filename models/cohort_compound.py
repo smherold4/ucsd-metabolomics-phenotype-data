@@ -27,10 +27,12 @@ class CohortCompound(base.Base):
     cohort = relationship("Cohort", backref="cohort_compounds")
     subjects = relationship("Subject", secondary="cohort")
 
-    def __init__(self, cohort, local_compound_id, mz, rt, cross_variation, ml_score):
+    def __init__(self, cohort, local_compound_id, mz, rt, cross_variation, ml_score, median_measurement=None):
         self.cohort = cohort
         self.local_compound_id = local_compound_id
         self.mz = mz
         self.rt = rt
         self.cross_variation = cross_variation
         self.ml_score = ml_score
+        if median_measurement is not None:
+            self.median_measurement = median_measurement

@@ -3,7 +3,7 @@ import pandas as pd
 from models import *
 from db import db_connection
 
-LOCAL_SUBJECT_ID_COL = 0
+COHORT_SAMPLE_ID_COL = 0
 FIRST_COL_WITH_MEASUREMENTS = 2
 ROW_OF_LOCAL_COMPOUND_ID = 0
 CSV_CHUNKSIZE = 20
@@ -20,24 +20,10 @@ def cohort_compound_ids_by_column(local_compound_ids, cohort, session):
     return [id_map[local_compound_id] for local_compound_id in local_compound_ids]
 
 
-def find_or_create_subject(cohort, local_subject_id, session):
-    subject = session.query(Subject).filter(
-        Subject.cohort_id == cohort.id,
-        Subject.local_subject_id == local_subject_id).first() or Subject(
-        cohort,
-        local_subject_id)
-    session.add(subject)
-    session.commit()
-    return subject
-
-
-def build_insert_measurements_sql(measurements, cohort_compound_ids, subject_id, dataset_id):
-    # insert_values = ["({}, {}, {})".format(subject_id,
-    # cohort_compound_ids[column]., measurement) for column, measurement in
-    # enumerate(measurements) if measurement]
-    insert_values = ["({}, {}, {}, {})".format(subject_id, cohort_compound_ids[column], measurement, dataset_id)
+def build_insert_measurements_sql(measurements, cohort_compound_ids, sample_id, dataset_id):
+    insert_values = ["({}, {}, {}, {})".format(sample_id, cohort_compound_ids[column], measurement, dataset_id)
                      for column, measurement in enumerate(measurements) if not pd.isnull(measurement)]
-    return "INSERT INTO measurement (subject_id, cohort_compound_id, measurement, dataset_id) VALUES " + ",".join(insert_values)
+    return "INSERT INTO measurement (sample_id, cohort_compound_id, measurement, dataset_id) VALUES " + ",".join(insert_values)
 
 
 def run(args):
@@ -66,11 +52,18 @@ def run(args):
         for _, row in df.iterrows():
             line_count += 1
             row_trimmed = row[FIRST_COL_WITH_MEASUREMENTS:].tolist()
-            local_subject_id = row[LOCAL_SUBJECT_ID_COL].strip()
-            if pd.isnull(local_subject_id):
+            cohort_sample_id = row[COHORT_SAMPLE_ID_COL].strip()
+            if pd.isnull(cohort_sample_id):
                 continue
-            subject = find_or_create_subject(cohort, local_subject_id, session)
-            insert_measurements_sql = build_insert_measurements_sql(row_trimmed, cohort_compound_ids, subject.id, dataset.id)
+            sample = session.query(Sample).join(Sample.subject).filter(
+                Subject.cohort_id == cohort.id,
+                Sample.cohort_sample_id == cohort_sample_id).first()
+            if sample is None:
+                if args.verbose:
+                    print "Could not find cohort_sample_id {} for cohort {}".format(cohort_sample_id, cohort.name)
+                continue
+            insert_measurements_sql = build_insert_measurements_sql(row_trimmed, cohort_compound_ids, sample.id, dataset.id)
             if args.verbose:
-                print "Inserting measurements for row {}, subjectId {}".format(line_count, local_subject_id)
+                print "Inserting measurements for row {}, cohort_sample_id {}".format(line_count, cohort_sample_id)
             session.execute(insert_measurements_sql)
+            session.commit()

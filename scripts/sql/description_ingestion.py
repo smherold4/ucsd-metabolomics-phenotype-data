@@ -11,10 +11,6 @@ COLUMNS = {
 }
 
 
-def build_lab_id_to_compound_id_mapping(args, alignment_cohort, session):
-    return {}
-
-
 def find_cohort_compound(cohort, local_compound_id, session):
     return session.query(CohortCompound).filter(
         CohortCompound.cohort_id == cohort.id,

@@ -11,6 +11,19 @@ COLUMNS = {
 }
 
 
+def find_or_create_subject(session, cohort, local_subject_id):
+    subject = session.query(Subject).filter(
+        Subject.cohort_id == cohort.id,
+        Subject.local_subject_id == local_subject_id,
+    ).first() or Subject(
+        cohort,
+        local_subject_id,
+    )
+    session.add(subject)
+    session.commit()
+    return subject
+
+
 def run(args):
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
@@ -24,21 +37,19 @@ def run(args):
         session.commit()
         for _, row in df.iterrows():
             line_count += 1
+            # maybe the subject will be created after the sample, i don't know
+            # for FR and FHS, the local_subject_id is the cohort_sample_id
+            local_subject_id = row[COLUMNS['cohort_sample_id_label']]
             cohort_sample_id = row[COLUMNS['cohort_sample_id_label']]
-            plate_well = row[COLUMNS['plate_well']]
             sample_barcode = row[COLUMNS['sample_barcode']]
+            plate_well = row[COLUMNS['plate_well']]
+            if pd.isnull(local_subject_id):
+                continue
+            subject = find_or_create_subject(session, cohort, local_subject_id)
             if pd.isnull(cohort_sample_id):
                 continue
-            subject = session.query(Subject).filter(
-                Subject.cohort_id == cohort.id,
-                Subject.local_subject_id == cohort_sample_id
-            ).first() or Subject(
-                cohort,
-                cohort_sample_id,
-            )
-            subject.plate_well = plate_well
-            subject.sample_barcode = sample_barcode
-            session.add(subject)
+            sample = Sample(cohort.id, subject.id, cohort_sample_id, sample_barcode, plate_well)
+            session.add(sample)
             session.commit()
             if args.verbose:
-                print 'Saved Sample {} with Sample Barcode {}'.format(cohort_sample_id, sample_barcode)
+                print 'Saved cohort_sample_id {} with sample_barcode {}'.format(sample.cohort_sample_id, sample.sample_barcode)

@@ -2,10 +2,10 @@ from dotenv import load_dotenv
 load_dotenv()
 import argparse
 from models import Cohort, Dataset
-from scripts.sql import description_ingestion, measurements_ingestion, sample_key_ingestion
+from scripts.sql import raw_ingestion, description_ingestion, measurements_ingestion, sample_key_ingestion
 
 
-MODES = ['description_ingestion', 'sample_key_ingestion', 'measurements_ingestion']
+MODES = ['raw_ingestion', 'description_ingestion', 'sample_key_ingestion', 'measurements_ingestion']
 
 
 def get_command_line_args():
@@ -42,7 +42,9 @@ def get_command_line_args():
 
 if __name__ == '__main__':
     clargs = get_command_line_args()
-    if clargs.mode == 'description_ingestion':
+    if clargs.mode == 'raw_ingestion':
+        raw_ingestion.run(clargs)
+    elif clargs.mode == 'description_ingestion':
         description_ingestion.run(clargs)
     elif clargs.mode == 'sample_key_ingestion':
         sample_key_ingestion.run(clargs)
