@@ -17,14 +17,14 @@ python main.py -h
 
 ### Adding new study names
 ```
-INSERT INTO cohort (name, method) VALUES ('Finrisk', 'LCMS_BAL');
+INSERT INTO cohort (name, method) VALUES ('FINRISK', 'LCMS_BAL');
 INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS_BAL');
 ```
 
 ### Importing descriptions
 ```
 python main_sql.py \
-  --cohort-name 'Finrisk' \
+  --cohort-name 'FINRISK' \
   --mode 'description_ingestion' \
   --file /volume1/Database/FINRISK2002/metabolomics/LCMS_EIC/FR_ml_mad_norm.description.csv
 ```
@@ -35,7 +35,7 @@ python main_sql.py \
 python main_sql.py \
   --mode sample_key_ingestion  \
   --file /volume1/Database/FINRISK2002/metabolomics/FINRISK_Example_Key.csv \
-  --cohort-name Finrisk \
+  --cohort-name FINRISK \
   --verbose
 ```
 
@@ -43,7 +43,7 @@ python main_sql.py \
 
 ```
 python main_sql.py \
-  --cohort-name 'Finrisk' \
+  --cohort-name FINRISK \
   --mode 'measurements_ingestion' \
   --file ~/Desktop/FR_ml_mad_norm.csv \
   --units normalized \
@@ -57,7 +57,7 @@ python main_sql.py \
 python main_es.py \
   --index subjects \
   --action populate \
-  --cohort-name Finrisk \
+  --cohort-name FINRISK \
   --file /volume1/Database/FINRISK2002/phenotype/F2015_60_Salomaa_Jain_dataFR02_FU16_2018-11-16_FR02_TL.csv \
   --subject-id-label PLASMA_ID \
   --age-at-sample-collection-label BL_AGE \
@@ -81,7 +81,7 @@ python main_es.py \
 python main_es.py \
   --index metabolomics \
   --action populate \
-  --cohort-name Finrisk \
+  --cohort-name FINRISK \
   --alignment-cohort-name FHS \
   --alignment-file /volume1/Database/Framingham/metabolomics/LCMS_EIC/AlignedPeaksWithFin.csv \
   --alignment-cohort-col A \
