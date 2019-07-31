@@ -37,9 +37,6 @@ index = {
                         "source": {
                             "type": "keyword"
                         },
-                        "age_at_sample_collection": {
-                            "type": "float"
-                        },
                         "sample_phenotypes": {
                             "type": "nested",
                             "properties": {

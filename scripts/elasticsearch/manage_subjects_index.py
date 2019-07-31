@@ -79,7 +79,6 @@ def sample_json(session, sample, cohort, age_at_sample_collection):
         ]
     }
     if age_at_sample_collection:
-        result["age_at_sample_collection"] = age_at_sample_collection
         result["sample_phenotypes"] = [{
             "name": "age_at_sample_collection",
             "float": age_at_sample_collection,
