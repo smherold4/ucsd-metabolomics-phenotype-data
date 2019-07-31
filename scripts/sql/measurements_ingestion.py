@@ -23,7 +23,7 @@ def cohort_compound_ids_by_column(local_compound_ids, cohort, session):
 def build_insert_measurements_sql(measurements, cohort_compound_ids, sample_id, dataset_id):
     insert_values = ["({}, {}, {}, {})".format(sample_id, cohort_compound_ids[column], measurement, dataset_id)
                      for column, measurement in enumerate(measurements) if not pd.isnull(measurement)]
-    return "INSERT INTO measurement (sample_id, cohort_compound_id, measurement, dataset_id) VALUES " + ",".join(insert_values)
+    return "INSERT INTO {} (sample_id, cohort_compound_id, measurement, dataset_id) VALUES ".format(Measurement.__tablename__) + ",".join(insert_values)
 
 
 def run(args):
