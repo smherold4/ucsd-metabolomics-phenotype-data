@@ -47,11 +47,11 @@ def extract_plate_well(string):
 #     return subject
 
 
-def find_or_create_sample(session, cohort, cohort_sample_id, plate_well):
+def find_or_create_sample(session, cohort, plate_well):
     sample = session.query(Sample).filter(
         Sample.cohort == cohort,
-        Sample.cohort_sample_id == cohort_sample_id,
-    ).first() or Sample(cohort.id, None, cohort_sample_id, None, plate_well)
+        Sample.plate_well == plate_well,
+    ).first() or Sample(cohort.id, None, None, None, plate_well)
     if not sample.id:
         session.add(sample)
         session.commit()
@@ -82,10 +82,8 @@ def run(args):
                 plate_well = extract_plate_well(sample_id_label)
                 if not plate_well:
                     continue
-                # let's pretend the plate_well is the cohort_sample_id
-                cohort_sample_id = plate_well
-                sample = samples_seen.get(cohort_sample_id) or find_or_create_sample(session, cohort, cohort_sample_id, plate_well)
-                samples_seen[cohort_sample_id] = sample
+                sample = samples_seen.get(plate_well) or find_or_create_sample(session, cohort, plate_well)
+                samples_seen[plate_well] = sample
 
                 if not pd.isnull(row[sample_id_label]):
                     values.append("({}, {}, {}, {})".format(sample.id, cohort_compound.id, dataset.id, row[sample_id_label]))

@@ -3,7 +3,7 @@
 import datetime
 from db import base
 from sqlalchemy.orm import validates, relationship
-from sqlalchemy import Column, String, Integer, Numeric, Index, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, String, Integer, Numeric, Index, DateTime, ForeignKey, UniqueConstraint, CheckConstraint
 
 
 class Sample(base.Base):
@@ -17,7 +17,7 @@ class Sample(base.Base):
         Integer,
         ForeignKey('cohort.id', ondelete='CASCADE'),
         nullable=False)
-    cohort_sample_id = Column(String, nullable=False)
+    cohort_sample_id = Column(String)
     sample_barcode = Column(String)
     plate_well = Column(String)
     created = Column(DateTime, default=datetime.datetime.utcnow)
@@ -30,6 +30,12 @@ class Sample(base.Base):
             "cohort_id",
             "cohort_sample_id",
             name="ix_sample_uniq_cohort_cohort_sample_id"),
+        # this constraint might be wrong or unnecessary, but i need it while the raw files only have plate_well
+        UniqueConstraint(
+            "cohort_id",
+            "plate_well",
+            name="ix_sample_uniq_cohort_plate_well"),
+        CheckConstraint('(cohort_sample_id is not null or plate_well is not null)', name='constraint_sample_identifier')
     )
 
     cohort = relationship("Cohort", backref="samples")
