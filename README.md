@@ -26,7 +26,7 @@ INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS_BAL');
 python main_sql.py \
   --mode raw_ingestion \
   --cohort-name FINRISK \
-  --file ~/Downloads/ProcessedDataRawDeadducted.first20.csv \
+  --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/finrisk/ProcessedDataRawDeadducted.csv \
   --units raw \
   --verbose
 ```
