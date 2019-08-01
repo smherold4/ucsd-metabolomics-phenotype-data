@@ -46,9 +46,15 @@ def run(args):
             if pd.isnull(local_subject_id):
                 continue
             subject = find_or_create_subject(session, cohort, local_subject_id)
-            if pd.isnull(cohort_sample_id):
+            if pd.isnull(plate_well):
                 continue
-            sample = Sample(cohort.id, subject.id, cohort_sample_id, sample_barcode, plate_well)
+            sample = session.query(Sample).filter(
+                Sample.plate_well == plate_well,
+                Sample.cohort_id == cohort.id,
+            ).first()
+            sample.subject_id = subject.id
+            sample.cohort_sample_id = cohort_sample_id
+            sample.sample_barcode = sample_barcode
             session.add(sample)
             session.commit()
             if args.verbose:
