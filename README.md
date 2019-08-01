@@ -40,13 +40,21 @@ python main_sql.py  \
   --verbose
 ```
 
-### Mapping Keys (Subjects, Samples, Sample Barcodes, Plate Wells)
+### Mapping Keys (Sample Barcodes, Plate Wells, SubjectID, etc)
 
 ```
 python main_sql.py \
   --mode sample_key_ingestion  \
   --file /volume1/Database/FINRISK2002/metabolomics/FINRISK_Example_Key.csv \
   --cohort-name FINRISK \
+  --verbose
+```
+
+```
+python main_sql.py \
+  --mode sample_key_ingestion  \
+  --file /volume1/Database/Framingham/metabolomics/FHS_Patient_Keys.csv \
+  --cohort-name FHS \
   --verbose
 ```
 
