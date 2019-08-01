@@ -21,12 +21,14 @@ INSERT INTO cohort (name, method) VALUES ('FINRISK', 'LCMS_BAL');
 INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS_BAL');
 ```
 
-### Importing descriptions
+### Importing raw cohort measurements by plate_well
 ```
 python main_sql.py \
-  --cohort-name 'FINRISK' \
-  --mode 'description_ingestion' \
-  --file /volume1/Database/FINRISK2002/metabolomics/LCMS_EIC/FR_ml_mad_norm.description.csv
+  --mode raw_ingestion \
+  --cohort-name FINRISK \
+  --file ~/Downloads/ProcessedDataRawDeadducted.first20.csv \
+  --units raw \
+  --verbose
 ```
 
 ### Mapping Keys (Subjects, Samples, Sample Barcodes, Plate Wells)
@@ -36,17 +38,6 @@ python main_sql.py \
   --mode sample_key_ingestion  \
   --file /volume1/Database/FINRISK2002/metabolomics/FINRISK_Example_Key.csv \
   --cohort-name FINRISK \
-  --verbose
-```
-
-### Importing measurements
-
-```
-python main_sql.py \
-  --cohort-name FINRISK \
-  --mode 'measurements_ingestion' \
-  --file ~/Desktop/FR_ml_mad_norm.csv \
-  --units normalized \
   --verbose
 ```
 
