@@ -31,6 +31,15 @@ python main_sql.py \
   --verbose
 ```
 
+```
+python main_sql.py  \
+  --mode raw_ingestion  \
+  --cohort-name FHS \
+  --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/FHS/ProcessedDataRawDeadducted.csv \
+  --units raw  \
+  --verbose
+```
+
 ### Mapping Keys (Subjects, Samples, Sample Barcodes, Plate Wells)
 
 ```
