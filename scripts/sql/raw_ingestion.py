@@ -4,7 +4,7 @@ from db import db_connection
 import pandas as pd
 import re
 
-CSV_CHUNKSIZE = 300
+CSV_CHUNKSIZE = 8000
 COLUMN_OF_FIRST_MEASUREMENT = 14
 PLATE_WELL_REGEX = r'\_Plate\_(\d+\_\d+)\_'
 
@@ -67,9 +67,9 @@ def run(args):
     dataset = Dataset(cohort, args.units)
     session.add(dataset)
     session.commit()
-    samples_seen = {}
+    sample_ids_cache = {}
     row_count = 0
-    for df in pd.read_csv(args.file, chunksize=CSV_CHUNKSIZE):
+    for df in pd.read_csv(args.file, chunksize=(args.csv_chunksize or CSV_CHUNKSIZE)):
         sample_id_labels = df.columns[COLUMN_OF_FIRST_MEASUREMENT:]
         for _, row in df.iterrows():
             sql = "INSERT INTO measurement (sample_id, cohort_compound_id, dataset_id, measurement) VALUES "
@@ -82,11 +82,11 @@ def run(args):
                 plate_well = extract_plate_well(sample_id_label)
                 if not plate_well:
                     continue
-                sample = samples_seen.get(plate_well) or find_or_create_sample(session, cohort, plate_well)
-                samples_seen[plate_well] = sample
+                sample_id = sample_ids_cache.get(plate_well) or find_or_create_sample(session, cohort, plate_well).id
+                sample_ids_cache[plate_well] = sample_id
 
                 if not pd.isnull(row[sample_id_label]):
-                    values.append("({}, {}, {}, {})".format(sample.id, cohort_compound.id, dataset.id, row[sample_id_label]))
+                    values.append("({}, {}, {}, {})".format(sample_id, cohort_compound.id, dataset.id, row[sample_id_label]))
             if args.verbose:
                 print "Inserting {} measurements for metabolite {}.  Row count is {}".format(len(values), cohort_compound.local_compound_id, row_count)
             if len(values):

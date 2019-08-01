@@ -22,6 +22,10 @@ def get_command_line_args():
         type=str,
         help="Path to input file")
     parser.add_argument(
+        '--csv-chunksize',
+        type=int,
+    )
+    parser.add_argument(
         '--units',
         type=str,
         help="Units used in cohort: {}" %
