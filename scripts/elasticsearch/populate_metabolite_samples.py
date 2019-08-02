@@ -77,4 +77,4 @@ def run(args):
               Measurement.__tablename__,
               last_queried_id,
           )
-      helpers.bulk(es, es_inserts)
+      helpers.parallel_bulk(es, es_inserts)
