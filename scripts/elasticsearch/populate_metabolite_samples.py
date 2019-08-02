@@ -48,7 +48,6 @@ def run(args):
           Measurement.id.asc()
       ).limit(args.index_batch_size or DEFAULT_BATCH_SIZE)
       mmts = sql.all()
-      last_queried_id = mmts[-1].id if len(mmts) else None
       es_inserts = [
         {
           "_index": INDEX_NAME,
@@ -71,5 +70,12 @@ def run(args):
         for mmt in mmts
       ]
       if args.verbose:
-          print "Inserting {} {} documents for {}.  On ".format(len(mmts), args.index, cohort.name)
+          print "Inserting {} {} documents for {}.  Last '{}' id {}".format(
+              len(mmts),
+              args.index,
+              cohort.name,
+              Measurement.__tablename__,
+              last_queried_id,
+          )
       helpers.bulk(es, es_inserts)
+      last_queried_id = mmts[-1].id if len(mmts) else None
