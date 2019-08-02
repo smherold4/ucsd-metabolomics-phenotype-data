@@ -56,6 +56,7 @@ def run(args):
     while last_queried_id is not None:
         sql = session.query(CohortCompound).filter(
             CohortCompound.id > last_queried_id,
+            CohortCompound.cohort_id == cohort.id,
         ).order_by(
             CohortCompound.id.asc()
         ).limit(args.index_batch_size or DEFAULT_BATCH_SIZE)
