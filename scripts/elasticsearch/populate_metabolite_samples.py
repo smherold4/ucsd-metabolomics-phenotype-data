@@ -55,7 +55,6 @@ def run(args):
           "_id": cohort.name + "_" + str(mmt.id), # careful when changing this
           "_source": {
               "cohort": cohort.name,
-              "created": datetime.now(),
               "local_ID": mmt.local_compound_id,
               "measurement_{}".format(mmt.units): mmt.measurement,
               "method": cohort.method,
@@ -69,8 +68,9 @@ def run(args):
         }
         for mmt in mmts
       ]
+      last_queried_id = mmts[-1].id if len(mmts) else None
       if args.verbose:
-          print "Inserting {} {} documents for {}.  Last '{}' id {}".format(
+          print "Inserting {} {} documents for {}.  Up to {}.id {}".format(
               len(mmts),
               args.index,
               cohort.name,
@@ -78,4 +78,3 @@ def run(args):
               last_queried_id,
           )
       helpers.bulk(es, es_inserts)
-      last_queried_id = mmts[-1].id if len(mmts) else None
