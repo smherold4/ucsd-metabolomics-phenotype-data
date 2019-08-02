@@ -3,9 +3,9 @@ load_dotenv()
 from elasticsearch import Elasticsearch
 import argparse, indices, os
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
-from scripts.elasticsearch import populate_metabolite_samples
+from scripts.elasticsearch import populate_metabolite_samples, populate_metabolite_alignments
 
-INDICES = ['metabolite_samples']
+INDICES = ['metabolite_samples', 'metabolite_alignments']
 ACTIONS = ['create', 'delete', 'populate']
 
 def get_command_line_args():
@@ -23,7 +23,7 @@ def get_command_line_args():
         help="Action to perform: {}" %
         ACTIONS)
     parser.add_argument(
-        '--file',
+        '--phenotype-file',
         type=str,
         help="Path to phenotype data file")
     parser.add_argument(
