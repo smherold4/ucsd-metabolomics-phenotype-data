@@ -58,40 +58,15 @@ python main_sql.py \
   --verbose
 ```
 
-### Indexing Subjects in Elasticsearch
-#### (this step will read the 'Age At Sample Collection' from the phenotype data and save it to the subject)
+### Elasticsearch Indexing metabolite_samples
 
 ```
-python main_es.py \
-  --index subjects \
-  --action populate \
-  --cohort-name FINRISK \
-  --file /volume1/Database/FINRISK2002/phenotype/F2015_60_Salomaa_Jain_dataFR02_FU16_2018-11-16_FR02_TL.csv \
-  --subject-id-label PLASMA_ID \
-  --age-at-sample-collection-label BL_AGE \
-  --verbose
+python main_es.py --index metabolite_samples --action populate --verbose --cohort-name FINRISK --index-batch-size 200000
 ```
 
 ```
-python main_es.py \
-  --index subjects \
-  --action populate \
-  --cohort-name FHS \
-  --file /volume1/Database/Framingham/phenotype/pheno_data_fhs_20171210_TL.csv \
-  --subject-id-label SubjectID \
-  --age-at-sample-collection-label BL_AGE \
-  --verbose
+python main_es.py --index metabolite_samples --action populate --verbose --cohort-name FHS --index-batch-size 200000
 ```
 
-### Indexing Metabolomics in Elasticsearch
+### Elasticsearch Indexing metabolite_alignments
 
-```
-python main_es.py \
-  --index metabolomics \
-  --action populate \
-  --cohort-name FINRISK \
-  --alignment-cohort-name FHS \
-  --alignment-file /volume1/Database/Framingham/metabolomics/LCMS_EIC/AlignedPeaksWithFin.csv \
-  --alignment-cohort-col A \
-  --verbose
-```
