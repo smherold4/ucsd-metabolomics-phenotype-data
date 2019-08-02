@@ -77,4 +77,7 @@ def run(args):
               Measurement.__tablename__,
               last_queried_id,
           )
-      helpers.parallel_bulk(es, es_inserts)
+      for success, info in helpers.parallel_bulk(es, es_inserts):
+          if not success:
+              print('Parallel bulk failure:', info)
+              raise Exception(info)
