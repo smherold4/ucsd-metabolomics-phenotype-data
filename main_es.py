@@ -1,11 +1,12 @@
 from dotenv import load_dotenv
 load_dotenv()
-from scripts.elasticsearch import manage_subjects_index, manage_metabolomics_index
-import argparse
+from elasticsearch import Elasticsearch
+import argparse, indices, os
+es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
+from scripts.elasticsearch import populate_metabolite_samples
 
-INDICES = ['subjects', 'metabolomics']
-ACTIONS = ['create', 'put_settings', 'put_mapping', 'delete', 'populate']
-
+INDICES = ['metabolite_samples']
+ACTIONS = ['create', 'delete', 'populate']
 
 def get_command_line_args():
     parser = argparse.ArgumentParser(description='Move SQL data into Elasticsearch')
@@ -30,6 +31,11 @@ def get_command_line_args():
         type=str,
         help="Name of cohort - when ingesting description")
     parser.add_argument(
+        '--index-batch-size',
+        type=int,
+        help="Amount of documents to bulk index at once",
+    )
+    parser.add_argument(
         '--age-at-sample-collection-label',
         type=str,
         default='BL_AGE',
@@ -43,20 +49,6 @@ def get_command_line_args():
         action='store_true',
         default=False,
         help="Show status outputs to monitor progress of script")
-    parser.add_argument(
-        '--multithread',
-        action='store_true',
-        default=False,
-        help="Multi-thread by Id ranges")
-    parser.add_argument(
-        '--multithread-batch-size',
-        type=int,
-        help="Specify batch size (e.g. number of metabolites per thread) when multi-threading")
-    parser.add_argument(
-        '--metabolite-id-range',
-        type=int,
-        nargs=2,
-        help="Specify cohort_compound_id range over which to index")
     parser.add_argument(
         '--alignment-cohort-name',
         type=str,
@@ -79,9 +71,11 @@ if __name__ == '__main__':
     assert clargs.action in ACTIONS, 'Unknown action. Must be one of: {}'.format(
         ACTIONS)
 
-    if clargs.index == 'subjects':
-        manage_subjects_index.run(clargs)
-    elif clargs.index == 'metabolomics':
-        manage_metabolomics_index.run(clargs)
+    if clargs.action == 'create':
+        print es.indices.create(index=clargs.index, body= getattr(indices, clargs.index).index)
+    elif clargs.action == 'delete':
+        print es.indices.delete(index=clargs.index)
+    elif clargs.action == 'populate':
+        getattr(__import__(__name__), 'populate_{}'.format(clargs.index)).run(clargs)
     else:
         raise Exception('Script is confused')
