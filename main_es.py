@@ -36,6 +36,11 @@ def get_command_line_args():
         help="Amount of documents to bulk index at once",
     )
     parser.add_argument(
+        '--starting-entity-id',
+        type=int,
+        help="Entity ID from which to start indexing",
+    )
+    parser.add_argument(
         '--age-at-sample-collection-label',
         type=str,
         default='BL_AGE',
