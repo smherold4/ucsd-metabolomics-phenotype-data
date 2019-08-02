@@ -74,3 +74,7 @@ python main_es.py --index metabolite_samples --action populate --verbose --cohor
 python main_es.py --index metabolite_alignments  --action populate --cohort-name FINRISK --alignment-cohort-name FHS --alignment-cohort-col A --alignment-file ~/Desktop/AlignedPeaksWithFin.csv --verbose
 ```
 
+```
+python main_es.py --index metabolite_alignments  --action populate --cohort-name FHS --alignment-cohort-name FINRISK --alignment-cohort-col B --alignment-file ~/Desktop/AlignedPeaksWithFin.csv --verbose
+```
+
