@@ -41,7 +41,7 @@ def run(args):
             # for FR and FHS, the local_subject_id is the cohort_sample_id
             local_subject_id = row[COLUMNS['cohort_sample_id_label']]
             cohort_sample_id = row[COLUMNS['cohort_sample_id_label']]
-            sample_barcode = row[COLUMNS['sample_barcode']]
+            sample_barcode = row[COLUMNS['sample_barcode']] if len(row) > COLUMNS['sample_barcode'] else None
             plate_well = row[COLUMNS['plate_well']]
             if pd.isnull(local_subject_id):
                 continue
@@ -52,9 +52,14 @@ def run(args):
                 Sample.plate_well == plate_well,
                 Sample.cohort_id == cohort.id,
             ).first()
+            if not sample:
+                if args.verbose:
+                    print "Could not find sample with plate_well {}".format(plate_well)
+                continue
             sample.subject_id = subject.id
             sample.cohort_sample_id = cohort_sample_id
-            sample.sample_barcode = sample_barcode
+            if sample_barcode:
+                sample.sample_barcode = sample_barcode
             session.add(sample)
             session.commit()
             if args.verbose:
