@@ -15,7 +15,7 @@ from collections import defaultdict
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
 INDEX_NAME = 'subject_phenotypes'
 DOC_TYPE = 'subject_phenotype'
-CSV_CHUNKSIZE = 2000
+CSV_CHUNKSIZE = 3000
 
 def determine_data_types_by_column(df):
     result = {}
@@ -67,7 +67,7 @@ def run(args):
               {
                   "_index": INDEX_NAME,
                   "_type": DOC_TYPE,
-                  "_id": cohort.name + "_" + phenotype_name.replace(" ", "_"), # careful when changing this
+                  "_id": cohort.name + "_" + phenotype_name.replace(" ", "_") + "_" + subject.local_subject_id, # careful when changing this
                   "_source": {
                       "cohort": cohort.name,
                       "subject": subject.local_subject_id,
