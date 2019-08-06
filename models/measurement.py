@@ -21,8 +21,6 @@ class Measurement(base.Base):
     measurement = Column(
         Numeric(precision=80, scale=30),
         nullable=False)
-    median_absolute_deviation = Column(
-        Numeric(precision=7, scale=4), nullable=True)
 
     metabolite = relationship('CohortCompound', uselist=False, primaryjoin='foreign(CohortCompound.id) == Measurement.cohort_compound_id')
     dataset = relationship('Dataset', uselist=False, primaryjoin='foreign(Dataset.id) == Measurement.dataset_id')
