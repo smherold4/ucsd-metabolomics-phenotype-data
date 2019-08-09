@@ -12,7 +12,7 @@ import numpy
 from helpers.data_types import determine_dtype_of_df_column
 from collections import defaultdict
 
-es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
+es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')], timeout=30)
 INDEX_NAME = 'subject_phenotypes'
 DOC_TYPE = 'subject_phenotype'
 CSV_CHUNKSIZE = 3000

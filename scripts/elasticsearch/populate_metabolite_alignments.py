@@ -9,7 +9,7 @@ import os
 import re
 import csv
 
-es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
+es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')], timeout=30)
 INDEX_NAME = 'metabolite_alignments'
 DOC_TYPE = 'metabolite_alignment'
 DEFAULT_BATCH_SIZE = 40000

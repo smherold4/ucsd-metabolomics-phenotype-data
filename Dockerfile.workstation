@@ -1,0 +1,7 @@
+FROM docker.elastic.co/elasticsearch/elasticsearch:6.8.1
+ADD ./docker-config/workstation-config.yml /usr/share/elasticsearch/config/elasticsearch.yml
+USER root
+RUN chown elasticsearch:elasticsearch config/elasticsearch.yml
+RUN chown -R elasticsearch:elasticsearch data
+ENV ES_JAVA_OPTS="-Xms2g -Xmx2g"
+USER elasticsearch

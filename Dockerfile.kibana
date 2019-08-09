@@ -1,0 +1,5 @@
+FROM docker.elastic.co/kibana/kibana:6.8.1
+ADD ./docker-config/kibana.yml /usr/share/kibana/config/kibana.yml
+USER root
+RUN chown kibana:kibana config/kibana.yml
+USER kibana

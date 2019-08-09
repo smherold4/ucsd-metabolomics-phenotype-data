@@ -1,0 +1,113 @@
+version: '3.2'
+services:
+  workstation:
+    image: herold961/ucsd-workstation
+    volumes:
+      - /media/ssd1/elasticsearch:/usr/share/elasticsearch/data:rw
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+      resources:
+        limits:
+          memory: 16G
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+      - target: 9300
+        published: 9300
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+      - analytics
+    logging:
+      driver: json-file
+    ulimits:
+      nproc: 65535
+  nas:
+    image: herold961/ucsd-nas
+    volumes:
+      - /volume1/Database/elasticsearch:/usr/share/elasticsearch/data:rw
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == worker ]
+      mode: "replicated"
+      replicas: 1
+      resources:
+        limits:
+          memory: 2G
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+      - target: 9300
+        published: 9300
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+      - analytics
+    logging:
+      driver: json-file
+    ulimits:
+      nproc: 65535
+  kibana:
+    image: herold961/ucsd-kibana
+    networks:
+      - analytics
+    logging:
+      driver: json-file
+    ports:
+      - target: 5601
+        published: 5601
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: volume
+        source: kibanalog
+        target: /usr/share/elasticsearch/kibana.log
+    deploy:
+      placement:
+        constraints: [ node.role == worker ]
+      mode: replicated
+      replicas: 1
+      update_config:
+        failure_action: rollback
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [ node.role == worker ]
+    networks:
+      - analytics
+
+volumes:
+  kibanalog:
+
+networks:
+  analytics:
+    driver: overlay
+    attachable: true
+  esnet:
+    driver: overlay
+    attachable: true

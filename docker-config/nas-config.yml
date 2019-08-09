@@ -1,0 +1,13 @@
+discovery.zen.ping.unicast.hosts: 137.110.194.34,nas
+discovery.zen.ping_timeout: 5s
+discovery.zen.commit_timeout: 5s
+discovery.zen.minimum_master_nodes: 1
+node.master: true
+node.data: true
+node.ingest: false
+node.name: nas
+cluster.name: "docker-cluster"
+cluster.routing.allocation.disk.threshold_enabled: "false"
+network.host: 0.0.0.0
+network.publish_host: 137.110.193.103
+bootstrap.system_call_filter: false

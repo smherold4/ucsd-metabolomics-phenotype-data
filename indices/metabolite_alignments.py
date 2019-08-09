@@ -1,4 +1,10 @@
 index = {
+    "settings" : {
+        "index" : {
+            "number_of_shards" : 14,
+            "number_of_replicas" : 1
+        }
+    },
     "mappings": {
         "metabolite_alignment": {
             "properties": {

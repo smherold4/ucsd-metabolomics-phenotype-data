@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from elasticsearch import Elasticsearch
 import argparse, indices, os
-es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
+es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')], timeout=40)
 from scripts.elasticsearch import populate_metabolite_samples, populate_metabolite_alignments, populate_subject_phenotypes
 
 INDICES = ['metabolite_samples', 'metabolite_alignments', 'subject_phenotypes']

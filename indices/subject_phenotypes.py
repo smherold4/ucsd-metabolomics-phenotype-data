@@ -1,4 +1,10 @@
 index = {
+    "settings" : {
+        "index" : {
+            "number_of_shards" : 10,
+            "number_of_replicas" : 1
+        }
+    },
     "mappings": {
         "subject_phenotype": {
             "properties": {
