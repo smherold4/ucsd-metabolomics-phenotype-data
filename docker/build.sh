@@ -1,9 +1,9 @@
 
-docker build -f ./kibana/Dockerfile -t herold961/ucsd-kibana ./kibana
+docker build -f ./docker/kibana/Dockerfile -t herold961/ucsd-kibana ./docker/kibana
 docker push herold961/ucsd-kibana
 
-docker build -f ./nas/Dockerfile -t herold961/ucsd-nas ./nas
+docker build -f ./docker/nas/Dockerfile -t herold961/ucsd-nas ./docker/nas
 docker push herold961/ucsd-nas
 
-docker build -f ./workstation/Dockerfile -t herold961/ucsd-workstation ./workstation
+docker build -f ./docker/workstation/Dockerfile -t herold961/ucsd-workstation ./docker/workstation
 docker push herold961/ucsd-workstation
