@@ -74,10 +74,8 @@ services:
         source: kibanalog
         target: /usr/share/elasticsearch/kibana.log
     deploy:
-      placement:
-        constraints: [ node.role == worker ]
       mode: replicated
-      replicas: 1
+      replicas: 2
       update_config:
         failure_action: rollback
         parallelism: 1
