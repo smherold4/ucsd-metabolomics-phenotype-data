@@ -2,7 +2,7 @@ discovery.zen.ping.unicast.hosts: 137.110.194.34,nas
 discovery.zen.ping_timeout: 5s
 discovery.zen.commit_timeout: 5s
 discovery.zen.minimum_master_nodes: 1
-xpack.security.enabled: "true"
+# xpack.security.enabled: "true"
 node.master: true
 node.data: true
 node.ingest: false
