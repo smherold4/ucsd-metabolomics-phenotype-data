@@ -16,9 +16,10 @@ xpack.security.transport.ssl.key: /usr/share/elasticsearch/config/certificates/e
 node.master: false
 node.data: true
 node.ingest: true
-node.name: workstation
+node.name: workstation2
 cluster.name: "docker-cluster"
 cluster.routing.allocation.disk.threshold_enabled: false
 network.host: 0.0.0.0
 network.publish_host: 137.110.194.34
+transport.publish_port: 9301
 bootstrap.system_call_filter: false

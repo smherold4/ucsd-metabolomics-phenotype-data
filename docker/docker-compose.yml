@@ -17,7 +17,7 @@ services:
         protocol: tcp
         mode: host
       - target: 9300
-        published: 9300
+        published: 9301
         protocol: tcp
         mode: host
     networks:
@@ -65,6 +65,11 @@ services:
       resources:
         limits:
           memory: 8G
+    ports:
+      - target: 9300
+        published: 9301
+        protocol: tcp
+        mode: host
     networks:
       - esnet
       - analytics
