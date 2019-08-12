@@ -1,5 +1,20 @@
 version: '3.2'
 services:
+  create_certs:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.1
+    user: "0"
+    working_dir: /usr/share/elasticsearch
+    volumes:
+      - certs:/certs:rw
+      - .:/usr/share/elasticsearch/config/certificates:rw
+    command: >
+      bash -c '
+        yum install -y -q -e 0 unzip;
+        if [[ ! -f /certs/bundle.zip ]]; then
+          bin/elasticsearch-certutil cert --silent --pem --in config/certificates/instances.yml -out /certs/bundle.zip;
+          unzip /certs/bundle.zip -d /certs;
+        fi;
+        chown -R 1000:0 /certs'
   workstation:
     image: herold961/ucsd-workstation
     volumes:
