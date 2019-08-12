@@ -2,8 +2,8 @@
 docker build --no-cache -f ./docker/kibana/Dockerfile -t herold961/ucsd-kibana ./docker/kibana
 docker push herold961/ucsd-kibana
 
-docker build --no-cache -f ./docker/nas/Dockerfile -t herold961/ucsd-nas ./docker/nas
+docker build --no-cache -f ./docker/nas/Dockerfile -t herold961/ucsd-nas ./docker/nas --build-arg ELASTIC_PASSWORD=$ELASTIC_PASSWORD
 docker push herold961/ucsd-nas
 
-docker build --no-cache -f ./docker/workstation/Dockerfile -t herold961/ucsd-workstation ./docker/workstation
+docker build --no-cache -f ./docker/workstation/Dockerfile -t herold961/ucsd-workstation ./docker/workstation --build-arg ELASTIC_PASSWORD=$ELASTIC_PASSWORD
 docker push herold961/ucsd-workstation
