@@ -4,6 +4,7 @@ services:
     image: herold961/ucsd-workstation
     volumes:
       - /media/ssd1/elasticsearch:/usr/share/elasticsearch/data:rw
+      - ./certs:$CERTS_DIR
     deploy:
       endpoint_mode: dnsrr
       placement:
@@ -33,6 +34,7 @@ services:
     image: herold961/ucsd-nas
     volumes:
       - /volume1/Database/elasticsearch:/usr/share/elasticsearch/data:rw
+      - ./certs:$CERTS_DIR
     deploy:
       endpoint_mode: dnsrr
       placement:
@@ -103,6 +105,7 @@ services:
 
 volumes:
   kibanalog:
+  certs:
 
 networks:
   analytics:

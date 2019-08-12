@@ -2,9 +2,16 @@ discovery.zen.ping.unicast.hosts: 137.110.194.34,nas
 discovery.zen.ping_timeout: 5s
 discovery.zen.commit_timeout: 5s
 discovery.zen.minimum_master_nodes: 1
+
 xpack.security.enabled: true
-xpack.security.transport.ssl.enabled: true
-xpack.security.transport.ssl.verification_mode: none
+xpack.security.http.ssl.key: $CERTS_DIR/nas/nas.key
+xpack.security.http.ssl.certificate_authorities: $CERTS_DIR/ca/ca.crt
+xpack.security.http.ssl.certificate: $CERTS_DIR/nas/nas.crt
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.certificate_authorities: $CERTS_DIR/ca/ca.crt
+xpack.security.transport.ssl.certificate: $CERTS_DIR/nas/nas.crt
+xpack.security.transport.ssl.key: $CERTS_DIR/nas/nas.key
+
 node.master: true
 node.data: true
 node.ingest: false
