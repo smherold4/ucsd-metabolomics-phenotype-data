@@ -3,6 +3,11 @@ version: '3.2'
 services:
   create_certs:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.8.1
+    user: "0"
+    working_dir: /usr/share/elasticsearch
+    volumes:
+      - certs:/certs:rw
+      - .:/usr/share/elasticsearch/config/certificates:rw
     command: >
       bash -c '
         yum install -y -q -e 0 unzip;
@@ -12,6 +17,6 @@ services:
         fi;
         chown -R 1000:0 /certs
       '
-    user: "0"
-    working_dir: /usr/share/elasticsearch
-    volumes: ['./certs:/certs', '.:/usr/share/elasticsearch/config/certificates']
+
+volumes:
+  certs:
