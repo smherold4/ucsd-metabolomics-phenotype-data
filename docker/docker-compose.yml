@@ -1,18 +1,16 @@
 version: '3.2'
 services:
-  workstation:
-    image: herold961/ucsd-workstation
-    volumes:
-      - /media/ssd1/elasticsearch:/usr/share/elasticsearch/data:rw
+  coordination:
+    image: herold961/ucsd-coordination
     deploy:
       endpoint_mode: dnsrr
       placement:
-        constraints: [ node.role == manager ]
+        constraints: [ node.role == worker ]
       mode: "replicated"
       replicas: 1
       resources:
         limits:
-          memory: 32G
+          memory: 1G
     ports:
       - target: 9200
         published: 9200
@@ -27,8 +25,51 @@ services:
       - analytics
     logging:
       driver: json-file
-    ulimits:
-      nproc: 65535
+  workstation1:
+    image: herold961/ucsd-workstation
+    volumes:
+      - /media/ssd1/elasticsearch:/usr/share/elasticsearch/data:rw
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+      resources:
+        limits:
+          memory: 8G
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+      - target: 9300
+        published: 9300
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+      - analytics
+    logging:
+      driver: json-file
+  workstation2:
+    image: herold961/ucsd-workstation
+    volumes:
+      - /media/ssd2/elasticsearch:/usr/share/elasticsearch/data:rw
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+      resources:
+        limits:
+          memory: 8G
+    networks:
+      - esnet
+      - analytics
+    logging:
+      driver: json-file
   nas:
     image: herold961/ucsd-nas
     volumes:
@@ -56,8 +97,6 @@ services:
       - analytics
     logging:
       driver: json-file
-    ulimits:
-      nproc: 65535
   kibana:
     image: herold961/ucsd-kibana
     networks:

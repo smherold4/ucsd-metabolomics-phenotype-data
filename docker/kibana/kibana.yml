@@ -1,5 +1,5 @@
 server.name: kibana
 server.host: "0"
-elasticsearch.hosts: [ "http://137.110.194.34:9200", "http://137.110.193.103:9200" ]
+elasticsearch.hosts: [ "http://coordination:9200" ]
 elasticsearch.username: "elastic"
 elasticsearch.password: "5f77a754-9d29-41d5-b146-89e0993deced"
