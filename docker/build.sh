@@ -13,5 +13,8 @@ docker push herold961/ucsd-coordination
 docker build --no-cache -f ./docker/nas/Dockerfile -t herold961/ucsd-nas ./docker/nas --build-arg ELASTIC_PASSWORD=$ELASTIC_PASSWORD
 docker push herold961/ucsd-nas
 
-docker build --no-cache -f ./docker/workstation/Dockerfile -t herold961/ucsd-workstation ./docker/workstation --build-arg ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-docker push herold961/ucsd-workstation
+docker build --no-cache -f ./docker/workstation1/Dockerfile -t herold961/ucsd-workstation1 ./docker/workstation1 --build-arg ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+docker push herold961/ucsd-workstation1
+
+docker build --no-cache -f ./docker/workstation2/Dockerfile -t herold961/ucsd-workstation2 ./docker/workstation2 --build-arg ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+docker push herold961/ucsd-workstation2

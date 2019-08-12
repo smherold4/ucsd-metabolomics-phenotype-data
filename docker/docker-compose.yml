@@ -26,7 +26,7 @@ services:
     logging:
       driver: json-file
   workstation1:
-    image: herold961/ucsd-workstation
+    image: herold961/ucsd-workstation1
     volumes:
       - /media/ssd1/elasticsearch:/usr/share/elasticsearch/data:rw
     deploy:
@@ -53,7 +53,7 @@ services:
     logging:
       driver: json-file
   workstation2:
-    image: herold961/ucsd-workstation
+    image: herold961/ucsd-workstation2
     volumes:
       - /media/ssd2/elasticsearch:/usr/share/elasticsearch/data:rw
     deploy:
