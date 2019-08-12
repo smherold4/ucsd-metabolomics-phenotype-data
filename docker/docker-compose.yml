@@ -105,7 +105,6 @@ services:
 
 volumes:
   kibanalog:
-  certs:
 
 networks:
   analytics:
