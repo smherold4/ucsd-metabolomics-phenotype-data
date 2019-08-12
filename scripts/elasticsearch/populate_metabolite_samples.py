@@ -20,7 +20,7 @@ def run(args):
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
-    line_count = 0
+    line_count = args.starting_entity_id or 0
 
     last_queried_id = 0
     while last_queried_id is not None:
