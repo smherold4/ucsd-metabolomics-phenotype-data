@@ -3,6 +3,4 @@ ARG ELASTIC_PASSWORD
 ADD ./elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
 USER root
 RUN chown elasticsearch:elasticsearch config/elasticsearch.yml
-RUN echo "Setting password as ${ELASTIC_PASSWORD}"
-ENV ELASTIC_PASSWORD=$ELASTIC_PASSWORD
 USER elasticsearch
