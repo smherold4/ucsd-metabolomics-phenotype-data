@@ -89,10 +89,6 @@ services:
         limits:
           memory: 2G
     ports:
-      - target: 9200
-        published: 9200
-        protocol: tcp
-        mode: host
       - target: 9300
         published: 9300
         protocol: tcp
