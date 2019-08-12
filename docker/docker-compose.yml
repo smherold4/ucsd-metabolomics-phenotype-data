@@ -12,7 +12,7 @@ services:
       replicas: 1
       resources:
         limits:
-          memory: 16G
+          memory: 32G
     ports:
       - target: 9200
         published: 9200

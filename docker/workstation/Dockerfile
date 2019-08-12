@@ -3,5 +3,5 @@ ADD ./elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
 USER root
 RUN chown elasticsearch:elasticsearch config/elasticsearch.yml
 RUN chown -R elasticsearch:elasticsearch data
-ENV ES_JAVA_OPTS="-Xms4g -Xmx4g"
+ENV ES_JAVA_OPTS="-Xms16g -Xmx16g"
 USER elasticsearch
