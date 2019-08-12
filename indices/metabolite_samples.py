@@ -1,7 +1,7 @@
 index = {
     "settings" : {
         "index" : {
-            "number_of_shards" : 38,
+            "number_of_shards" : 12,
             "number_of_replicas" : 1
         }
     },
