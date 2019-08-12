@@ -2,13 +2,12 @@ discovery.zen.ping.unicast.hosts: workstation,137.110.193.103
 discovery.zen.ping_timeout: 5s
 discovery.zen.commit_timeout: 5s
 discovery.zen.minimum_master_nodes: 1
-# xpack.security.enabled: "true"
 node.master: false
 node.data: true
 node.ingest: true
 node.name: workstation
 cluster.name: "docker-cluster"
-cluster.routing.allocation.disk.threshold_enabled: "false"
+cluster.routing.allocation.disk.threshold_enabled: false
 network.host: 0.0.0.0
 network.publish_host: 137.110.194.34
 bootstrap.system_call_filter: false
