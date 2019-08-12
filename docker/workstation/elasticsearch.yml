@@ -4,13 +4,13 @@ discovery.zen.commit_timeout: 5s
 discovery.zen.minimum_master_nodes: 1
 
 xpack.security.enabled: true
-xpack.security.http.ssl.key: $CERTS_DIR/workstation/workstation.key
-xpack.security.http.ssl.certificate_authorities: $CERTS_DIR/ca/ca.crt
-xpack.security.http.ssl.certificate: $CERTS_DIR/workstation/workstation.crt
+xpack.security.http.ssl.key: /usr/share/elasticsearch/config/certificates/workstation/workstation.key
+xpack.security.http.ssl.certificate_authorities: /usr/share/elasticsearch/config/certificates/ca/ca.crt
+xpack.security.http.ssl.certificate: /usr/share/elasticsearch/config/certificates/workstation/workstation.crt
 xpack.security.transport.ssl.verification_mode: certificate
-xpack.security.transport.ssl.certificate_authorities: $CERTS_DIR/ca/ca.crt
-xpack.security.transport.ssl.certificate: $CERTS_DIR/workstation/workstation.crt
-xpack.security.transport.ssl.key: $CERTS_DIR/workstation/workstation.key
+xpack.security.transport.ssl.certificate_authorities: /usr/share/elasticsearch/config/certificates/ca/ca.crt
+xpack.security.transport.ssl.certificate: /usr/share/elasticsearch/config/certificates/workstation/workstation.crt
+xpack.security.transport.ssl.key: /usr/share/elasticsearch/config/certificates/workstation/workstation.key
 
 node.master: false
 node.data: true
