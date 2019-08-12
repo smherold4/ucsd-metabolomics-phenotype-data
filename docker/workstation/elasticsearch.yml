@@ -4,6 +4,7 @@ discovery.zen.commit_timeout: 5s
 discovery.zen.minimum_master_nodes: 1
 
 xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
 xpack.security.http.ssl.key: /usr/share/elasticsearch/config/certificates/es.key
 xpack.security.http.ssl.certificate_authorities: /usr/share/elasticsearch/config/certificates/ca.crt
 xpack.security.http.ssl.certificate: /usr/share/elasticsearch/config/certificates/es.crt
