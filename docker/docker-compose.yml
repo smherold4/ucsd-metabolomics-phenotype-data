@@ -61,13 +61,6 @@ services:
       - nas
     volumes:
       - /media/ssd2/elasticsearch:/usr/share/elasticsearch/data:rw
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
     deploy:
       endpoint_mode: dnsrr
       placement:
@@ -88,13 +81,6 @@ services:
     image: herold961/ucsd-nas
     volumes:
       - /volume1/Database/elasticsearch:/usr/share/elasticsearch/data:rw
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
     deploy:
       endpoint_mode: dnsrr
       placement:
