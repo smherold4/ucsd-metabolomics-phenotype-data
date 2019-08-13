@@ -2,12 +2,10 @@ version: '3.2'
 services:
   coordination:
     image: herold961/ucsd-coordination
-    healthcheck:
-      test: curl -fs http://nas:9200/_cat/health || exit 1
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 100s
+    depends_on:
+      - nas
+      - workstation1
+      - workstation2
     deploy:
       endpoint_mode: dnsrr
       placement:
