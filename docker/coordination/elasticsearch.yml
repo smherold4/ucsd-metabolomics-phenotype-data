@@ -1,7 +1,7 @@
 discovery.zen.ping.unicast.hosts: nas
 discovery.zen.ping_timeout: 5s
 discovery.zen.commit_timeout: 5s
-discovery.zen.minimum_master_nodes: 1
+discovery.zen.minimum_master_nodes: 2
 
 xpack.security.enabled: true
 xpack.security.transport.ssl.enabled: true
