@@ -52,7 +52,7 @@ def run(args):
         {
           "_index": INDEX_NAME,
           "_type": DOC_TYPE,
-          "_id": cohort.name + "_" + str(mmt.id), # careful when changing this
+        #   "_id": cohort.name + "_" + str(mmt.id), # faster not to do this.  Use _delete_by_query when mistakes are made
           "_source": {
               "cohort": cohort.name,
               "local_ID": mmt.local_compound_id,
