@@ -4,6 +4,7 @@ RUN echo "Setting password as $ELASTIC_PASSWORD"
 ENV ELASTIC_PASSWORD=$ELASTIC_PASSWORD
 
 ADD ./elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
+ADD ./jvm.options /usr/share/elasticsearch/config/jvm.options
 
 RUN mkdir -p /usr/share/elasticsearch/config/certificates
 ADD ./ca.crt /usr/share/elasticsearch/config/certificates/ca.crt
@@ -13,5 +14,4 @@ ADD ./es.key /usr/share/elasticsearch/config/certificates/es.key
 USER root
 RUN chown elasticsearch:elasticsearch config/elasticsearch.yml
 RUN chown -R elasticsearch:elasticsearch data
-ENV ES_JAVA_OPTS="-Xms16g -Xmx16g"
 USER elasticsearch
