@@ -35,9 +35,6 @@ services:
         constraints: [ node.role == manager ]
       mode: "replicated"
       replicas: 1
-      resources:
-        limits:
-          memory: 8G
     ports:
       - target: 9200
         published: 9200
@@ -62,9 +59,6 @@ services:
         constraints: [ node.role == manager ]
       mode: "replicated"
       replicas: 1
-      resources:
-        limits:
-          memory: 8G
     ports:
       - target: 9300
         published: 9301
@@ -85,9 +79,6 @@ services:
         constraints: [ node.role == worker ]
       mode: "replicated"
       replicas: 1
-      resources:
-        limits:
-          memory: 2G
     ports:
       - target: 9300
         published: 9300

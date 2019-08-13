@@ -13,5 +13,5 @@ ADD ./es.key /usr/share/elasticsearch/config/certificates/es.key
 USER root
 RUN chown elasticsearch:elasticsearch config/elasticsearch.yml
 RUN chown -R elasticsearch:elasticsearch data
-ENV ES_JAVA_OPTS="-Xms2g -Xmx2g"
+ENV ES_JAVA_OPTS="-Xms4g -Xmx4g"
 USER elasticsearch
