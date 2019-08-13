@@ -1,34 +1,5 @@
 version: '3.2'
 services:
-  coordination:
-    image: herold961/ucsd-coordination
-    depends_on:
-      - nas
-      - workstation1
-      - workstation2
-    deploy:
-      endpoint_mode: dnsrr
-      placement:
-        constraints: [ node.role == worker ]
-      mode: "replicated"
-      replicas: 1
-      resources:
-        limits:
-          memory: 1G
-    ports:
-      - target: 9200
-        published: 9200
-        protocol: tcp
-        mode: host
-      - target: 9300
-        published: 9301
-        protocol: tcp
-        mode: host
-    networks:
-      - esnet
-      - analytics
-    logging:
-      driver: json-file
   workstation1:
     image: herold961/ucsd-workstation1
     depends_on:
@@ -88,6 +59,10 @@ services:
       mode: "replicated"
       replicas: 1
     ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
       - target: 9300
         published: 9300
         protocol: tcp
@@ -99,8 +74,6 @@ services:
       driver: json-file
   kibana:
     image: herold961/ucsd-kibana
-    depends_on:
-      - coordination
     networks:
       - analytics
     logging:
