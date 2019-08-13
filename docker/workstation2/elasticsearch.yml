@@ -23,4 +23,3 @@ network.host: 0.0.0.0
 network.publish_host: 137.110.194.34
 transport.publish_port: 9301
 bootstrap.system_call_filter: false
-bootstrap.memory_lock: true
