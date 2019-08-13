@@ -1,7 +1,7 @@
 discovery.zen.ping.unicast.hosts: 137.110.193.103
 discovery.zen.ping_timeout: 5s
 discovery.zen.commit_timeout: 5s
-discovery.zen.minimum_master_nodes: 2
+discovery.zen.minimum_master_nodes: 1
 
 xpack.security.enabled: true
 xpack.security.transport.ssl.enabled: true
@@ -13,7 +13,7 @@ xpack.security.transport.ssl.certificate_authorities: /usr/share/elasticsearch/c
 xpack.security.transport.ssl.certificate: /usr/share/elasticsearch/config/certificates/es.crt
 xpack.security.transport.ssl.key: /usr/share/elasticsearch/config/certificates/es.key
 
-node.master: true
+node.master: false
 node.data: true
 node.ingest: true
 node.name: workstation1
