@@ -2,6 +2,10 @@ version: '3.2'
 services:
   coordination:
     image: herold961/ucsd-coordination
+    depends_on:
+      - nas
+      - workstation1
+      - workstation2
     deploy:
       endpoint_mode: dnsrr
       placement:
@@ -27,6 +31,8 @@ services:
       driver: json-file
   workstation1:
     image: herold961/ucsd-workstation1
+    depends_on:
+      - nas
     volumes:
       - /media/ssd1/elasticsearch:/usr/share/elasticsearch/data:rw
     deploy:
@@ -51,6 +57,8 @@ services:
       driver: json-file
   workstation2:
     image: herold961/ucsd-workstation2
+    depends_on:
+      - nas
     volumes:
       - /media/ssd2/elasticsearch:/usr/share/elasticsearch/data:rw
     deploy:
@@ -91,6 +99,8 @@ services:
       driver: json-file
   kibana:
     image: herold961/ucsd-kibana
+    depends_on:
+      - coordination
     networks:
       - analytics
     logging:
