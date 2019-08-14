@@ -1,9 +1,24 @@
 version: '3.2'
 services:
+  jupyter:
+    image: herold961/ucsd-jupyter
+    volumes:
+      - /volume1/Database/jupyter:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 8888
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == worker ]
+      mode: "replicated"
+      replicas: 1
   workstation1:
     image: herold961/ucsd-workstation1
-    depends_on:
-      - nas
     volumes:
       - /media/ssd1/elasticsearch:/usr/share/elasticsearch/data:rw
     deploy:
@@ -28,8 +43,6 @@ services:
       driver: json-file
   workstation2:
     image: herold961/ucsd-workstation2
-    depends_on:
-      - nas
     volumes:
       - /media/ssd2/elasticsearch:/usr/share/elasticsearch/data:rw
     deploy:

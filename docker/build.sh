@@ -15,3 +15,6 @@ docker push herold961/ucsd-workstation1
 
 docker build --no-cache -f ./docker/workstation2/Dockerfile -t herold961/ucsd-workstation2 ./docker/workstation2 --build-arg ELASTIC_PASSWORD=$ELASTIC_PASSWORD
 docker push herold961/ucsd-workstation2
+
+docker build --no-cache -f ./docker/jupyter/Dockerfile -t herold961/ucsd-jupyter ./docker/jupyter
+docker push herold961/ucsd-jupyter
