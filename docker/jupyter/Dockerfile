@@ -4,5 +4,5 @@ ENV GRANT_SUDO=yes
 ENV RESTARTABLE=yes
 ADD ./startup.sh /usr/local/bin/before-notebook.d/
 USER root
-RUN chown -R jovyan:jovyan /usr/local/bin/before-notebook.d/
+RUN chown -R jovyan /usr/local/bin/before-notebook.d/
 USER jovyan
