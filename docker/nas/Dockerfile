@@ -1,6 +1,5 @@
 FROM docker.elastic.co/elasticsearch/elasticsearch:6.8.1
 ARG ELASTIC_PASSWORD
-RUN echo "Setting password as $ELASTIC_PASSWORD"
 ENV ELASTIC_PASSWORD=$ELASTIC_PASSWORD
 
 ADD ./elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
