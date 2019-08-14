@@ -1,6 +1,8 @@
 
+source .env
+
 if [ -z "$ELASTIC_PASSWORD" ] ; then
-  echo "Env variable ELASTIC_PASSWORD required" 1>&2
+  echo "Add environment variable ELASTIC_PASSWORD='{password}' to .env file in current directory" 1>&2
   exit 64
 fi
 
