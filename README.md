@@ -22,6 +22,8 @@ INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS_BAL');
 ```
 
 ### Importing raw cohort measurements by plate_well
+
+FINRISK
 ```
 python main_sql.py \
   --mode raw_ingestion \
@@ -31,6 +33,7 @@ python main_sql.py \
   --verbose
 ```
 
+FHS
 ```
 python main_sql.py  \
   --mode raw_ingestion  \
@@ -38,6 +41,11 @@ python main_sql.py  \
   --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/FHS/ProcessedDataRawDeadducted.csv \
   --units raw  \
   --verbose
+```
+
+MESA
+```
+python main_sql.py --mode raw_ingestion  --measurement-tablename mesa_measurement --cohort-name MESA --units raw --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA/ProcessedDataRawDeadducted_relabelled.csv --verbose
 ```
 
 ### Mapping Keys (Sample Barcodes, Plate Wells, SubjectID, etc)
