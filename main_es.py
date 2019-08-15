@@ -54,18 +54,6 @@ def get_command_line_args():
         action='store_true',
         default=False,
         help="Show status outputs to monitor progress of script")
-    parser.add_argument(
-        '--alignment-cohort-name',
-        type=str,
-        help="Specify cohort name of cohort to which we're doing alignment")
-    parser.add_argument(
-        '--alignment-file',
-        type=str,
-        help="Path to file used for cohort alignment")
-    parser.add_argument(
-        '--alignment-cohort-col',
-        type=str,
-        help="Column (A or B) of alignment cohort in alignment file.  If B, then this cohort is assumed to be in column A")
     return parser.parse_args()
 
 

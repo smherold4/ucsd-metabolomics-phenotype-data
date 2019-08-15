@@ -4,6 +4,7 @@ from elasticsearch import Elasticsearch, helpers
 from db import db_connection
 from models import *
 from sqlalchemy.orm import joinedload
+from scripts.elasticsearch import alignment_file_params
 import sys
 import os
 import re
@@ -15,26 +16,34 @@ DOC_TYPE = 'metabolite_alignment'
 DEFAULT_BATCH_SIZE = 40000
 
 
-def build_alignment_dict(args):
-    this_cohort_col, alignment_cohort_col = (None, None)
-    if args.alignment_cohort_col == 'A':
-        this_cohort_col, alignment_cohort_col = (1, 0)
-    elif args.alignment_cohort_col == 'B':
-        this_cohort_col, alignment_cohort_col = (0, 1)
-
-    assert args.alignment_file, "Must provide an alignment CSV with --alignment-file"
+def build_alignment_dict(args, alignment_params, cohort, session):
     alignments = {}
-    with open(args.alignment_file) as csvfile:
-        line_count = 0
-        csv_reader = csv.reader(csvfile, delimiter=',')
-        for row in csv_reader:
-            line_count += 1
-            if line_count == 1 or not row[this_cohort_col] or not row[alignment_cohort_col]:
-                continue
-            elif alignments.get(row[this_cohort_col]):
-                alignments[row[this_cohort_col]].append(row[alignment_cohort_col])
-            else:
-                alignments[row[this_cohort_col]] = [row[alignment_cohort_col]]
+    for alignment_file in alignment_params:
+        alignment_cohort = session.query(Cohort).filter(Cohort.name == alignment_file['cohort_name']).first()
+        assert alignment_cohort is not None, "Could not find alignment cohort for {}".format(alignment_file)
+        assert cohort != alignment_cohort, "Alignment cohort must be different from cohort for {}".format(alignment_file)
+        this_cohort_col, alignment_cohort_col = (None, None)
+        if alignment_file['cohort_column'] == 'A':
+            this_cohort_col, alignment_cohort_col = (1, 0)
+        elif alignment_file['cohort_column'] == 'B':
+            this_cohort_col, alignment_cohort_col = (0, 1)
+        else:
+            raise Exception("Invalid cohort_column (should be A or B) for {}".format(alignment_file))
+        with open(alignment_file['path']) as csvfile:
+            line_count = 0
+            csv_reader = csv.reader(csvfile, delimiter=',')
+            for row in csv_reader:
+                line_count += 1
+                if line_count == 1 or not row[this_cohort_col] or not row[alignment_cohort_col]:
+                    continue
+                entry = {
+                    "local_ID": row[alignment_cohort_col],
+                    "cohort": alignment_cohort.name,
+                }
+                if alignments.get(row[this_cohort_col]):
+                    alignments[row[this_cohort_col]].append(entry)
+                else:
+                    alignments[row[this_cohort_col]] = [entry]
     return alignments
 
 
@@ -44,14 +53,9 @@ def run(args):
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
     Measurement.configure_tablename(cohort)
-    alignments = {}
-    alignment_cohort = None
-    if True:  # I believe all cohorts will be aligned with others
-        assert args.alignment_cohort_col in ('A', 'B'), "--alignment-cohort-col must be specified (column A or B)"
-        alignment_cohort = session.query(Cohort).filter(Cohort.name == args.alignment_cohort_name).first()
-        assert alignment_cohort is not None, "Could not find alignment cohort (--alignment-cohort-name) '{}'".format(args.alignment_cohort_name)
-        assert cohort != alignment_cohort, "Alignment cohort must be different from cohort"
-        alignments = build_alignment_dict(args)
+    alignment_params = getattr(alignment_file_params, cohort.name).files
+    alignments = build_alignment_dict(args, alignment_params, cohort, session)
+
 
     last_queried_id = args.starting_entity_id or 0
     while last_queried_id is not None:
@@ -76,11 +80,7 @@ def run(args):
                     "ML_score": metabolite.ml_score,
                     "MZ": metabolite.mz,
                     "RT": metabolite.rt,
-                    "alignment": [
-                        {'cohort': alignment_cohort.name, 'local_ID': local_ID}
-                        for local_ID
-                        in (alignments.get(metabolite.local_compound_id) or [])
-                    ]
+                    "alignment": (alignments.get(metabolite.local_compound_id) or []),
                 }
             }
             for metabolite in metabolites
