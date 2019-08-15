@@ -43,6 +43,7 @@ def run(args):
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
+    Measurement.configure_tablename(cohort)
     alignments = {}
     alignment_cohort = None
     if True:  # I believe all cohorts will be aligned with others

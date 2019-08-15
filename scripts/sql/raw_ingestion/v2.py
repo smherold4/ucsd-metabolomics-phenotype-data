@@ -52,8 +52,9 @@ def run(args):
     Measurement.__tablename__ == args.measurement_tablename
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
-    assert cohort is not None, "Could not find cohort with name '{}'".format(
-        args.cohort_name)
+    assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
+    Measurement.configure_tablename(cohort)
+
     assert args.units in Dataset.UNITS, 'Invalid units provided. Must be one of: {}'.format(Dataset.UNITS)
     dataset = Dataset(cohort, args.units)
     session.add(dataset)

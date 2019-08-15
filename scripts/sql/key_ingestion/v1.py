@@ -27,8 +27,8 @@ def find_or_create_subject(session, cohort, local_subject_id):
 def run(args):
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
-    assert cohort is not None, "Could not find cohort with name '{}'".format(
-        args.cohort_name)
+    assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
+    Measurement.configure_tablename(cohort)
 
     line_count = 0
     for df in pd.read_csv(args.file, chunksize=CSV_CHUNKSIZE):

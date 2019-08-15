@@ -31,3 +31,12 @@ class Measurement(base.Base):
         self.dataset_id = dataset.id
         self.cohort_compound_id = cohort_compound.id
         self.measurement = measurement
+
+    @classmethod
+    def configure_tablename(cls, cohort):
+        if cohort.name in ["FHS", "FINRISK"]:
+            cls.__tablename__ = "fhs_finrisk_measurement"
+        elif cohort.name == "MESA":
+            cls.__tablename__ = "mesa_measurement"
+        else:
+            raise Exception('Could not find measurement table for cohort')
