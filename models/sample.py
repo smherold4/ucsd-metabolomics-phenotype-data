@@ -30,11 +30,6 @@ class Sample(base.Base):
             "cohort_id",
             "cohort_sample_id",
             name="ix_sample_uniq_cohort_cohort_sample_id"),
-        # this constraint might be wrong or unnecessary, but i need it while the raw files only have plate_well
-        UniqueConstraint(
-            "cohort_id",
-            "plate_well",
-            name="ix_sample_uniq_cohort_plate_well"),
         CheckConstraint('(cohort_sample_id is not null or plate_well is not null)', name='constraint_sample_identifier')
     )
 

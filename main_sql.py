@@ -2,10 +2,15 @@ from dotenv import load_dotenv
 load_dotenv()
 import argparse
 from models import Cohort, Dataset
-from scripts.sql import raw_ingestion, sample_key_ingestion
+from scripts.sql import raw_ingestion, key_ingestion
 
-MODES = ['raw_ingestion', 'sample_key_ingestion']
+MODES = ['raw_ingestion', 'key_ingestion']
 
+def get_version(clargs):
+    if clargs.cohort_name in ['FHS', 'FINRISK']:
+        return 'v1'
+    else:
+        return 'v2'
 
 def get_command_line_args():
     parser = argparse.ArgumentParser(description='Move CSV data into Postgres')
@@ -48,9 +53,10 @@ def get_command_line_args():
 
 if __name__ == '__main__':
     clargs = get_command_line_args()
+    version = get_version(clargs)
     if clargs.mode == 'raw_ingestion':
-        raw_ingestion.v2.run(clargs)
-    elif clargs.mode == 'sample_key_ingestion':
-        sample_key_ingestion.run(clargs)
+        getattr(raw_ingestion, version).run(clargs)
+    elif clargs.mode == 'key_ingestion':
+        getattr(key_ingestion, version).run(clargs)
     else:
         raise Exception('Unknown --mode {}'.format(clargs.mode))
