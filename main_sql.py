@@ -2,10 +2,9 @@ from dotenv import load_dotenv
 load_dotenv()
 import argparse
 from models import Cohort, Dataset
-from scripts.sql import raw_ingestion, description_ingestion, measurements_ingestion, sample_key_ingestion
+from scripts.sql import raw_ingestion, sample_key_ingestion
 
-
-MODES = ['raw_ingestion', 'description_ingestion', 'sample_key_ingestion', 'measurements_ingestion']
+MODES = ['raw_ingestion', 'sample_key_ingestion']
 
 
 def get_command_line_args():
@@ -33,8 +32,11 @@ def get_command_line_args():
     parser.add_argument(
         '--cohort-name',
         type=str,
-        required=True,
-        help="Name of cohort - when ingesting description")
+        required=True)
+    parser.add_argument(
+        '--measurement-tablename',
+        type=str,
+        help="Name of sql table for measurememnts specific to cohort.  Required when doing raw ingestion")
     parser.add_argument(
         '--verbose',
         action='store_true',
@@ -47,12 +49,8 @@ def get_command_line_args():
 if __name__ == '__main__':
     clargs = get_command_line_args()
     if clargs.mode == 'raw_ingestion':
-        raw_ingestion.run(clargs)
-    elif clargs.mode == 'description_ingestion':
-        description_ingestion.run(clargs)
+        raw_ingestion.v2.run(clargs)
     elif clargs.mode == 'sample_key_ingestion':
         sample_key_ingestion.run(clargs)
-    elif clargs.mode == 'measurements_ingestion':
-        measurements_ingestion.run(clargs)
     else:
         raise Exception('Unknown --mode {}'.format(clargs.mode))

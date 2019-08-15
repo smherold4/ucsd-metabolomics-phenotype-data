@@ -3,7 +3,7 @@
 import datetime
 from db import base
 from sqlalchemy.orm import validates, relationship
-from sqlalchemy import Column, String, Date, Integer, Numeric, Index, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, String, Text, Date, Integer, Numeric, Index, DateTime, ForeignKey, UniqueConstraint
 
 
 class CohortCompound(base.Base):
@@ -13,6 +13,7 @@ class CohortCompound(base.Base):
         Integer,
         ForeignKey('cohort.id', ondelete='CASCADE'), nullable=False, index=True)
     local_compound_id = Column(String, nullable=False)
+    compound_name = Column(Text, nullable=True)
     mz = Column(Numeric(precision=20, scale=12), index=True, nullable=False)
     rt = Column(Numeric(precision=16, scale=10), index=True, nullable=False)
     cross_variation = Column(Numeric(precision=12, scale=6), index=True)

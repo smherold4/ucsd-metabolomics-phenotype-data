@@ -6,7 +6,7 @@ import re
 
 CSV_CHUNKSIZE = 8000
 COLUMN_OF_FIRST_MEASUREMENT = 14
-PLATE_WELL_REGEX = r'\_Plate\_(\d+\_\d+)\_'
+SAMP_ID_REGEX = r'SampID\_+([A-Za-z0-9\-]+)'
 
 
 def find_or_create_cohort_compound(session, series, cohort, calculate_median):
@@ -30,28 +30,17 @@ def find_or_create_cohort_compound(session, series, cohort, calculate_median):
     return cohort_compound
 
 
-def extract_plate_well(string):
-    re_match = re.search(PLATE_WELL_REGEX, string)
+def extract_cohort_sample_id(string):
+    re_match = re.search(SAMP_ID_REGEX, string)
     if re_match:
         return re_match.group(1)
 
 
-# def find_or_create_subject(session, cohort, local_subject_id):
-#     subject = session.query(Subject).filter(
-#         Subject.cohort == cohort,
-#         Subject.local_subject_id == local_subject_id
-#     ).first() or Subject(cohort, local_subject_id)
-#     if not subject.id:
-#         session.add(subject)
-#         session.commit()
-#     return subject
-
-
-def find_or_create_sample(session, cohort, plate_well):
+def find_or_create_sample(session, cohort, cohort_sample_id):
     sample = session.query(Sample).filter(
         Sample.cohort == cohort,
-        Sample.plate_well == plate_well,
-    ).first() or Sample(cohort.id, None, None, None, plate_well)
+        Sample.cohort_sample_id == cohort_sample_id,
+    ).first() or Sample(cohort.id, None, cohort_sample_id, None, None)
     if not sample.id:
         session.add(sample)
         session.commit()
@@ -59,6 +48,8 @@ def find_or_create_sample(session, cohort, plate_well):
 
 
 def run(args):
+    assert args.measurement_tablename is not None, "Missing --measurement-tablename"
+    Measurement.__tablename__ == args.measurement_tablename
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(
@@ -72,23 +63,23 @@ def run(args):
     for df in pd.read_csv(args.file, chunksize=(args.csv_chunksize or CSV_CHUNKSIZE)):
         sample_id_labels = df.columns[COLUMN_OF_FIRST_MEASUREMENT:]
         for _, row in df.iterrows():
-            sql = "INSERT INTO measurement (sample_id, cohort_compound_id, dataset_id, measurement) VALUES "
+            sql = "INSERT INTO mesa_measurement (sample_id, cohort_compound_id, dataset_id, measurement) VALUES "
             values = []
             row_count += 1
             cohort_compound = find_or_create_cohort_compound(session, row, cohort, args.units == 'raw')
             if not cohort_compound:
                 continue
             for sample_id_label in sample_id_labels:
-                plate_well = extract_plate_well(sample_id_label)
-                if not plate_well:
+                cohort_sample_id = extract_cohort_sample_id(sample_id_label)
+                if not cohort_sample_id:
                     continue
-                sample_id = sample_ids_cache.get(plate_well) or find_or_create_sample(session, cohort, plate_well).id
-                sample_ids_cache[plate_well] = sample_id
+                sample_id = sample_ids_cache.get(cohort_sample_id) or find_or_create_sample(session, cohort, cohort_sample_id).id
+                sample_ids_cache[cohort_sample_id] = sample_id
 
                 if not pd.isnull(row[sample_id_label]):
                     values.append("({}, {}, {}, {})".format(sample_id, cohort_compound.id, dataset.id, row[sample_id_label]))
             if args.verbose:
-                print "Inserting {} measurements for metabolite {}.  Row count is {}".format(len(values), cohort_compound.local_compound_id, row_count)
+                print "Inserting {} mesa measurements for metabolite {}.  Row count is {}".format(len(values), cohort_compound.local_compound_id, row_count)
             if len(values):
                 sql += ",".join(values)
                 session.execute(sql)
