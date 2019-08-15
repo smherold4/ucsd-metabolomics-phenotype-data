@@ -21,7 +21,7 @@ INSERT INTO cohort (name, method) VALUES ('FINRISK', 'LCMS_BAL');
 INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS_BAL');
 ```
 
-### Importing raw cohort measurements by plate_well
+### Importing Raw Files
 
 FINRISK
 ```
