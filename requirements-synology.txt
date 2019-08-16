@@ -12,6 +12,7 @@ mccabe==0.6.1
 netifaces==0.10.4
 numpy==1.16.4
 pandas==0.24.2
+pandasticsearch==0.5.3
 pipenv==2018.11.26
 psycopg2-binary==2.8.3
 pycurl==7.19.5.1
