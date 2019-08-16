@@ -52,7 +52,7 @@ def run(args):
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
-    Measurement.configure_tablename(cohort)
+    Measurement = measurement_class_factory(cohort)
     alignment_params = getattr(alignment_file_params, cohort.name).files
     alignments = build_alignment_dict(args, alignment_params, cohort, session)
 

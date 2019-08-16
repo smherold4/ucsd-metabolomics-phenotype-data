@@ -46,7 +46,6 @@ def run(args):
   session = db_connection.session_factory()
   cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
   assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
-  Measurement.configure_tablename(cohort)
   assert args.phenotype_file is not None, "Must specify --phenotype-file path for phenotype data"
   assert args.subject_id_label is not None, "Must specify --subject-id-label"
   line_count = 0

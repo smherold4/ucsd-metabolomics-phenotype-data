@@ -39,10 +39,6 @@ def get_command_line_args():
         type=str,
         required=True)
     parser.add_argument(
-        '--measurement-tablename',
-        type=str,
-        help="Name of sql table for measurememnts specific to cohort.  Required when doing raw ingestion")
-    parser.add_argument(
         '--verbose',
         action='store_true',
         default=False,

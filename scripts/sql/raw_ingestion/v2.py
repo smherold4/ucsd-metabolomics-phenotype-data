@@ -48,12 +48,10 @@ def find_or_create_sample(session, cohort, cohort_sample_id):
 
 
 def run(args):
-    assert args.measurement_tablename is not None, "Missing --measurement-tablename"
-    Measurement.__tablename__ == args.measurement_tablename
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
-    Measurement.configure_tablename(cohort)
+    Measurement = measurement_class_factory(cohort)
 
     assert args.units in Dataset.UNITS, 'Invalid units provided. Must be one of: {}'.format(Dataset.UNITS)
     dataset = Dataset(cohort, args.units)
@@ -64,7 +62,7 @@ def run(args):
     for df in pd.read_csv(args.file, chunksize=(args.csv_chunksize or CSV_CHUNKSIZE)):
         sample_id_labels = df.columns[COLUMN_OF_FIRST_MEASUREMENT:]
         for _, row in df.iterrows():
-            sql = "INSERT INTO mesa_measurement (sample_id, cohort_compound_id, dataset_id, measurement) VALUES "
+            sql = "INSERT INTO {} (sample_id, cohort_compound_id, dataset_id, measurement) VALUES ".format(Measurement.__tablename__)
             values = []
             row_count += 1
             cohort_compound = find_or_create_cohort_compound(session, row, cohort, args.units == 'raw')
@@ -80,7 +78,7 @@ def run(args):
                 if not pd.isnull(row[sample_id_label]):
                     values.append("({}, {}, {}, {})".format(sample_id, cohort_compound.id, dataset.id, row[sample_id_label]))
             if args.verbose:
-                print "Inserting {} mesa measurements for metabolite {}.  Row count is {}".format(len(values), cohort_compound.local_compound_id, row_count)
+                print "Inserting {} records into {} for metabolite {}.  Row count is {}".format(len(values), Measurement.__tablename__, cohort_compound.local_compound_id, row_count)
             if len(values):
                 sql += ",".join(values)
                 session.execute(sql)
