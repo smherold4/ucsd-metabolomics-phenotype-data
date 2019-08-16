@@ -4,10 +4,9 @@ from elasticsearch import Elasticsearch, helpers
 from db import db_connection
 from models import *
 from sqlalchemy.orm import joinedload
-import sys
-import os
-import re
-import csv
+import sys, os, re, csv
+import pandas as pd
+from pandasticsearch import Select
 
 COLUMNS = {
   'variable_name': 0,
@@ -35,8 +34,42 @@ def run(args):
               continue
             variable_name = row[COLUMNS['variable_name']]
             description = row[COLUMNS['description']]
-            es
-            import pdb; pdb.set_trace()
-            es.index(index="test-index", doc_type='tweet', id=1, body=doc)
-            # get the datatype for this phenotype
-            # insert the doc
+            if pd.isnull(variable_name):
+              continue
+            doc_id = "{}_{}".format(cohort.name, variable_name) # careful when changing this
+            datatype = get_datatype_for_phenotype(variable_name, cohort)
+            es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body={
+                "cohort": cohort.name,
+                "datatype": datatype,
+                "description": description,
+                "variable_name": variable_name,
+            })
+            if args.verbose:
+                print "Indexed {}".format(variable_name)
+
+
+def get_datatype_for_phenotype(variable_name, cohort):
+    query = {
+        "bool": {
+            "must": [
+                {
+                  "term": {
+                    "cohort": cohort.name
+                  }
+                },
+                {
+                  "term": {
+                    "name": variable_name
+                  }
+                },
+            ]
+        }
+    }
+    # in future we might need to search sample_phenotypes as well
+    res = es.search(index="subject_phenotypes", body={ "query": query }, size=10)
+    df = Select.from_dict(res).to_pandas()
+    if df is None:
+        return None
+    for datatype in ['float', 'boolean', 'integer', 'string']:
+        if datatype in df:
+            return datatype
