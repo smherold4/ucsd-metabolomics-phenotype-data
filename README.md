@@ -6,7 +6,7 @@ Metabolomics and Phenotype ElasticSearch project
 $ pip install -r requirements.txt
 
 (if on Linux server)
-$ pip install -r requirements-synology.txt
+$ pip install -r requirements-linux.txt
 ```
 
 ### Add cohorts directly to SQL database
