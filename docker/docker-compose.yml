@@ -61,6 +61,26 @@ services:
       - analytics
     logging:
       driver: json-file
+  workstation3:
+    image: herold961/ucsd-workstation3
+    volumes:
+      - /media/ssd2/elasticsearch2:/usr/share/elasticsearch/data:rw
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+    ports:
+      - target: 9300
+        published: 9302
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+      - analytics
+    logging:
+      driver: json-file
   nas:
     image: herold961/ucsd-nas
     volumes:
