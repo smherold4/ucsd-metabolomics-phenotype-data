@@ -72,7 +72,7 @@ python main_es.py --index subject_phenotypes --action populate --cohort-name FIN
 python main_es.py --index subject_phenotypes --action populate --cohort-name FHS --phenotype-file /volume1/Database/Framingham/phenotype/pheno_data_fhs_20171210_TL.csv --subject-id-label SubjectID --verbose
 ```
 
-# Elasticsearch Indexing phenotype_descriptions
+### Elasticsearch Indexing phenotype_descriptions
 ```
 python main_es.py --index phenotype_descriptions --action populate --cohort-name FINRISK --phenotype-file /volume1/Database/phenotype/FINRISK2002/FR02_pheno_annotations.csv --verbose
 ```
