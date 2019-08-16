@@ -3,9 +3,9 @@ load_dotenv()
 from elasticsearch import Elasticsearch
 import argparse, indices, os
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')], timeout=40)
-from scripts.elasticsearch import populate_metabolite_samples, populate_metabolite_alignments, populate_subject_phenotypes
+import scripts.elasticsearch as scripts
 
-INDICES = ['metabolite_samples', 'metabolite_alignments', 'subject_phenotypes']
+INDICES = ['metabolite_samples', 'metabolite_alignments', 'subject_phenotypes', 'phenotype_descriptions']
 ACTIONS = ['create', 'delete', 'populate']
 
 def get_command_line_args():
@@ -25,7 +25,7 @@ def get_command_line_args():
     parser.add_argument(
         '--phenotype-file',
         type=str,
-        help="Path to phenotype data file")
+        help="Path to phenotype data or description file")
     parser.add_argument(
         '--cohort-name',
         type=str,
@@ -69,6 +69,6 @@ if __name__ == '__main__':
     elif clargs.action == 'delete':
         print es.indices.delete(index=clargs.index)
     elif clargs.action == 'populate':
-        getattr(__import__(__name__), 'populate_{}'.format(clargs.index)).run(clargs)
+        getattr(scripts, 'populate_{}'.format(clargs.index)).run(clargs)
     else:
         raise Exception('Script is confused')
