@@ -10,12 +10,7 @@ OR (if on Synology server)
 pip install -r requirements-synology.txt
 ```
 
-### Viewing Help File
-```
-python main.py -h
-```
-
-### Adding new study names
+### Add cohorts directly to SQL database
 ```
 INSERT INTO cohort (name, method) VALUES ('FINRISK', 'LCMS_BAL');
 INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS_BAL');
