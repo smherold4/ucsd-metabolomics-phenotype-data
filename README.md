@@ -78,7 +78,7 @@ python main_es.py --index subject_phenotypes --action populate --cohort-name FHS
 python main_es.py --action populate --index sample_phenotypes --phenotype-file /volume1/Database/phenotype/MESA/MESA2_20160520.csv --cohort-name MESA --exam-no 2 --subject-id-label idno --verbose
 ```
 
-### Elasticsearch Indexing phenotype_descriptions
+### Elasticsearch Indexing phenotype_descriptions (This should be done after all phenotype data has been indexed)
 ```
 python main_es.py --index phenotype_descriptions --action populate --cohort-name FINRISK --phenotype-file /volume1/Database/phenotype/FINRISK2002/FR02_pheno_annotations.csv --verbose
 ```
