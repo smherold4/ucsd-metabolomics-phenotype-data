@@ -65,11 +65,11 @@ python main_es.py --index metabolite_alignments --action populate --cohort-name 
 ### Elasticsearch Indexing subject_phenotypes
 
 ```
-python main_es.py --index subject_phenotypes --action populate --cohort-name FINRISK --phenotype-file /volume1/Database/FINRISK2002/phenotype/F2015_60_Salomaa_Jain_dataFR02_FU16_2018-11-16_FR02_TL.csv --subject-id-label PLASMA_ID --verbose
+python main_es.py --index subject_phenotypes --action populate --cohort-name FINRISK --phenotype-file /volume1/Database/phenotype/FINRISK2002/F2015_60_Salomaa_Jain_dataFR02_FU16_2018-11-16_FR02_TL.csv  --subject-id-label PLASMA_ID --verbose
 ```
 
 ```
-python main_es.py --index subject_phenotypes --action populate --cohort-name FHS --phenotype-file /volume1/Database/Framingham/phenotype/pheno_data_fhs_20171210_TL.csv --subject-id-label SubjectID --verbose
+python main_es.py --index subject_phenotypes --action populate --cohort-name FHS --phenotype-file /volume1/Database/phenotype/FHS/pheno_data_fhs_20171210_TL.csv --subject-id-label SubjectID --verbose
 ```
 
 ### Elasticsearch Indexing phenotype_descriptions
