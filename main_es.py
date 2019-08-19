@@ -5,7 +5,7 @@ import argparse, indices, os
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')], timeout=40)
 import scripts.elasticsearch as scripts
 
-INDICES = ['metabolite_samples', 'metabolite_alignments', 'subject_phenotypes', 'phenotype_descriptions']
+INDICES = ['metabolite_samples', 'metabolite_alignments', 'subject_phenotypes', 'phenotype_descriptions', 'sample_phenotypes']
 ACTIONS = ['create', 'delete', 'populate']
 
 def get_command_line_args():
@@ -49,6 +49,9 @@ def get_command_line_args():
         '--subject-id-label',
         type=str,
         help="In phenotype CSV, the label of the Subject Id")
+    parser.add_argument(
+        '--exam-no',
+        type=str)
     parser.add_argument(
         '--verbose',
         action='store_true',
