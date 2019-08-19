@@ -54,12 +54,12 @@ def run(args):
       for _, row in df.iterrows():
           line_count += 1
           row_data = row_with_proper_types(data_typed_by_col, row.name)
-          subject_id = row[args.subject_id_label]
-          if pd.isnull(subject_id):
+          local_subject_id = row[args.subject_id_label]
+          if pd.isnull(local_subject_id):
               continue
           subject = session.query(Subject).filter(
               Subject.cohort_id == cohort.id,
-              Subject.local_subject_id == str(subject_id),
+              Subject.local_subject_id == str(local_subject_id),
           ).first()
           if subject is None:
               continue
@@ -67,8 +67,11 @@ def run(args):
           sample = session.query(Sample).filter(
               Sample.exam_no == args.exam_no,
               Sample.subject_id == subject.id,
-          ).first()
-          # for MESA exams 1,3,5 we want to create a new sample here
+          ).first() or Sample(cohort.id, subject.id, str(local_subject_id), None, None)
+          if not sample.id:
+              session.exam_no = args.exam_no
+              session.add(sample)
+              session.commit()
           sample_barcode_or_backup = sample.sample_barcode or (sample.cohort_sample_id + '-' + sample.exam_no)
           es_inserts = [
               {
