@@ -8,9 +8,6 @@ index = {
     "mappings": {
         "subject_phenotype": {
             "properties": {
-                "cohort": {
-                    "type": "keyword"
-                },
                 "subject": {
                     "type": "keyword"
                 },
@@ -28,7 +25,10 @@ index = {
                 },
                 "string": {
                     "type": "keyword"
-                }
+                },
+                "study": {
+                    "type": "keyword"
+                },
             }
         }
     }

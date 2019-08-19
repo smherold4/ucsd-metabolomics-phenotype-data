@@ -38,7 +38,7 @@ def build_alignment_dict(args, alignment_params, cohort, session):
                     continue
                 entry = {
                     "local_ID": row[alignment_cohort_col],
-                    "cohort": alignment_cohort.name,
+                    "study": alignment_cohort.name,
                 }
                 if alignments.get(row[this_cohort_col]):
                     alignments[row[this_cohort_col]].append(entry)
@@ -72,7 +72,7 @@ def run(args):
                 "_type": DOC_TYPE,
                 "_id": cohort.name + "_" + str(metabolite.id),  # careful when changing this
                 "_source": {
-                    "cohort": cohort.name,
+                    "alignment": (alignments.get(metabolite.local_compound_id) or []),
                     "cross_variation": metabolite.cross_variation,
                     "local_ID": metabolite.local_compound_id,
                     "method": cohort.method,
@@ -80,7 +80,7 @@ def run(args):
                     "ML_score": metabolite.ml_score,
                     "MZ": metabolite.mz,
                     "RT": metabolite.rt,
-                    "alignment": (alignments.get(metabolite.local_compound_id) or []),
+                    "study": cohort.name,
                 }
             }
             for metabolite in metabolites

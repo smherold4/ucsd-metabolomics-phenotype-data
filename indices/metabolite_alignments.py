@@ -20,16 +20,13 @@ index = {
                 "alignment": {
                     "type": "nested",
                     "properties": {
-                        "cohort": {
-                            "type": "keyword"
-                        },
                         "local_ID": {
                             "type": "keyword"
-                        }
+                        },
+                        "study": {
+                            "type": "keyword"
+                        },
                     }
-                },
-                "cohort": {
-                    "type": "keyword"
                 },
                 "cross_variation": {
                     "type": "double"
@@ -42,7 +39,10 @@ index = {
                 },
                 "source": {
                     "type": "keyword"
-                }
+                },
+                "study": {
+                    "type": "keyword"
+                },
             }
         }
     }

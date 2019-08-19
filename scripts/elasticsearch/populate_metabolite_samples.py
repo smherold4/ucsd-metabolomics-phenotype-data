@@ -55,7 +55,6 @@ def run(args):
           "_type": DOC_TYPE,
           "_id": cohort.name + "_" + str(mmt.id), # faster not to do this.  Use _delete_by_query when mistakes are made
           "_source": {
-              "cohort": cohort.name,
               "local_ID": mmt.local_compound_id,
               "measurement_{}".format(mmt.units): mmt.measurement,
               "method": cohort.method,
@@ -64,6 +63,7 @@ def run(args):
               "plate_well": mmt.plate_well,
               "RT": mmt.rt,
               "sample_barcode": mmt.sample_barcode,
+              "study": cohort.name,
               "subject": mmt.local_subject_id,
           }
         }

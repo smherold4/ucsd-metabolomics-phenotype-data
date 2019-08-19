@@ -8,9 +8,6 @@ index = {
     "mappings": {
         "metabolite_sample": {
             "properties": {
-                "cohort": {
-                    "type": "keyword"
-                },
                  "created": {
                     "type": "date",
                     "format": "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
@@ -44,7 +41,10 @@ index = {
                 },
                 "subject": {
                     "type": "keyword"
-                }
+                },
+                "study": {
+                    "type": "keyword"
+                },
             }
         }
     }

@@ -39,9 +39,9 @@ def run(args):
             doc_id = "{}_{}".format(cohort.name, variable_name) # careful when changing this
             datatype = get_datatype_for_phenotype(variable_name, cohort)
             es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body={
-                "cohort": cohort.name,
                 "datatype": datatype,
                 "description": description,
+                "study": cohort.name,
                 "variable_name": variable_name,
             })
             if args.verbose:
@@ -54,7 +54,7 @@ def get_datatype_for_phenotype(variable_name, cohort):
             "must": [
                 {
                   "term": {
-                    "cohort": cohort.name
+                    "study": cohort.name
                   }
                 },
                 {

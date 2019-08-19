@@ -69,7 +69,7 @@ def run(args):
                   "_type": DOC_TYPE,
                   "_id": cohort.name + "_" + phenotype_name.replace(" ", "_") + "_" + subject.local_subject_id, # careful when changing this
                   "_source": {
-                      "cohort": cohort.name,
+                      "study": cohort.name,
                       "subject": subject.local_subject_id,
                       "name": phenotype_name,
                       phenotype_value_data['type']: phenotype_value_data['value'],

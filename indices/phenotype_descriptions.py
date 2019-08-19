@@ -40,15 +40,15 @@ index = {
     "mappings": {
         "phenotype_description": {
             "properties": {
-                "cohort": {
-                    "type": "keyword"
-                },
                 "datatype": {
                     "type": "keyword"
                 },
                 "description": {
                     "type": "text",
                     "analyzer": "phenotype_description_analyzer"
+                },
+                "study": {
+                    "type": "keyword"
                 },
                 "variable_name": {
                     "type": "keyword"
