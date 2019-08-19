@@ -24,6 +24,10 @@ class Sample(base.Base):
     created = Column(DateTime, default=datetime.datetime.utcnow)
     __table_args__ = (
         UniqueConstraint(
+            "cohort_sample_id",
+            "exam_no",
+            name="uniq_sample_exam"),
+        UniqueConstraint(
             "subject_id",
             "cohort_sample_id",
             name="ix_sample_uniq_subject_cohort_sample_id"),
