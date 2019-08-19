@@ -60,11 +60,10 @@ def run(args):
           subject = session.query(Subject).filter(
               Subject.cohort_id == cohort.id,
               Subject.local_subject_id == str(local_subject_id),
-          ).first()
-          if subject is None:
-              if args.verbose:
-                  print "Couldn't find subject {} in sql database".format(local_subject_id)
-              continue
+          ).first() || Subject(cohort, str(local_subject_id))
+          if not subject.id:
+              session.add(subject):
+              session.commit()
           assert args.exam_no is not None, "Currently requiring --exam-no"
           cohort_sample_id = str(local_subject_id) + "-" + args.exam_no
           sample = session.query(Sample).filter(
