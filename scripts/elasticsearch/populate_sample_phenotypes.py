@@ -60,7 +60,7 @@ def run(args):
           subject = session.query(Subject).filter(
               Subject.cohort_id == cohort.id,
               Subject.local_subject_id == str(local_subject_id),
-          ).first() || Subject(cohort, str(local_subject_id))
+          ).first() or Subject(cohort, str(local_subject_id))
           if not subject.id:
               session.add(subject):
               session.commit()
