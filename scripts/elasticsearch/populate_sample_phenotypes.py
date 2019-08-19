@@ -62,17 +62,19 @@ def run(args):
               Subject.local_subject_id == str(local_subject_id),
           ).first()
           if subject is None:
+              if args.verbose:
+                  print "Couldn't find subject {} in sql database".format(local_subject_id)
               continue
           assert args.exam_no is not None, "Currently requiring --exam-no"
+          cohort_sample_id = str(local_subject_id) + "-" + args.exam_no
           sample = session.query(Sample).filter(
-              Sample.exam_no == args.exam_no,
+              Sample.cohort_sample_id == cohort_sample_id,
               Sample.subject_id == subject.id,
-          ).first() or Sample(cohort.id, subject.id, str(local_subject_id), None, None)
+          ).first() or Sample(cohort.id, subject.id, cohort_sample_id, None, None)
           if not sample.id:
-              session.exam_no = args.exam_no
               session.add(sample)
               session.commit()
-          sample_barcode_or_backup = sample.sample_barcode or (sample.cohort_sample_id + '-' + sample.exam_no)
+          sample_barcode_or_backup = sample.sample_barcode or cohort_sample_id
           es_inserts = [
               {
                   "_index": INDEX_NAME,

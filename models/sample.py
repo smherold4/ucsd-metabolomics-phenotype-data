@@ -20,13 +20,8 @@ class Sample(base.Base):
     cohort_sample_id = Column(String)
     sample_barcode = Column(String)
     plate_well = Column(String)
-    exam_no = Column(String)
     created = Column(DateTime, default=datetime.datetime.utcnow)
     __table_args__ = (
-        UniqueConstraint(
-            "cohort_sample_id",
-            "exam_no",
-            name="uniq_sample_exam"),
         UniqueConstraint(
             "subject_id",
             "cohort_sample_id",
