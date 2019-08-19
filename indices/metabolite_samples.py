@@ -15,11 +15,11 @@ index = {
                 "local_ID": {
                     "type": "keyword"
                 },
-                "measurement_normalized": {
+                "measurement": {
                     "type": "double"
                 },
-                "measurement_raw": {
-                    "type": "double"
+                "normalization": {
+                    "type": "keyword"
                 },
                 "method": {
                     "type": "keyword"
