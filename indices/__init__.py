@@ -1,4 +1,5 @@
 import metabolite_samples
 import metabolite_alignments
+import sample_phenotypes
 import subject_phenotypes
 import phenotype_descriptions
