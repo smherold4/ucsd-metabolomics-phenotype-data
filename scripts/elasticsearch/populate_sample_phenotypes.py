@@ -42,7 +42,6 @@ def row_with_proper_types(data_typed_by_col, row_idx):
 
 
 def run(args):
-  assert
   assert args.cohort_name is not None, "Missing --cohort-name"
   session = db_connection.session_factory()
   cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
