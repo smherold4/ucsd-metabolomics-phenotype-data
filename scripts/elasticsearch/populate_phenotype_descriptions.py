@@ -65,8 +65,7 @@ def get_datatype_for_phenotype(variable_name, cohort):
             ]
         }
     }
-    # in future we might need to search sample_phenotypes as well
-    res = es.search(index="subject_phenotypes", body={ "query": query }, size=10)
+    res = es.search(index=cohort.phenotypes_data_index(), body={ "query": query }, size=10)
     df = Select.from_dict(res).to_pandas()
     if df is None:
         return None

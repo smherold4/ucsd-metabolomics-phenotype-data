@@ -19,3 +19,9 @@ class Cohort(base.Base):
     def source(self):
         # This is a shim until I add the method 'source' to the cohort table
         return 'plasma'
+
+    def phenotypes_data_index(self):
+        if self.name in ['MESA']:
+            return 'sample_phenotypes'
+        else:
+            return 'subject_phenotypes'
