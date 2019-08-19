@@ -62,7 +62,7 @@ def run(args):
               Subject.local_subject_id == str(local_subject_id),
           ).first() or Subject(cohort, str(local_subject_id))
           if not subject.id:
-              session.add(subject):
+              session.add(subject)
               session.commit()
           assert args.exam_no is not None, "Currently requiring --exam-no"
           cohort_sample_id = str(local_subject_id) + "-" + args.exam_no
