@@ -53,7 +53,7 @@ def run(args):
         {
           "_index": INDEX_NAME,
           "_type": DOC_TYPE,
-          "_id": cohort.name + "_" + str(mmt.id), # faster not to do this.  Use _delete_by_query when mistakes are made
+          "_id": cohort.name + "_" + str(mmt.id),
           "_source": {
               "local_ID": mmt.local_compound_id,
               "measurement": mmt.measurement,
