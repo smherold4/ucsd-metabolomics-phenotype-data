@@ -72,6 +72,8 @@ def run(args):
                 cohort_sample_id = extract_cohort_sample_id(sample_id_label)
                 if not cohort_sample_id:
                     continue
+                if args.exam_no:
+                    cohort_sample_id = cohort_sample_id + "-" + args.exam_no
                 sample_id = sample_ids_cache.get(cohort_sample_id) or find_or_create_sample(session, cohort, cohort_sample_id).id
                 sample_ids_cache[cohort_sample_id] = sample_id
 

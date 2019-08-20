@@ -39,6 +39,9 @@ def get_command_line_args():
         type=str,
         required=True)
     parser.add_argument(
+        '--exam-no',
+        type=str)
+    parser.add_argument(
         '--verbose',
         action='store_true',
         default=False,
