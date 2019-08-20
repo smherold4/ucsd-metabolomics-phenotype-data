@@ -4,5 +4,3 @@ ENV GRANT_SUDO=yes
 ENV RESTARTABLE=yes
 ADD ./pip_install_frequently_used_libraries.sh /usr/local/bin/before-notebook.d/
 USER root
-RUN chown -R jovyan /usr/local/bin/before-notebook.d/
-USER jovyan
