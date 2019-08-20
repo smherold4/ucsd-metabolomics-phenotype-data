@@ -3,7 +3,7 @@ services:
   jupyter:
     image: herold961/ucsd-jupyter
     volumes:
-      - /volume1/Database/jupyter:/home/jovyan/work:rw
+      - /volume1/Database/jupyter:/home/jovyan:rw
     ports:
       - target: 8888
         published: 8888
