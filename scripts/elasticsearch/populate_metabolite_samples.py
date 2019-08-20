@@ -55,6 +55,7 @@ def run(args):
           "_type": DOC_TYPE,
           "_id": cohort.name + "_" + str(mmt.id),
           "_source": {
+              "created": datetime.now(),
               "local_ID": mmt.local_compound_id,
               "measurement": mmt.measurement,
               "normalization": mmt.units,
