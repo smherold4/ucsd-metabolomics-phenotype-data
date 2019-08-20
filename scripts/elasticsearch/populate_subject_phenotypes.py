@@ -67,7 +67,7 @@ def run(args):
               {
                   "_index": INDEX_NAME,
                   "_type": DOC_TYPE,
-                  "_id": cohort.name + "_" + phenotype_name.replace(" ", "_") + "_" + subject.local_subject_id, # careful when changing this
+                  "_id": cohort.name.replace(" ", "_") + "_" + phenotype_name.replace(" ", "_") + "_" + subject.local_subject_id, # careful when changing this
                   "_source": {
                       "study": cohort.name,
                       "subject": subject.local_subject_id,

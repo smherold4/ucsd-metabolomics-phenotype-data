@@ -70,7 +70,7 @@ def run(args):
             {
                 "_index": INDEX_NAME,
                 "_type": DOC_TYPE,
-                "_id": cohort.name + "_" + str(metabolite.id),  # careful when changing this
+                "_id": cohort.name.replace(" ", "_") + "_" + str(metabolite.id),  # careful when changing this
                 "_source": {
                     "alignment": (alignments.get(metabolite.local_compound_id) or []),
                     "cross_variation": metabolite.cross_variation,

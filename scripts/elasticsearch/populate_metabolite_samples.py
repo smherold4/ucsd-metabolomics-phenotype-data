@@ -53,7 +53,7 @@ def run(args):
         {
           "_index": INDEX_NAME,
           "_type": DOC_TYPE,
-          "_id": cohort.name + "_" + str(mmt.id),
+          "_id": cohort.name.replace(" ", "_") + "_" + str(mmt.id),
           "_source": {
               "created": datetime.now().strftime("%s"),
               "local_ID": mmt.local_compound_id,
