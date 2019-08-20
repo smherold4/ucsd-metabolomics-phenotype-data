@@ -47,6 +47,18 @@ def find_or_create_sample(session, cohort, cohort_sample_id):
     return sample
 
 
+def find_or_create_dataset(cohort, units, session):
+    dataset = session.query(Dataset).filter(
+        Dataset.cohort == cohort,
+        Dataset.units == units,
+    ).first()
+    if dataset:
+        return dataset
+    dataset = Dataset(cohort, units)
+    session.add(dataset)
+    session.commit()
+    return dataset
+
 def run(args):
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
@@ -54,9 +66,7 @@ def run(args):
     Measurement = measurement_class_factory(cohort)
 
     assert args.units in Dataset.UNITS, 'Invalid units provided. Must be one of: {}'.format(Dataset.UNITS)
-    dataset = Dataset(cohort, args.units)
-    session.add(dataset)
-    session.commit()
+    dataset = find_or_create_dataset(cohort, args.units, session)
     sample_ids_cache = {}
     row_count = 0
     for df in pd.read_csv(args.file, chunksize=(args.csv_chunksize or CSV_CHUNKSIZE)):
