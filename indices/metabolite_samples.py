@@ -10,7 +10,7 @@ index = {
             "properties": {
                  "created": {
                     "type": "date",
-                    "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    "format": "epoch_second"
                 },
                 "local_ID": {
                     "type": "keyword"
