@@ -37,6 +37,11 @@ MESA04
 python main_sql.py --mode raw_ingestion --cohort-name MESA --exam-no 4 --units raw --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA04/ProcessedDataRawDeadducted_relabelled.csv --verbose
 ```
 
+VITAL CTSC
+```
+python main_sql.py --mode raw_ingestion --cohort-name 'VITAL CTSC' --units raw --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/VITAL\ CTSC/ProcessedDataRawDeadducted_relabelled.csv --verbose
+```
+
 ### Mapping Keys (Sample Barcodes, Plate Wells, SubjectID, etc)
 
 ```
