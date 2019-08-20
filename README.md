@@ -32,6 +32,11 @@ MESA02
 python main_sql.py --mode raw_ingestion --cohort-name MESA --exam-no 2 --units raw --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA02/ProcessedDataRawDeadducted_relabelled.csv --verbose
 ```
 
+MESA04
+```
+python main_sql.py --mode raw_ingestion --cohort-name MESA --exam-no 4 --units raw --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA04/ProcessedDataRawDeadducted_relabelled.csv --verbose
+```
+
 ### Mapping Keys (Sample Barcodes, Plate Wells, SubjectID, etc)
 
 ```
