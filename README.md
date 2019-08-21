@@ -45,11 +45,15 @@ python main_sql.py --mode raw_ingestion --cohort-name 'VITAL CTSC' --units raw -
 ### Mapping Keys (Sample Barcodes, Plate Wells, SubjectID, etc)
 
 ```
-python main_sql.py --mode sample_key_ingestion --file /volume1/Database/FINRISK2002/metabolomics/FINRISK_Example_Key.csv --cohort-name FINRISK --verbose
+python main_sql.py --mode key_ingestion --file /volume1/Database/FINRISK2002/metabolomics/FINRISK_Example_Key.csv --cohort-name FINRISK --verbose
 ```
 
 ```
-python main_sql.py --mode sample_key_ingestion --file /volume1/Database/Framingham/metabolomics/FHS_Patient_Keys.csv --cohort-name FHS --verbose
+python main_sql.py --mode key_ingestion --file /volume1/Database/Framingham/metabolomics/FHS_Patient_Keys.csv --cohort-name FHS --verbose
+```
+
+```
+python main_sql.py --mode key_ingestion --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA04/SampleKey.csv --cohort-name MESA --exam-no 4 --verbose
 ```
 
 ### Elasticsearch Indexing metabolite_samples
