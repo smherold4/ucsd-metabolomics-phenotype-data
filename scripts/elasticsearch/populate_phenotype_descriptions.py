@@ -25,7 +25,7 @@ def run(args):
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
 
-    with open(args.phenotype_file, encoding='utf-8') as csvfile:
+    with open(args.phenotype_file, newline='', encoding='utf-8') as csvfile:
         line_count = 0
         csv_reader = csv.reader(csvfile, delimiter=',')
         for row in csv_reader:
