@@ -46,7 +46,7 @@ def run(args):
             if pd.isnull(plate_well):
                 continue
             if args.exam_no:
-                cohort_sample_id = cohort_sample_id + "-" + args.exam_no
+                cohort_sample_id = str(cohort_sample_id) + "-" + args.exam_no
             sample = session.query(Sample).filter(
                 Sample.cohort_sample_id == str(cohort_sample_id),
                 Sample.cohort_id == cohort.id,
