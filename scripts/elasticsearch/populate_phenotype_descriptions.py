@@ -33,7 +33,7 @@ def run(args):
             if line_count == 1:
               continue
             variable_name = row[COLUMNS['variable_name']]
-            description = row[COLUMNS['description']]
+            description = row[COLUMNS['description']] and row[COLUMNS['description']].encode('UTF-8')
             if pd.isnull(variable_name):
               continue
             doc_id = "{}_{}".format(cohort.name, variable_name) # careful when changing this
