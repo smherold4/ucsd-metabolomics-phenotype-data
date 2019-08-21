@@ -27,7 +27,7 @@ def run(args):
 
     with open(args.phenotype_file) as csvfile:
         line_count = 0
-        csv_reader = csv.reader(csvfile, delimiter=',')
+        csv_reader = csv.reader(csvfile, delimiter=',', encoding='utf-8')
         for row in csv_reader:
             line_count += 1
             if line_count == 1:
