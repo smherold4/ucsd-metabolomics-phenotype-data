@@ -25,7 +25,7 @@ def run(args):
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
 
-    with open(args.phenotype_file, newline='', encoding='utf-8') as csvfile:
+    with open(args.phenotype_file) as csvfile:
         line_count = 0
         csv_reader = csv.reader(csvfile, delimiter=',')
         for row in csv_reader:
@@ -33,10 +33,7 @@ def run(args):
             if line_count == 1:
               continue
             variable_name = row[COLUMNS['variable_name']]
-            try:
-              description = row[COLUMNS['description']] and row[COLUMNS['description']].encode('UTF-8')
-            except:
-              import pdb; pdb.set_trace()
+            description = row[COLUMNS['description']] and unicode(row[COLUMNS['description']], 'UTF-8')
             if pd.isnull(variable_name):
               continue
             doc_id = "{}_{}".format(cohort.name, variable_name) # careful when changing this
