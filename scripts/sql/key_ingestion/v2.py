@@ -45,6 +45,8 @@ def run(args):
             subject = find_or_create_subject(session, cohort, local_subject_id)
             if pd.isnull(plate_well):
                 continue
+            if args.exam_no:
+                cohort_sample_id = cohort_sample_id + "-" + args.exam_no
             sample = session.query(Sample).filter(
                 Sample.cohort_sample_id == str(cohort_sample_id),
                 Sample.cohort_id == cohort.id,
@@ -55,6 +57,8 @@ def run(args):
                 continue
             sample.subject_id = subject.id
             sample.plate_well = plate_well
+            if args.exam_no:
+                sample.exam_no = args.exam_no
             session.add(sample)
             session.commit()
             if args.verbose:
