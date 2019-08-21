@@ -93,7 +93,7 @@ def run(args):
               print "Inserting {} {} documents for {}.  Line count is {}".format(
                   len(es_inserts),
                   args.index,
-                  subject.local_subject_id,
+                  sample_barcode_or_backup,
                   line_count,
               )
           for success, info in helpers.parallel_bulk(es, es_inserts):
