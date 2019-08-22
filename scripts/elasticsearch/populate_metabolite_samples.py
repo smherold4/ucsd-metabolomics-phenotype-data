@@ -22,13 +22,15 @@ def run(args):
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
     Measurement = measurement_class_factory(cohort)
     line_count = 0
-
+    normalization_by_dataset_id = { (d.id): d.units
+                                    for d
+                                    in session.query(Dataset).filter(Dataset.cohort == cohort).all() }
+    metabolites_by_id = { (c.id): { "local_compound_id": c.local_compound_id, "ml_score": c.ml_score, "mz": c.mz, "rt": c.rt }
+                          for c
+                          in session.query(CohortCompound).filter(CohortCompound.cohort == cohort).all() }
     last_queried_id = args.starting_entity_id or 0
     while last_queried_id is not None:
       sql = session.query(Measurement).filter(
-          Measurement.dataset_id == Dataset.id,
-          Sample.cohort_id == cohort.id,
-          Measurement.cohort_compound_id == CohortCompound.id,
           Measurement.id > last_queried_id,
       ).join(
           Measurement.sample,
@@ -36,12 +38,10 @@ def run(args):
           Subject, Sample.subject_id == Subject.id, isouter=True,
       ).with_entities(
           Measurement.id,
+          Measurement.dataset_id,
           Measurement.measurement,
-          Dataset.units,
-          CohortCompound.local_compound_id,
-          CohortCompound.ml_score,
-          CohortCompound.mz,
-          CohortCompound.rt,
+          Measurement.cohort_compound_id,
+          Sample.cohort_id,
           Sample.sample_barcode,
           Sample.plate_well,
           Subject.local_subject_id,
@@ -56,20 +56,20 @@ def run(args):
           "_id": cohort.name.replace(" ", "_") + "_" + str(mmt.id),
           "_source": {
               "created": datetime.now().strftime("%s"),
-              "local_ID": mmt.local_compound_id,
               "measurement": mmt.measurement,
-              "normalization": mmt.units,
+              "normalization": normalization_by_dataset_id[mmt.dataset_id],
               "method": cohort.method,
-              "ML_score": mmt.ml_score,
-              "MZ": mmt.mz,
+              "local_ID": metabolites_by_id[mmt.cohort_compound_id]["local_compound_id"],
+              "ML_score": metabolites_by_id[mmt.cohort_compound_id]["ml_score"],
+              "MZ":       metabolites_by_id[mmt.cohort_compound_id]["mz"],
+              "RT":       metabolites_by_id[mmt.cohort_compound_id]["rt"],
               "plate_well": mmt.plate_well,
-              "RT": mmt.rt,
               "sample_barcode": mmt.sample_barcode,
               "study": cohort.name,
               "subject": mmt.local_subject_id,
           }
         }
-        for mmt in mmts
+        for mmt in mmts if mmt.cohort_id == cohort.id
       ]
       last_queried_id = mmts[-1].id if len(mmts) else None
       if args.verbose:
