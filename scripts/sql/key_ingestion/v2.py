@@ -2,6 +2,10 @@ import csv
 from models import *
 from db import db_connection
 import pandas as pd
+import re
+
+# Customize this by cohort
+SUBJECT_ID_REGEX = r'^([A-Za-z0-9]+)\-'
 
 CSV_CHUNKSIZE = 100000
 COLUMNS = {
@@ -23,6 +27,11 @@ def find_or_create_subject(session, cohort, local_subject_id):
     return subject
 
 
+def extract_subject_id(sample_id):
+    re_match = re.search(SUBJECT_ID_REGEX, sample_id)
+    if re_match:
+        return re_match.group(1)
+
 def run(args):
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
@@ -35,13 +44,12 @@ def run(args):
         session.commit()
         for _, row in df.iterrows():
             line_count += 1
-            # maybe the subject will be created after the sample, i don't know
-            # for FR and FHS, the local_subject_id is the cohort_sample_id
-            local_subject_id = row[COLUMNS['cohort_sample_id_label']]
             cohort_sample_id = row[COLUMNS['cohort_sample_id_label']]
-            plate_well = row[COLUMNS['plate_well']]
-            if pd.isnull(local_subject_id):
+            if pd.isnull(cohort_sample_id):
                 continue
+            local_subject_id = extract_subject_id(cohort_sample_id)
+            assert local_subject_id is not None, "Could not extract subject_id from cohort_sample_id {}".format(cohort_sample_id)
+            plate_well = row[COLUMNS['plate_well']]
             subject = find_or_create_subject(session, cohort, local_subject_id)
             if pd.isnull(plate_well):
                 continue

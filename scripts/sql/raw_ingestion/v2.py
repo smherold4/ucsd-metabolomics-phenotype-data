@@ -6,6 +6,8 @@ import re
 
 CSV_CHUNKSIZE = 8000
 COLUMN_OF_FIRST_MEASUREMENT = 14
+
+# Customize this by cohort
 SAMP_ID_REGEX = r'SampID\_+([A-Za-z0-9\-]+)\_\_([0-9]+)'
 
 
