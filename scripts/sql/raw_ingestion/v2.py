@@ -81,8 +81,6 @@ def run(args):
             for sample_id_label in sample_id_labels:
                 cohort_sample_id = extract_cohort_sample_id(sample_id_label)
                 if not cohort_sample_id:
-                    if args.verbose:
-                        print("Could not extract cohort_sample_id from {}".format(sample_id_label))
                     continue
                 if args.exam_no:
                     cohort_sample_id = cohort_sample_id + "-" + args.exam_no
