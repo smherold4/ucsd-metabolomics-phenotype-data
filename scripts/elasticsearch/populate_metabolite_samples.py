@@ -74,7 +74,7 @@ def run(args):
       last_queried_id = mmts[-1].id if len(mmts) else None
       if args.verbose:
           print "Inserting {} {} documents for {}.  Up to {}.id {}".format(
-              len(mmts),
+              len(es_inserts),
               args.index,
               cohort.name,
               Measurement.__tablename__,
