@@ -19,4 +19,9 @@ files = [
     "cohort_name": "FHS",
     "cohort_column": "B",
   },
+  {
+    "path": "/volume1/Jain Lab Data/MassSpecDatabase/Eicosanoid method/VITAL CTSC/AlignedPeaks_Vital CTSC_Vital 400.csv",
+    "cohort_name": "VITAL 400",
+    "cohort_column": "B",
+  }
 ]
