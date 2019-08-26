@@ -23,5 +23,10 @@ files = [
     "path": "/volume1/Jain Lab Data/MassSpecDatabase/Eicosanoid method/FINRISK/AlignedPeaks_FINRISK_Vital CTSC.csv",
     "cohort_name": "VITAL CTSC",
     "cohort_column": "B",
-  }
+  },
+  {
+    "path": "/volume1/Jain Lab Data/MassSpecDatabase/Eicosanoid method/FINRISK/AlignedPeaks_CIAO-SAGE_FINRISK.csv",
+    "cohort_name": "CIAO-SAGE",
+    "cohort_column": "A",
+  },
 ]
