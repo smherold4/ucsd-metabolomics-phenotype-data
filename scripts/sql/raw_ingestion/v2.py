@@ -8,7 +8,7 @@ CSV_CHUNKSIZE = 8000
 COLUMN_OF_FIRST_MEASUREMENT = 14
 
 # Customize this by cohort
-SAMP_ID_REGEX = r'SampID\_+([A-Za-z0-9\-]+)\_\_([0-9]+)'
+SAMP_ID_REGEX = r'SampID\_+([A-Za-z0-9\-]+)$'
 
 
 def find_or_create_cohort_compound(session, series, cohort, calculate_median):
@@ -35,7 +35,7 @@ def find_or_create_cohort_compound(session, series, cohort, calculate_median):
 def extract_cohort_sample_id(string):
     re_match = re.search(SAMP_ID_REGEX, string)
     if re_match:
-        return re_match.group(1) + "-" + re_match.group(2)
+        return re_match.group(1)
 
 
 def find_or_create_sample(session, cohort, cohort_sample_id):
