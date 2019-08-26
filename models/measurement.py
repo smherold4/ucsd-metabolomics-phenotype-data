@@ -14,6 +14,8 @@ def measurement_class_factory(cohort):
             return "mesa_measurement"
         elif cohort.name in ["VITAL 400", "VITAL CTSC"]:
             return "vital_measurement"
+        elif cohort.name == "CIAO-SAGE":
+            return "ciao_measurement"
         else:
             raise Exception('Could not find measurement table for cohort')
 

@@ -5,7 +5,7 @@ import pandas as pd
 import re
 
 # Customize this by cohort
-SUBJECT_ID_REGEX = r'^([A-Za-z0-9]+)\-'
+SUBJECT_ID_REGEX = r'^([A-Za-z0-9]+)$'
 
 CSV_CHUNKSIZE = 100000
 COLUMNS = {
