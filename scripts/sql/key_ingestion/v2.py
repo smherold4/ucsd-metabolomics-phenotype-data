@@ -28,7 +28,7 @@ def find_or_create_subject(session, cohort, local_subject_id):
 
 
 def extract_subject_id(sample_id):
-    re_match = re.search(SUBJECT_ID_REGEX, sample_id)
+    re_match = re.search(SUBJECT_ID_REGEX, str(sample_id))
     if re_match:
         return re_match.group(1)
 
