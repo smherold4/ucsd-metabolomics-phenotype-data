@@ -1,7 +1,7 @@
 # UCSD Metabolomics SQL and Elasticsearch Scripts
 Metabolomics and Phenotype ElasticSearch project
 
-### Python setup
+### STEP 0: Python setup
 ```
 $ pip install -r requirements.txt
 
@@ -9,13 +9,15 @@ $ pip install -r requirements.txt
 $ pip install -r requirements-linux.txt
 ```
 
-### Add new cohorts directly to SQL database
+### STEP 1: Add new cohort directly to SQL database
 ```
 INSERT INTO cohort (name, method) VALUES ('FINRISK', 'LCMS_BAL');
 INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS_BAL');
 ```
 
-### Importing Raw Files
+### STEP 2: Import Raw Files
+##### PRIOR TO THIS STEP YOU MUST CUSTOMIZE THE `SAMP_ID_REGEX` IN THE CODE, AND ENSURE THAT `COLUMN_OF_FIRST_MEASUREMENT = 14` IS CORRECT FOR THE INGESTION FILE
+##### THIS STEP SHOULD BE RUN ONCE FOR 'RAW_RELABELLED.CSV' AND ONCE FOR 'NORMALIZEDV2_RELABELLED.CSV'
 
 FINRISK
 ```
@@ -42,7 +44,8 @@ VITAL CTSC
 python main_sql.py --mode raw_ingestion --cohort-name 'VITAL CTSC' --units raw --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/VITAL\ CTSC/ProcessedDataRawDeadducted_relabelled.csv --verbose
 ```
 
-### Mapping Keys (Sample Barcodes, Plate Wells, SubjectID, etc)
+### STEP 3: Mapping Keys - Adding Plate_Well info and Creating Subjects For Each Sample
+##### PRIOR TO THIS STEP YOU MUST CUSTOMIZE THE `SUBJECT_ID_REGEX` IN THE CODE
 
 FINRISK
 ```
@@ -64,47 +67,58 @@ VITAL CTSC
 python main_sql.py --mode key_ingestion --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/VITAL\ CTSC/SampleKey.csv --cohort-name 'VITAL CTSC' --verbose
 ```
 
-### Elasticsearch Indexing metabolite_samples
+### STEP 4: Elasticsearch Indexing `metabolite_samples`
 
 ```
-python main_es.py --index metabolite_samples --action populate --verbose --cohort-name FINRISK --index-batch-size 200000
+python main_es.py --index metabolite_samples --action populate --verbose --cohort-name FINRISK
 ```
 
 ```
-python main_es.py --index metabolite_samples --action populate --verbose --cohort-name FHS --index-batch-size 200000
+python main_es.py --index metabolite_samples --action populate --verbose --cohort-name FHS
 ```
 
-### Elasticsearch Indexing metabolite_alignments
+### STEP 5: Elasticsearch Indexing metabolite_alignments
+##### PRIOR TO THIS STEP YOU MUST ADD A FILE UNDER THE ALIGNMENT FILE PARAMS WITH THE NAME OF THE COHORT (SPACES AND DASHES SHOULD WRITTEN AS UNDERSCORES) AND THIS FILE WILL LIST ALL THE ALIGNMENT FILES ON THE NAS SERVER
 
+FINRISK
 ```
 python main_es.py --index metabolite_alignments --action populate --cohort-name FINRISK --verbose
 ```
 
+FHS
 ```
 python main_es.py --index metabolite_alignments --action populate --cohort-name FHS --verbose
 ```
 
-### Elasticsearch Indexing subject_phenotypes
+### STEP 6.A: Elasticsearch Indexing subject_phenotypes
 
+
+FINRISK
 ```
 python main_es.py --index subject_phenotypes --action populate --cohort-name FINRISK --phenotype-file /volume1/Database/phenotype/FINRISK2002/F2015_60_Salomaa_Jain_dataFR02_FU16_2018-11-16_FR02_TL.csv  --subject-id-label PLASMA_ID --verbose
 ```
 
+FHS
 ```
 python main_es.py --index subject_phenotypes --action populate --cohort-name FHS --phenotype-file /volume1/Database/phenotype/FHS/pheno_data_fhs_20171210_TL.csv --subject-id-label SubjectID --verbose
 ```
 
-### Elasticsearch Indexing sample_phenotypes (MESA)
+### STEP 6.B: Elasticsearch Indexing sample_phenotypes
 
+MESA
 ```
 python main_es.py --action populate --index sample_phenotypes --phenotype-file /volume1/Database/phenotype/MESA/MESA2_20160520.csv --cohort-name MESA --exam-no 2 --subject-id-label idno --verbose
 ```
 
-### Elasticsearch Indexing phenotype_descriptions (This should be done after all phenotype data has been indexed)
+### STEP 7: Elasticsearch Indexing phenotype_descriptions
+##### THIS MUST BE DONE AFTER STEP 6 SO THAT WE CAN INFER THE DATATYPE
+
+FINRISK
 ```
 python main_es.py --index phenotype_descriptions --action populate --cohort-name FINRISK --phenotype-file /volume1/Database/phenotype/FINRISK2002/FR02_pheno_annotations.csv --verbose
 ```
 
+FHS
 ```
 python main_es.py --index phenotype_descriptions --action populate --cohort-name FHS --phenotype-file /volume1/Database/phenotype/FHS/pheno_data_fhs_description_KM.csv --verbose
 ```
