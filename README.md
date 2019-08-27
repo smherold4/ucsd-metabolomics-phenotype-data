@@ -14,7 +14,7 @@ INSERT INTO cohort (name, method) VALUES ('CIAO-SAGE', 'LCMS_BAL');
 ```
 
 ### STEP 2: Create a new measurement table for the new cohort in the SQL database
-- ##### FOR TABLE NAME - SPACES AND DASHES SHOULD BECOME UNDERSCORES, FOR TABLE NAME, SEE METHOD `get_tablename()` IN CODE
+- ##### FOR TABLE NAME - ALL LOWERCASE, SPACES AND DASHES SHOULD BECOME UNDERSCORES, SEE METHOD `get_tablename()`
 ```
 CREATE TABLE ciao_sage_measurement (
     id SERIAL PRIMARY KEY,
