@@ -1,5 +1,4 @@
 # Metabolomics SQL and Elasticsearch Scripts
-Metabolomics and Phenotype ElasticSearch project
 
 ### STEP 0: Python setup
 ```
