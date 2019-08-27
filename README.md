@@ -9,7 +9,7 @@ $ pip install -r requirements.txt
 $ pip install -r requirements-linux.txt
 ```
 
-### Add cohorts directly to SQL database
+### Add new cohorts directly to SQL database
 ```
 INSERT INTO cohort (name, method) VALUES ('FINRISK', 'LCMS_BAL');
 INSERT INTO cohort (name, method) VALUES ('FHS', 'LCMS_BAL');
