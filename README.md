@@ -14,7 +14,7 @@ INSERT INTO cohort (name, method) VALUES ('MESA', 'LCMS_BAL');
 ```
 
 ### STEP 2: Create a new measurement table for the new cohort
-- ###### SPACES AND DASHES SHOULD BECOME UNDERSCORES
+- ##### SPACES AND DASHES SHOULD BECOME UNDERSCORES
 ```
 CREATE TABLE ciao_sage_measurement (
     id SERIAL PRIMARY KEY,
