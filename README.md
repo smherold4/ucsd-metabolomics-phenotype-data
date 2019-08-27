@@ -14,8 +14,9 @@ INSERT INTO cohort (name, method) VALUES ('MESA', 'LCMS_BAL');
 ```
 
 ### STEP 2: Create a new measurement table for the new cohort
+- ###### SPACES AND DASHES SHOULD BECOME UNDERSCORES
 ```
-CREATE TABLE mesa_measurement (
+CREATE TABLE ciao_sage_measurement (
     id SERIAL PRIMARY KEY,
     sample_id integer NOT NULL,
     cohort_compound_id integer NOT NULL,
