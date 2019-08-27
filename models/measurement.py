@@ -10,14 +10,10 @@ def measurement_class_factory(cohort):
     def get_tablename():
         if cohort.name in ["FHS", "FINRISK"]:
             return "fhs_finrisk_measurement"
-        elif cohort.name == "MESA":
-            return "mesa_measurement"
         elif cohort.name in ["VITAL 400", "VITAL CTSC"]:
             return "vital_measurement"
-        elif cohort.name == "CIAO-SAGE":
-            return "ciao_measurement"
         else:
-            raise Exception('Could not find measurement table for cohort')
+            return cohort.name.lower().replace(" ", "_").replace("-", "_") + "_measurement"
 
     class MeasurementClass(base.Base):
         __tablename__ = get_tablename()
