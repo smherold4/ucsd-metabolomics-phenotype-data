@@ -15,6 +15,7 @@ INSERT INTO cohort (name, method) VALUES ('CIAO-SAGE', 'LCMS_BAL');
 
 ### STEP 2: Create a new measurement table for the new cohort in the SQL database
 - ##### SPACES AND DASHES SHOULD BECOME UNDERSCORES
+- ##### ALL LOWERCASE
 ```
 CREATE TABLE ciao_sage_measurement (
     id SERIAL PRIMARY KEY,
@@ -89,7 +90,7 @@ python main_es.py --index metabolite_samples --action populate --verbose --cohor
 
 ### STEP 6: Elasticsearch Indexing metabolite_alignments
 - ##### PRIOR TO THIS STEP YOU MUST ADD A FILE UNDER THE ALIGNMENT FILE PARAMS WITH THE NAME OF THE COHORT
-- ##### SPACES AND DASHES SHOULD WRITTEN AS UNDERSCORES
+- ##### FOR FILE NAME - IT IS CASE SENSITIVE AND SPACES AND DASHES SHOULD WRITTEN AS UNDERSCORES
 - ##### THIS FILE WILL LIST ALL THE ALIGNMENT FILES ON THE NAS SERVER
 
 
