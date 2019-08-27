@@ -10,7 +10,7 @@ $ pip install -r requirements-linux.txt
 
 ### STEP 1: Add new cohort directly to SQL database
 ```
-INSERT INTO cohort (name, method) VALUES ('MESA', 'LCMS_BAL');
+INSERT INTO cohort (name, method) VALUES ('CIAO-SAGE', 'LCMS_BAL');
 ```
 
 ### STEP 2: Create a new measurement table for the new cohort in the SQL database
