@@ -123,7 +123,7 @@ python main_es.py --action populate --index sample_phenotypes --phenotype-file /
 ```
 
 ### STEP 8: Elasticsearch Indexing phenotype_descriptions
-- ##### THIS MUST BE DONE AFTER STEP 6 SO THAT WE CAN INFER THE DATATYPE
+- ##### THIS MUST BE DONE LAST SO THAT WE CAN INFER THE DATATYPE
 
 
 ```
