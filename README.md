@@ -1,4 +1,4 @@
-# UCSD Metabolomics SQL storage
+# UCSD Metabolomics SQL and Elasticsearch Scripts
 Metabolomics and Phenotype ElasticSearch project
 
 ### Python setup
