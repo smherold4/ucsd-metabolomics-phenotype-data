@@ -79,6 +79,7 @@ def run(args):
                     "source": cohort.source(),
                     "ML_score": metabolite.ml_score,
                     "MZ": metabolite.mz,
+                    "prevalence": metabolite.prevalence,
                     "RT": metabolite.rt,
                     "study": cohort.name,
                 }

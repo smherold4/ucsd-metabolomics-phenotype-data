@@ -20,7 +20,7 @@ class CohortCompound(base.Base):
     ml_score = Column(Numeric(precision=9, scale=8), index=True)
     median_measurement = Column(Numeric(precision=80, scale=30), index=True, nullable=True)
     created = Column(DateTime, default=datetime.datetime.utcnow)
-    presence_percentage = Column(Numeric(precision=4, scale=1), nullable=True)
+    prevalence = Column(Numeric(precision=4, scale=1), nullable=True)
     __table_args__ = (
         UniqueConstraint("cohort_id", "local_compound_id", name="uniq_cohort_id_local_compound_id"),
         Index("ix_cohort_compound_on_cohort_id_mz", "cohort_id", "mz"),
