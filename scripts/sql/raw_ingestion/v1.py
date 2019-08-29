@@ -11,7 +11,7 @@ COLUMN_OF_FIRST_MEASUREMENT = 14
 PLATE_WELL_REGEX = r'\_Plate\_(\d+\_\d+)\_'
 
 
-def find_or_create_cohort_compound(session, series, cohort, calculate_median):
+def find_or_create_cohort_compound(session, series, cohort, calc_agg_stats):
     local_compound_id = series['local_Lab']
     if pd.isnull(local_compound_id):
         return None
@@ -25,8 +25,10 @@ def find_or_create_cohort_compound(session, series, cohort, calculate_median):
     ).first() or CohortCompound(
         cohort, local_compound_id, mz, rt, cross_variation, ml_score
     )
-    if calculate_median:
-        cohort_compound.median_measurement = series[COLUMN_OF_FIRST_MEASUREMENT:].median()
+    if calc_agg_stats:
+        measurements = series[COLUMN_OF_FIRST_MEASUREMENT:]
+        cohort_compound.median_measurement = measurements.median()
+        cohort_compound.presence_percentage = 100.0 * sum(1 for m in measurements if not pd.isnull(m))/len(measurements)
     session.add(cohort_compound)
     session.commit()
     return cohort_compound
