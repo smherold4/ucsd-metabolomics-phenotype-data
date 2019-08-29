@@ -37,6 +37,9 @@ index = {
                 "method": {
                     "type": "keyword"
                 },
+                "prevalence": {
+                    "type": "float"
+                },
                 "source": {
                     "type": "keyword"
                 },
