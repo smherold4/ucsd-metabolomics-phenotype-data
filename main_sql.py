@@ -46,7 +46,6 @@ def get_command_line_args():
 
 if __name__ == '__main__':
     clargs = get_command_line_args()
-    version = get_version(clargs)
     if clargs.mode == 'raw_ingestion':
         raw_ingestion.v2.run(clargs)
     elif clargs.mode == 'key_ingestion':
