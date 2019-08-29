@@ -77,7 +77,7 @@ python main_sql.py --mode key_ingestion --file /volume1/Jain\ Lab\ Data/MassSpec
 python main_sql.py --mode key_ingestion --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/VITAL\ CTSC/SampleKey.csv --cohort-name 'VITAL CTSC' --verbose
 ```
 
-### STEP 5: Elasticsearch Indexing `metabolite_samples`
+### STEP 5: Elasticsearch Indexing - metabolite_samples
 
 ```
 python main_es.py --index metabolite_samples --action populate --verbose --cohort-name FINRISK
@@ -87,7 +87,7 @@ python main_es.py --index metabolite_samples --action populate --verbose --cohor
 python main_es.py --index metabolite_samples --action populate --verbose --cohort-name FHS
 ```
 
-### STEP 6: Elasticsearch Indexing metabolite_alignments
+### STEP 6: Elasticsearch Indexing - metabolite_alignments
 - ##### PRIOR TO THIS STEP YOU MUST ADD A FILE UNDER THE ALIGNMENT FILE PARAMS WITH THE NAME OF THE COHORT
 - ##### FOR FILE NAME - IT IS CASE SENSITIVE AND SPACES AND DASHES SHOULD WRITTEN AS UNDERSCORES
 - ##### THIS FILE WILL LIST ALL THE ALIGNMENT FILES ON THE NAS SERVER
@@ -102,7 +102,7 @@ python main_es.py --index metabolite_alignments --action populate --cohort-name 
 python main_es.py --index metabolite_alignments --action populate --cohort-name FHS --verbose
 ```
 
-### STEP 7.A: Elasticsearch Indexing subject_phenotypes
+### STEP 7.A: Elasticsearch Indexing - subject_phenotypes
 
 
 
@@ -115,14 +115,14 @@ python main_es.py --index subject_phenotypes --action populate --cohort-name FIN
 python main_es.py --index subject_phenotypes --action populate --cohort-name FHS --phenotype-file /volume1/Database/phenotype/FHS/pheno_data_fhs_20171210_TL.csv --subject-id-label SubjectID --verbose
 ```
 
-### STEP 7.B: Elasticsearch Indexing sample_phenotypes
+### STEP 7.B: Elasticsearch Indexing - sample_phenotypes
 
 
 ```
 python main_es.py --action populate --index sample_phenotypes --phenotype-file /volume1/Database/phenotype/MESA/MESA2_20160520.csv --cohort-name MESA --exam-no 2 --subject-id-label idno --verbose
 ```
 
-### STEP 8: Elasticsearch Indexing phenotype_descriptions
+### STEP 8: Elasticsearch Indexing - phenotype_descriptions
 - ##### THIS MUST BE DONE LAST SO THAT WE CAN INFER THE DATATYPE
 
 
