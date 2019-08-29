@@ -59,7 +59,7 @@ def run(args):
               continue
           subject = session.query(Subject).filter(
               Subject.cohort_id == cohort.id,
-              Subject.local_subject_id == subject_id
+              Subject.local_subject_id == str(subject_id)
           ).first()
           if subject is None:
               continue
