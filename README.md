@@ -115,6 +115,10 @@ python main_es.py --index subject_phenotypes --action populate --cohort-name FIN
 python main_es.py --index subject_phenotypes --action populate --cohort-name FHS --phenotype-file /volume1/Database/phenotype/FHS/pheno_data_fhs_20171210_TL.csv --subject-id-label SubjectID --verbose
 ```
 
+```
+python main_es.py --index subject_phenotypes --action populate --cohort-name 'VITAL 400' --phenotype-file /volume1/Database/phenotype/VITAL400/vital_20180801.csv --subject-id-label subject_ID --verbose
+```
+
 ### STEP 7.B: Elasticsearch Indexing - sample_phenotypes
 
 
