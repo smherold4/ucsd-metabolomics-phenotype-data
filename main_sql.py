@@ -6,12 +6,6 @@ from scripts.sql import raw_ingestion, key_ingestion
 
 MODES = ['raw_ingestion', 'key_ingestion']
 
-def get_version(clargs):
-    if clargs.cohort_name in ['FHS', 'FINRISK']:
-        return 'v1'
-    else:
-        return 'v2'
-
 def get_command_line_args():
     parser = argparse.ArgumentParser(description='Move CSV data into Postgres')
     parser.add_argument(
@@ -54,8 +48,8 @@ if __name__ == '__main__':
     clargs = get_command_line_args()
     version = get_version(clargs)
     if clargs.mode == 'raw_ingestion':
-        getattr(raw_ingestion, version).run(clargs)
+        raw_ingestion.v2.run(clargs)
     elif clargs.mode == 'key_ingestion':
-        getattr(key_ingestion, version).run(clargs)
+        key_ingestion.v2.run(clargs)
     else:
         raise Exception('Unknown --mode {}'.format(clargs.mode))
