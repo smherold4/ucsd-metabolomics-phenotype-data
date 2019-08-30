@@ -28,7 +28,7 @@ def find_or_create_cohort_compound(session, series, cohort, calc_agg_stats):
     if calc_agg_stats:
         measurements = series[COLUMN_OF_FIRST_MEASUREMENT:]
         cohort_compound.median_measurement = measurements.median()
-        cohort_compound.presence_percentage = 100.0 * sum(1 for m in measurements if not pd.isnull(m))/len(measurements)
+        cohort_compound.presence_percentage = 100.0 * sum(1 for m in measurements if not pd.isnull(m)) / len(measurements)
     session.add(cohort_compound)
     session.commit()
     return cohort_compound

@@ -18,18 +18,10 @@ def measurement_class_factory(cohort):
     class MeasurementClass(base.Base):
         __tablename__ = get_tablename()
         id = Column(Integer, primary_key=True)
-        sample_id = Column(
-            Integer,
-            nullable=False)
-        cohort_compound_id = Column(
-            Integer,
-            nullable=False)
-        dataset_id = Column(
-            Integer,
-            nullable=False)
-        measurement = Column(
-            Numeric(precision=80, scale=30),
-            nullable=False)
+        sample_id = Column(Integer, nullable=False)
+        cohort_compound_id = Column(Integer, nullable=False)
+        dataset_id = Column(Integer, nullable=False)
+        measurement = Column(Numeric(precision=80, scale=30), nullable=False)
 
         metabolite = relationship('CohortCompound', uselist=False, primaryjoin='foreign(CohortCompound.id) == MeasurementClass.cohort_compound_id')
         dataset = relationship('Dataset', uselist=False, primaryjoin='foreign(Dataset.id) == MeasurementClass.dataset_id')

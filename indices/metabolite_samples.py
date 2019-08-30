@@ -1,14 +1,14 @@
 index = {
-    "settings" : {
-        "index" : {
-            "number_of_shards" : 72,
-            "number_of_replicas" : 0
+    "settings": {
+        "index": {
+            "number_of_shards": 72,
+            "number_of_replicas": 0
         }
     },
     "mappings": {
         "metabolite_sample": {
             "properties": {
-                 "created": {
+                "created": {
                     "type": "date",
                     "format": "epoch_second"
                 },

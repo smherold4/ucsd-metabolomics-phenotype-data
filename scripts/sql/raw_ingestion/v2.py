@@ -28,7 +28,7 @@ def find_or_create_cohort_compound(session, series, cohort, calc_agg_stats):
     if calc_agg_stats:
         measurements = series[COLUMN_OF_FIRST_MEASUREMENT:]
         cohort_compound.median_measurement = measurements.median()
-        cohort_compound.presence_percentage = 100.0 * sum(1 for m in measurements if not pd.isnull(m))/len(measurements)
+        cohort_compound.presence_percentage = 100.0 * sum(1 for m in measurements if not pd.isnull(m)) / len(measurements)
     session.add(cohort_compound)
     session.commit()
     return cohort_compound
@@ -63,6 +63,7 @@ def find_or_create_dataset(cohort, units, session):
     session.commit()
     return dataset
 
+
 def run(args):
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
@@ -94,7 +95,8 @@ def run(args):
                 if not pd.isnull(row[sample_id_label]):
                     values.append("({}, {}, {}, {})".format(sample_id, cohort_compound.id, dataset.id, row[sample_id_label]))
             if args.verbose:
-                print "Inserting {} records into {} for metabolite {}.  Row count is {}".format(len(values), Measurement.__tablename__, cohort_compound.local_compound_id, row_count)
+                print "Inserting {} records into {} for metabolite {}.  Row count is {}".format(
+                    len(values), Measurement.__tablename__, cohort_compound.local_compound_id, row_count)
             if len(values):
                 sql += ",".join(values)
                 session.execute(sql)

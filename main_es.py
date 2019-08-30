@@ -68,7 +68,7 @@ if __name__ == '__main__':
         ACTIONS)
 
     if clargs.action == 'create':
-        print es.indices.create(index=clargs.index, body= getattr(indices, clargs.index).index)
+        print es.indices.create(index=clargs.index, body=getattr(indices, clargs.index).index)
     elif clargs.action == 'delete':
         print es.indices.delete(index=clargs.index)
     elif clargs.action == 'populate':

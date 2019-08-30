@@ -1,8 +1,8 @@
 index = {
-    "settings" : {
-        "index" : {
-            "number_of_shards" : 18,
-            "number_of_replicas" : 1
+    "settings": {
+        "index": {
+            "number_of_shards": 18,
+            "number_of_replicas": 1
         }
     },
     "mappings": {
@@ -36,4 +36,3 @@ index = {
         }
     }
 }
-

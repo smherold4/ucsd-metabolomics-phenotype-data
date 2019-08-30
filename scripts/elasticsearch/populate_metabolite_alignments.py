@@ -56,7 +56,6 @@ def run(args):
     alignment_params = getattr(alignment_file_params, cohort.name.replace(" ", "_").replace("-", "_")).files
     alignments = build_alignment_dict(args, alignment_params, cohort, session)
 
-
     last_queried_id = args.starting_entity_id or 0
     while last_queried_id is not None:
         sql = session.query(CohortCompound).filter(

@@ -4,19 +4,23 @@ from elasticsearch import Elasticsearch, helpers
 from db import db_connection
 from models import *
 from sqlalchemy.orm import joinedload
-import sys, os, re, csv
+import sys
+import os
+import re
+import csv
 import pandas as pd
 from pandasticsearch import Select
 
 COLUMNS = {
-  'variable_name': 0,
-  'description':   1
+    'variable_name': 0,
+    'description': 1
 }
 
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')], timeout=30)
 INDEX_NAME = 'phenotype_descriptions'
 DOC_TYPE = 'phenotype_description'
 DEFAULT_BATCH_SIZE = 40000
+
 
 def run(args):
     assert args.cohort_name is not None, "Missing --cohort-name"
@@ -31,12 +35,12 @@ def run(args):
         for row in csv_reader:
             line_count += 1
             if line_count == 1:
-              continue
+                continue
             variable_name = row[COLUMNS['variable_name']]
             description = row[COLUMNS['description']] and unicode(row[COLUMNS['description']], 'UTF-8')
             if pd.isnull(variable_name):
-              continue
-            doc_id = "{}_{}".format(cohort.name, variable_name) # careful when changing this
+                continue
+            doc_id = "{}_{}".format(cohort.name, variable_name)  # careful when changing this
             datatype = get_datatype_for_phenotype(variable_name, cohort)
             es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body={
                 "datatype": datatype,
@@ -53,19 +57,19 @@ def get_datatype_for_phenotype(variable_name, cohort):
         "bool": {
             "must": [
                 {
-                  "term": {
-                    "study": cohort.name
-                  }
+                    "term": {
+                        "study": cohort.name
+                    }
                 },
                 {
-                  "term": {
-                    "name": variable_name
-                  }
+                    "term": {
+                        "name": variable_name
+                    }
                 },
             ]
         }
     }
-    res = es.search(index=cohort.phenotypes_data_index(), body={ "query": query }, size=10)
+    res = es.search(index=cohort.phenotypes_data_index(), body={"query": query}, size=10)
     df = Select.from_dict(res).to_pandas()
     if df is None:
         return None

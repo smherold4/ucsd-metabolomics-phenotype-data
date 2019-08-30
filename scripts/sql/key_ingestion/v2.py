@@ -32,6 +32,7 @@ def extract_subject_id(sample_id):
     if re_match:
         return re_match.group(1)
 
+
 def run(args):
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()

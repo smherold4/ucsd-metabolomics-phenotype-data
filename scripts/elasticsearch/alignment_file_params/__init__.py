@@ -1,1 +1,6 @@
-import FINRISK, FHS, MESA, VITAL_CTSC, VITAL_400, CIAO_SAGE
+import FINRISK
+import FHS
+import MESA
+import VITAL_CTSC
+import VITAL_400
+import CIAO_SAGE

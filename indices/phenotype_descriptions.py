@@ -1,31 +1,31 @@
 index = {
-    "settings" : {
-        "index" : {
-            "number_of_shards" : 5,
-            "number_of_replicas" : 1
+    "settings": {
+        "index": {
+            "number_of_shards": 5,
+            "number_of_replicas": 1
         },
         "analysis": {
             "filter": {
                 "english_stop": {
-                    "type":       "stop",
-                    "stopwords":  "_english_" 
+                    "type": "stop",
+                    "stopwords": "_english_"
                 },
                 "english_keywords": {
-                    "type":       "keyword_marker",
-                    "keywords":   ["example"] 
+                    "type": "keyword_marker",
+                    "keywords": ["example"]
                 },
                 "english_stemmer": {
-                    "type":       "stemmer",
-                    "language":   "english"
+                    "type": "stemmer",
+                    "language": "english"
                 },
                 "english_possessive_stemmer": {
-                    "type":       "stemmer",
-                    "language":   "possessive_english"
+                    "type": "stemmer",
+                    "language": "possessive_english"
                 }
             },
             "analyzer": {
                 "phenotype_description_analyzer": {
-                    "tokenizer":  "standard",
+                    "tokenizer": "standard",
                     "filter": [
                         "english_possessive_stemmer",
                         "lowercase",
