@@ -37,6 +37,12 @@ index = {
                 "method": {
                     "type": "keyword"
                 },
+                "min_raw": {
+                    "type": "double"
+                },
+                "max_raw": {
+                    "type": "double"
+                },
                 "prevalence": {
                     "type": "float"
                 },
