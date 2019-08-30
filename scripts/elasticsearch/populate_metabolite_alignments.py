@@ -78,6 +78,8 @@ def run(args):
                     "source": cohort.source(),
                     "ML_score": metabolite.ml_score,
                     "MZ": metabolite.mz,
+                    "min_raw": metabolite.min_raw,
+                    "max_raw": metabolite.max_raw,
                     "prevalence": metabolite.prevalence,
                     "RT": metabolite.rt,
                     "study": cohort.name,
