@@ -3,3 +3,6 @@ import metabolite_alignments
 import sample_phenotypes
 import subject_phenotypes
 import phenotype_descriptions
+import microbiome_abundances
+import microbiome_alignments
+import microbiome_sequences

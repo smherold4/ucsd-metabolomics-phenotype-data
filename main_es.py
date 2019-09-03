@@ -5,7 +5,16 @@ import argparse, indices, os
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')], timeout=40)
 import scripts.elasticsearch as scripts
 
-INDICES = ['metabolite_samples', 'metabolite_alignments', 'subject_phenotypes', 'phenotype_descriptions', 'sample_phenotypes']
+INDICES = [
+    'metabolite_samples',
+    'metabolite_alignments',
+    'subject_phenotypes',
+    'phenotype_descriptions',
+    'sample_phenotypes',
+    'microbiome_abundances',
+    'microbiome_alignments',
+    'microbiome_sequences',
+]
 ACTIONS = ['create', 'delete', 'populate']
 
 def get_command_line_args():
