@@ -46,12 +46,11 @@ def run(args):
             line_count += 1
             if not has_all_fields(row):
                 continue
-            doc = build_document(row)
-
             for species in row['species'].split(","):
+                doc = build_document(row)
+                doc['species'] = species
                 if pd.isnull(species):
                     continue
-                doc['species'] = species
                 es_inserts.append({
                     "_index": INDEX_NAME,
                     "_type": DOC_TYPE,
