@@ -138,3 +138,10 @@ python main_es.py --index phenotype_descriptions --action populate --cohort-name
 ```
 python main_es.py --index phenotype_descriptions --action populate --cohort-name FHS --phenotype-file /volume1/Database/phenotype/FHS/pheno_data_fhs_description_KM.csv --verbose
 ```
+
+## MICROBIOME INDEXING
+
+#### `microbiome_abundances`
+```
+python main_es.py --index microbiome_abundances --action populate --microbiome-file /volume1/Database/microbiome/agp/microbiome_abundance.txt --verbose
+```
