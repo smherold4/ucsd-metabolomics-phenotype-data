@@ -152,3 +152,7 @@ python main_es.py --index microbiome_abundances --action populate --microbiome-f
 ```
 python main_es.py --index microbiome_alignments --action populate --cohort-name FINRISK --microbiome-file /volume1/Database/microbiome/finrisk/microbiome_alignments.txt --verbose
 ```
+
+```
+python main_es.py --index microbiome_alignments --action populate --cohort-name GGMP --microbiome-file /volume1/Database/microbiome/ggmp/microbiome_alignments.txt --verbose
+```
