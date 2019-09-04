@@ -3,7 +3,20 @@ index = {
         "index": {
             "number_of_shards": 14,
             "number_of_replicas": 1
-        }
+        },
+        "analysis": {
+            "tokenizer": {
+                "strain_tokenizer": {
+                    "type": "pattern",
+                    "pattern": "[\_\,\s]", # tokenize on underscores, commas and spaces
+                }
+            },
+            "analyzer": {
+                "strain_analyzer": {
+                    "tokenizer": "strain_tokenizer"
+                }
+            }
+        },
     },
     "mappings": {
         "microbiome_alignment": {
@@ -11,6 +24,9 @@ index = {
                 "created": {
                     "type": "date",
                     "format": "epoch_second"
+                },
+                "study": {
+                    "type": "keyword"
                 },
                 "variant_id": {
                     "type": "keyword"
@@ -55,7 +71,8 @@ index = {
                     "type": "float"
                 },
                 "strain": {
-                    "type": "keyword"
+                    "type": "text",
+                    "analyzer": "strain_analyzer",
                 },
                 "copy_number": {
                     "type": "integer"
