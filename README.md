@@ -145,3 +145,10 @@ python main_es.py --index phenotype_descriptions --action populate --cohort-name
 ```
 python main_es.py --index microbiome_abundances --action populate --microbiome-file /volume1/Database/microbiome/agp/microbiome_abundance.txt --verbose
 ```
+
+#### `microbiome_alignments`
+
+(since the study name is not included in this file, we have to specify it at the command line as `--cohort-name`)
+```
+python main_es.py --index microbiome_alignments --action populate --cohort-name FINRISK --microbiome-file /volume1/Database/microbiome/finrisk/microbiome_alignments.txt --verbose
+```
