@@ -46,17 +46,15 @@ def run(args):
             line_count += 1
             if not has_all_fields(row):
                 continue
-            for species in row['species'].split(","):
-                doc = build_document(row)
-                doc['species'] = species
-                if pd.isnull(species):
-                    continue
-                es_inserts.append({
-                    "_index": INDEX_NAME,
-                    "_type": DOC_TYPE,
-                    "_id": doc['dataset'] + "_" + doc['sample_id'] + "_" + doc['species'],
-                    "_source": doc
-                })
+            doc = build_document(row)
+            doc['study'] = doc.pop('dataset')
+            doc['subjectID'] = doc.pop('sample_id')
+            es_inserts.append({
+                "_index": INDEX_NAME,
+                "_type": DOC_TYPE,
+                "_id": doc['study'] + "_" + doc['subjectID'] + "_" + doc['osu_id'],
+                "_source": doc
+            })
         if args.verbose:
             print "Inserting {} {} documents.  Line count is {}".format(
                 len(es_inserts),

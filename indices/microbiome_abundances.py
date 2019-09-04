@@ -3,6 +3,19 @@ index = {
         "index": {
             "number_of_shards": 14,
             "number_of_replicas": 1
+        },
+        "analysis": {
+            "tokenizer": {
+                "species_tokenizer": {
+                    "type": "pattern",
+                    "pattern": "[\_\,\s]", # tokenize on underscores, commas and spaces
+                }
+            },
+            "analyzer": {
+                "species_analyzer": {
+                    "tokenizer": "species_tokenizer"
+                }
+            }
         }
     },
     "mappings": {
@@ -12,10 +25,10 @@ index = {
                     "type": "date",
                     "format": "epoch_second"
                 },
-                "dataset": {
+                "study": {
                     "type": "keyword"
                 },
-                "sample_id": {
+                "subjectID": {
                     "type": "keyword"
                 },
                 "osu_id": {
@@ -28,7 +41,8 @@ index = {
                     "type": "float"
                 },
                 "species": {
-                    "type": "keyword"
+                    "type": "text",
+                    "analyzer": "species_analyzer",
                 },
             }
         }
