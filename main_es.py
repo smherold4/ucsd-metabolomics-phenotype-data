@@ -32,6 +32,10 @@ def get_command_line_args():
         help="Action to perform: {}" %
         ACTIONS)
     parser.add_argument(
+        '--microbiome-file',
+        type=str,
+        help="Path to microbiome data")
+    parser.add_argument(
         '--phenotype-file',
         type=str,
         help="Path to phenotype data or description file")
