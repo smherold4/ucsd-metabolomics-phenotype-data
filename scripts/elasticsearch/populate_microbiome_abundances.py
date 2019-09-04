@@ -40,6 +40,7 @@ def build_document(row):
 
 def run(args):
     line_count = 0
+    assert args.microbiome_file is not None, "Missing --microbiome-file"
     for df in pd.read_csv(args.microbiome_file, chunksize=CSV_CHUNKSIZE, delim_whitespace=True):
         es_inserts = []
         for _, row in df.iterrows():
@@ -49,6 +50,7 @@ def run(args):
             doc = build_document(row)
             doc['study'] = doc.pop('dataset')
             doc['subjectID'] = doc.pop('sample_id')
+            doc['created'] = datetime.now().strftime("%s")
             es_inserts.append({
                 "_index": INDEX_NAME,
                 "_type": DOC_TYPE,
