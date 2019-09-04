@@ -148,7 +148,7 @@ python main_es.py --index microbiome_abundances --action populate --microbiome-f
 
 #### `microbiome_alignments`
 
-(since the study name is not included in this file, we have to specify it at the command line as `--cohort-name`)
+* since the study name is not included in these files, we have to specify it at the command line as `--cohort-name`
 ```
 python main_es.py --index microbiome_alignments --action populate --cohort-name FINRISK --microbiome-file /volume1/Database/microbiome/finrisk/microbiome_alignments.txt --verbose
 ```
