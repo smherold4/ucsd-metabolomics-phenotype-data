@@ -6,14 +6,15 @@ index = {
         },
         "analysis": {
             "tokenizer": {
-                "strain_tokenizer": {
+                "comma_whitespace_tokenizer": {
                     "type": "pattern",
-                    "pattern": "[\_\,\s]", # tokenize on underscores, commas and spaces
-                }
+                    "pattern": "[\,\s]",
+                },
             },
             "analyzer": {
                 "strain_analyzer": {
-                    "tokenizer": "strain_tokenizer"
+                    "filter": ["lowercase"],
+                    "tokenizer": "comma_whitespace_tokenizer",
                 }
             }
         },

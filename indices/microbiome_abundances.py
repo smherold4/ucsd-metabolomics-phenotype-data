@@ -6,17 +6,18 @@ index = {
         },
         "analysis": {
             "tokenizer": {
-                "species_tokenizer": {
+                "comma_whitespace_tokenizer": {
                     "type": "pattern",
-                    "pattern": "[\_\,\s]", # tokenize on underscores, commas and spaces
-                }
+                    "pattern": "[\,\s]",
+                },
             },
             "analyzer": {
                 "species_analyzer": {
-                    "tokenizer": "species_tokenizer"
+                    "filter": ["lowercase"],
+                    "tokenizer": "comma_whitespace_tokenizer",
                 }
             }
-        }
+        },
     },
     "mappings": {
         "microbiome_abundance": {

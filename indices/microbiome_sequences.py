@@ -3,7 +3,21 @@ index = {
         "index": {
             "number_of_shards": 14,
             "number_of_replicas": 1
-        }
+        },
+        "analysis": {
+            "tokenizer": {
+                "comma_whitespace_tokenizer": {
+                    "type": "pattern",
+                    "pattern": "[\,\s]",
+                },
+            },
+            "analyzer": {
+                "species_analyzer": {
+                    "filter": ["lowercase"],
+                    "tokenizer": "comma_whitespace_tokenizer",
+                }
+            }
+        },
     },
     "mappings": {
         "microbiome_sequence": {
@@ -12,7 +26,7 @@ index = {
                     "type": "date",
                     "format": "epoch_second"
                 },
-                "dataset": {
+                "study": {
                     "type": "keyword"
                 },
                 "osu_id": {
@@ -28,7 +42,8 @@ index = {
                     "type": "integer"
                 },
                 "species": {
-                    "type": "keyword"
+                    "type": "text",
+                    "analyzer": "species_analyzer",
                 },
                 "sequence": {
                     "type": "keyword",
