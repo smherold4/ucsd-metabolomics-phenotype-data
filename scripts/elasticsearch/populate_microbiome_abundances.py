@@ -1,7 +1,6 @@
 import indices
 from datetime import datetime
 from elasticsearch import Elasticsearch, helpers
-from db import db_connection
 from models import *
 import sys
 import os
@@ -41,9 +40,6 @@ def build_document(row):
 def run(args):
     line_count = 0
     assert args.cohort_name is not None, "Missing --cohort-name"
-    session = db_connection.session_factory()
-    cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
-    assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
     assert args.microbiome_file is not None, "Missing --microbiome-file"
     for df in pd.read_csv(args.microbiome_file, chunksize=CSV_CHUNKSIZE, delim_whitespace=True):
         es_inserts = []
@@ -52,14 +48,14 @@ def run(args):
             if not has_all_fields(row):
                 continue
             doc = build_document(row)
-            doc['study'] = cohort.name
+            doc['study'] = args.cohort_name
             doc['subjectID'] = doc.pop('sample_id')
             doc['created'] = datetime.now().strftime("%s")
             doc['species'] = doc['species'].replace('_', ' ')
             es_inserts.append({
                 "_index": INDEX_NAME,
                 "_type": DOC_TYPE,
-                "_id": cohort.name.replace(" ", "_") + "_" + doc['subjectID'] + "_" + doc['osu_id'],
+                "_id": args.cohort_name.replace(" ", "_") + "_" + doc['subjectID'] + "_" + doc['osu_id'],
                 "_source": doc
             })
         if args.verbose:
