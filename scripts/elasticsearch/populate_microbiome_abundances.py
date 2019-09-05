@@ -51,6 +51,7 @@ def run(args):
             doc['study'] = doc.pop('dataset')
             doc['subjectID'] = doc.pop('sample_id')
             doc['created'] = datetime.now().strftime("%s")
+            doc['species'] = doc['species'].replace('_', ' ')
             es_inserts.append({
                 "_index": INDEX_NAME,
                 "_type": DOC_TYPE,

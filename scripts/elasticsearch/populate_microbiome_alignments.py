@@ -58,11 +58,13 @@ def run(args):
             if not has_all_fields(row):
                 continue
             doc = build_document(row)
+            strain_w_underscores = doc['strain']
+            doc['strain'] = doc['strain'].replace('_', ' ')
             doc['study'] = args.cohort_name
             doc['created'] = datetime.now().strftime("%s")
             es_inserts.append({
                 "_index": INDEX_NAME,
-                "_id": doc['study'] + "_" + doc['strain'] + "_qseqid" + str(doc['qseqid']),
+                "_id": doc['study'] + "_" + strain_w_underscores + "_qseqid" + str(doc['qseqid']),
                 "_type": DOC_TYPE,
                 "_source": doc
             })
