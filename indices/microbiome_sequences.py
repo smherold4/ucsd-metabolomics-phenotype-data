@@ -16,7 +16,13 @@ index = {
                     "filter": ["lowercase"],
                     "tokenizer": "comma_whitespace_tokenizer",
                 }
-            }
+            },
+            "normalizer": {
+                "dna_sequence_normalizer": {
+                    "type": "custom",
+                    "filter": ["lowercase"],
+                },
+            },
         },
     },
     "mappings": {
@@ -47,6 +53,7 @@ index = {
                 },
                 "sequence": {
                     "type": "keyword",
+                    "normalizer": "dna_sequence_normalizer",
                 },
             }
         }
