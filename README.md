@@ -154,3 +154,12 @@ python main_es.py --index microbiome_alignments --action populate --cohort-name 
 ```
 python main_es.py --index microbiome_alignments --action populate --cohort-name GGMP --microbiome-file /volume1/Database/microbiome/ggmp/microbiome_alignments.txt --verbose
 ```
+
+#### `microbiome_sequenes`
+```
+python main_es.py --index microbiome_sequences --action populate --cohort-name FINRISK --microbiome-file /volume1/Database/microbiome/finrisk/microbiome_sequence.txt --verbose
+```
+
+```
+python main_es.py --index microbiome_sequences --action populate --cohort-name AGP --microbiome-file /volume1/Database/microbiome/agp/microbiome_sequence.txt --verbose
+```
