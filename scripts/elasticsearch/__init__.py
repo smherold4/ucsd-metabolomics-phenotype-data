@@ -5,6 +5,7 @@ import populate_sample_phenotypes
 import populate_phenotype_descriptions
 import populate_microbiome_abundances
 import populate_microbiome_alignments
+import populate_microbiome_sequences
 
 __all__ = [
     'populate_metabolite_samples',
@@ -14,4 +15,5 @@ __all__ = [
     'populate_phenotype_descriptions',
     'populate_microbiome_abundances',
     'populate_microbiome_alignments',
+    'populate_microbiome_sequences',
 ]
