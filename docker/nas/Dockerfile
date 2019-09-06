@@ -1,4 +1,4 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:6.8.1
+FROM docker.elastic.co/elasticsearch/elasticsearch:7.3.1
 ARG ELASTIC_PASSWORD
 ENV ELASTIC_PASSWORD=$ELASTIC_PASSWORD
 
