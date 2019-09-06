@@ -19,6 +19,7 @@ node.master: true
 node.data: false
 node.ingest: false
 node.name: nas
+cluster.initial_master_nodes: nas
 cluster.name: "docker-cluster"
 cluster.routing.allocation.disk.threshold_enabled: false
 network.host: 0.0.0.0
