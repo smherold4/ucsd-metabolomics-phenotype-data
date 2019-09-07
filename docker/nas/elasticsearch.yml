@@ -16,7 +16,7 @@ xpack.security.transport.ssl.certificate: /usr/share/elasticsearch/config/certif
 xpack.security.transport.ssl.key: /usr/share/elasticsearch/config/certificates/es.key
 
 node.master: true
-node.data: true
+node.data: false
 node.ingest: false
 node.name: nas
 cluster.initial_master_nodes: nas
