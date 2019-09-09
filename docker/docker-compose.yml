@@ -21,7 +21,7 @@ services:
     image: herold961/ucsd-workstation1
     volumes:
       - /media/ssd1/elasticsearch:/usr/share/elasticsearch/data:rw
-      - /mnt/labdata/elasticsearch-snapshots:/opt/elasticsearch/snapshots:rw
+      - /mnt/Database/elasticsearch-snapshots:/opt/elasticsearch/snapshots-repo:rw
     deploy:
       endpoint_mode: dnsrr
       placement:
@@ -46,7 +46,7 @@ services:
     image: herold961/ucsd-workstation2
     volumes:
       - /media/ssd2/elasticsearch:/usr/share/elasticsearch/data:rw
-      - /mnt/labdata/elasticsearch-snapshots:/opt/elasticsearch/snapshots:rw
+      - /mnt/Database/elasticsearch-snapshots:/opt/elasticsearch/snapshots-repo:rw
     deploy:
       endpoint_mode: dnsrr
       placement:
@@ -67,7 +67,7 @@ services:
     image: herold961/ucsd-workstation3
     volumes:
       - /media/ssd2/elasticsearch2:/usr/share/elasticsearch/data:rw
-      - /mnt/labdata/elasticsearch-snapshots:/opt/elasticsearch/snapshots:rw
+      - /mnt/Database/elasticsearch-snapshots:/opt/elasticsearch/snapshots-repo:rw
     deploy:
       endpoint_mode: dnsrr
       placement:
@@ -88,7 +88,7 @@ services:
     image: herold961/ucsd-nas
     volumes:
       - /volume1/Database/elasticsearch:/usr/share/elasticsearch/data:rw
-      - /mnt/labdata/elasticsearch-snapshots:/opt/elasticsearch/snapshots:rw
+      - /mnt/Database/elasticsearch-snapshots:/opt/elasticsearch/snapshots-repo:rw
     deploy:
       endpoint_mode: dnsrr
       placement:
