@@ -16,7 +16,7 @@ INDEX_NAME = 'microbiome_alignments'
 DOC_TYPE = 'microbiome_alignment'
 CSV_CHUNKSIZE = 3000
 
-FIELDS = { 
+FIELDS = {
     "variant_id": str,
     "qseqid": int,
     "length": int,
@@ -35,17 +35,20 @@ FIELDS = {
     "copy_number": int,
 }
 
+
 def has_all_fields(row):
     for field in FIELDS.keys():
         if pd.isnull(row[field]):
             return False
     return True
 
+
 def build_document(row):
     result = {}
     for field, dtype in FIELDS.iteritems():
         result[field] = dtype(row[field])
     return result
+
 
 def run(args):
     assert args.cohort_name is not None, "Missing --cohort-name"

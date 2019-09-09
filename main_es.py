@@ -20,6 +20,7 @@ ACTIONS = ['create', 'delete', 'populate']
 
 SNAPSHOT_REPOSITORY = 'monthly'
 
+
 def get_command_line_args():
     parser = argparse.ArgumentParser(description='Move SQL data into Elasticsearch')
     parser.add_argument(
@@ -82,20 +83,18 @@ def get_command_line_args():
 if __name__ == '__main__':
     clargs = get_command_line_args()
 
+    assert clargs.action in ACTIONS, 'Unknown action. Must be one of: {}'.format(
+        ACTIONS)
+
+    if clargs.action is not 'snapshot':
+        assert clargs.index in INDICES, 'Unknown index (--index) provided. Must be one of: {}'.format(INDICES)
+
     if clargs.action == 'snapshot':
         assert clargs.snapshot_name is not None, "Must provide a --snapshot-name"
         es_snapshot = SnapshotClient([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
         response = es_snapshot.create(repository=SNAPSHOT_REPOSITORY, snapshot=clargs.snapshot_name, master_timeout=30)
         print(response)
-        return True
-    ###########################################################################################
-
-    assert clargs.index in INDICES, 'Unknown index (--index) provided. Must be one of: {}'.format(
-        INDICES)
-    assert clargs.action in ACTIONS, 'Unknown action. Must be one of: {}'.format(
-        ACTIONS)
-
-    if clargs.action == 'create':
+    elif clargs.action == 'create':
         print es.indices.create(index=clargs.index, body=getattr(indices, clargs.index).index)
     elif clargs.action == 'delete':
         print es.indices.delete(index=clargs.index)

@@ -24,11 +24,13 @@ FIELDS = {
     "species": str,
 }
 
+
 def has_all_fields(row):
     for field in FIELDS.keys():
         if pd.isnull(row[field]):
             return False
     return True
+
 
 def build_document(row):
     result = {}
