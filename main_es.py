@@ -16,7 +16,7 @@ INDICES = [
     'microbiome_alignments',
     'microbiome_sequences',
 ]
-ACTIONS = ['create', 'delete', 'populate']
+ACTIONS = ['create', 'delete', 'populate', 'snapshot']
 
 SNAPSHOT_REPOSITORY = 'monthly'
 
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     assert clargs.action in ACTIONS, 'Unknown action. Must be one of: {}'.format(
         ACTIONS)
 
-    if clargs.action is not 'snapshot':
+    if clargs.action != 'snapshot':
         assert clargs.index in INDICES, 'Unknown index (--index) provided. Must be one of: {}'.format(INDICES)
 
     if clargs.action == 'snapshot':
