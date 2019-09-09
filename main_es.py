@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 from elasticsearch import Elasticsearch
+from elasticsearch.client import SnapshotClient
 import argparse, indices, os
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')], timeout=40)
 import scripts.elasticsearch as scripts
@@ -17,11 +18,12 @@ INDICES = [
 ]
 ACTIONS = ['create', 'delete', 'populate']
 
+SNAPSHOT_REPOSITORY = 'monthly'
+
 def get_command_line_args():
     parser = argparse.ArgumentParser(description='Move SQL data into Elasticsearch')
     parser.add_argument(
         '--index',
-        required=True,
         type=str,
         help="Elasticsearch index: {}" %
         INDICES)
@@ -43,6 +45,10 @@ def get_command_line_args():
         '--cohort-name',
         type=str,
         help="Name of cohort - when ingesting description")
+    parser.add_argument(
+        '--snapshot-name',
+        type=str,
+        help="Name of snapshot")
     parser.add_argument(
         '--index-batch-size',
         type=int,
@@ -75,6 +81,15 @@ def get_command_line_args():
 
 if __name__ == '__main__':
     clargs = get_command_line_args()
+
+    if clargs.action == 'snapshot':
+        assert clargs.snapshot_name is not None, "Must provide a --snapshot-name"
+        es_snapshot = SnapshotClient([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
+        response = es_snapshot.create(repository=SNAPSHOT_REPOSITORY, snapshot=clargs.snapshot_name, master_timeout=30)
+        print(response)
+        return True
+    ###########################################################################################
+
     assert clargs.index in INDICES, 'Unknown index (--index) provided. Must be one of: {}'.format(
         INDICES)
     assert clargs.action in ACTIONS, 'Unknown action. Must be one of: {}'.format(
