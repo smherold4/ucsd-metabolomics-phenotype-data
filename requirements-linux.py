@@ -20,6 +20,7 @@ pylint==1.9.5
 python-dateutil==2.8.0
 python-dotenv==0.10.3
 pytz==2019.1
+requests==2.22.0
 singledispatch==3.4.0.3
 six==1.12.0
 SQLAlchemy==1.3.5
