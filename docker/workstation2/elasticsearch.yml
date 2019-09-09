@@ -3,7 +3,7 @@ discovery.zen.ping_timeout: 5s
 discovery.zen.commit_timeout: 5s
 discovery.zen.minimum_master_nodes: 1
 
-path.repo: ["/opt/elasticsearch/backup"]
+path.repo: ["/opt/elasticsearch/snapshots"]
 
 xpack.security.enabled: true
 xpack.security.transport.ssl.enabled: true
