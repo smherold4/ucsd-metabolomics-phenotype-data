@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 from elasticsearch import Elasticsearch
-from elasticsearch.client import SnapshotClient
+import requests
 import argparse, indices, os
 es = Elasticsearch([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')], timeout=40)
 import scripts.elasticsearch as scripts
@@ -91,9 +91,11 @@ if __name__ == '__main__':
 
     if clargs.action == 'snapshot':
         assert clargs.snapshot_name is not None, "Must provide a --snapshot-name"
-        es_snapshot = SnapshotClient([os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200')])
-        response = es_snapshot.create(repository=SNAPSHOT_REPOSITORY, snapshot=clargs.snapshot_name, master_timeout=30)
-        print(response)
+        put_snapshot_url = "{}/_snapshot/{}/{}?_wait_for_completion=false".format(
+            os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200'),
+            SNAPSHOT_REPOSITORY, clargs.snapshot_name.replace(' ', '_'))
+        r = requests.put(put_snapshot_url)
+        print(r.json())
     elif clargs.action == 'create':
         print es.indices.create(index=clargs.index, body=getattr(indices, clargs.index).index)
     elif clargs.action == 'delete':
