@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     if clargs.action == 'snapshot':
         assert clargs.snapshot_name is not None, "Must provide a --snapshot-name"
-        put_snapshot_url = "{}/_snapshot/{}/{}?_wait_for_completion=false".format(
+        put_snapshot_url = "{}/_snapshot/{}/{}?wait_for_completion=false".format(
             os.getenv('ELASTICSEARCH_CONFIG_URL', 'http://localhost:9200'),
             SNAPSHOT_REPOSITORY, clargs.snapshot_name.replace(' ', '_'))
         r = requests.put(put_snapshot_url)
