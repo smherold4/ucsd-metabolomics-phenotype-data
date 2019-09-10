@@ -16,7 +16,7 @@ INDEX_NAME = 'microbiome_sequences'
 DOC_TYPE = 'microbiome_sequence'
 CSV_CHUNKSIZE = 3000
 
-FIELDS = {
+REQUIRED_FIELDS = {
     "osu_id": int,
     "pctsim": float,
     "copy_number": int,
@@ -25,9 +25,23 @@ FIELDS = {
     "sequence": str,
 }
 
+CLASSIFICATION_FIELDS = {
+    "kingdom": str,
+    "phylum": str,
+    "class": str,
+    "order": str,
+    "family": str,
+    "genus": str,
+    "species": str,
+}
 
-def has_all_fields(row):
-    for field in FIELDS.keys():
+def all_fields():
+    result = REQUIRED_FIELDS.copy()
+    result.update(CLASSIFICATION_FIELDS)
+    return result
+
+def has_required_fields(row):
+    for field in all_fields().keys():
         if pd.isnull(row[field]):
             return False
     return True
@@ -48,11 +62,13 @@ def run(args):
         es_inserts = []
         for _, row in df.iterrows():
             line_count += 1
-            if not has_all_fields(row):
+            if not has_required_fields(row):
                 continue
             doc = build_document(row)
             species_first_300_chars = doc['species'][0:300]
-            doc['species'] = doc['species'].replace('_', ' ')
+            for analyzed_field in CLASSIFICATION_FIELDS.keys():
+                # Tao wanted to remove underscores from these fields before saving
+                doc[analyzed_field] = doc[analyzed_field].replace('_', ' ')
             doc['study'] = args.cohort_name
             doc['created'] = datetime.now().strftime("%s")
             es_inserts.append({
