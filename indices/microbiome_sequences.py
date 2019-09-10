@@ -55,6 +55,30 @@ index = {
                     "type": "keyword",
                     "normalizer": "dna_sequence_normalizer",
                 },
+                "kingdom": {
+                    "type": "text",
+                    "analyzer": "species_analyzer",
+                },
+                "phylum": {
+                    "type": "text",
+                    "analyzer": "species_analyzer",
+                },
+                "class": {
+                    "type": "text",
+                    "analyzer": "species_analyzer",
+                },
+                "order": {
+                    "type": "text",
+                    "analyzer": "species_analyzer",
+                },
+                "family": {
+                    "type": "text",
+                    "analyzer": "species_analyzer",
+                },
+                "genus": {
+                    "type": "text",
+                    "analyzer": "species_analyzer",
+                },
             }
         }
     }
