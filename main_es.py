@@ -103,7 +103,7 @@ if __name__ == '__main__':
     elif clargs.action == 'update_mapping':
         mappings = getattr(indices, clargs.index).index["mappings"]
         for doc_type, mapping_properties in mappings.iteritems():
-            print es.indices.put_mapping(index=clargs.index, doc_type=doc_type, body=mapping_properties)
+            print es.indices.put_mapping(index=clargs.index, doc_type=doc_type, body=mapping_properties, include_type_name=True)
     elif clargs.action == 'populate':
         getattr(scripts, 'populate_{}'.format(clargs.index)).run(clargs)
     else:
