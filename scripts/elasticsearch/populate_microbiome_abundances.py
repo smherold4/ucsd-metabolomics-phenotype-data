@@ -16,7 +16,7 @@ INDEX_NAME = 'microbiome_abundances'
 DOC_TYPE = 'microbiome_abundance'
 CSV_CHUNKSIZE = 3000
 
-FIELDS = {
+REQUIRED_FIELDS = {
     "sample_id": str,
     "osu_id": str,
     "osu_count": int,
@@ -24,9 +24,17 @@ FIELDS = {
     "species": str,
 }
 
+ADDITIONAL_FIELDS = {
+    "ablog10": float,
+}
 
-def has_all_fields(row):
-    for field in FIELDS.keys():
+def all_fields():
+    result = REQUIRED_FIELDS.copy()
+    result.update(ADDITIONAL_FIELDS)
+    return result
+
+def has_required_fields(row):
+    for field in REQUIRED_FIELDS.keys():
         if pd.isnull(row[field]):
             return False
     return True
@@ -34,7 +42,7 @@ def has_all_fields(row):
 
 def build_document(row):
     result = {}
-    for field, dtype in FIELDS.iteritems():
+    for field, dtype in all_fields().iteritems():
         result[field] = dtype(row[field])
     return result
 
@@ -47,7 +55,7 @@ def run(args):
         es_inserts = []
         for _, row in df.iterrows():
             line_count += 1
-            if not has_all_fields(row):
+            if not has_required_fields(row):
                 continue
             doc = build_document(row)
             doc['study'] = args.cohort_name
