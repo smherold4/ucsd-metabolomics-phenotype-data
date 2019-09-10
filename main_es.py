@@ -16,7 +16,7 @@ INDICES = [
     'microbiome_alignments',
     'microbiome_sequences',
 ]
-ACTIONS = ['create', 'delete', 'populate', 'snapshot']
+ACTIONS = ['create', 'delete', 'populate', 'update_mapping', 'snapshot']
 
 SNAPSHOT_REPOSITORY = 'monthly'
 
@@ -100,6 +100,10 @@ if __name__ == '__main__':
         print es.indices.create(index=clargs.index, body=getattr(indices, clargs.index).index)
     elif clargs.action == 'delete':
         print es.indices.delete(index=clargs.index)
+    elif clargs.action == 'update_mapping':
+        mappings = getattr(indices, clargs.index).index["mappings"]
+        for doc_type, mapping_properties in mappings.iteritems():
+            print es.indices.put_mapping(index=clargs.index, doc_type=doc_type, body=mapping_properties)
     elif clargs.action == 'populate':
         getattr(scripts, 'populate_{}'.format(clargs.index)).run(clargs)
     else:

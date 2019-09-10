@@ -22,6 +22,9 @@ index = {
     "mappings": {
         "microbiome_abundance": {
             "properties": {
+                "ablog10": {
+                    "type": "float",
+                },
                 "created": {
                     "type": "date",
                     "format": "epoch_second"
