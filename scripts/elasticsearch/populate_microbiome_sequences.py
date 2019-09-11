@@ -41,7 +41,7 @@ def all_fields():
     return result
 
 def has_required_fields(row):
-    for field in all_fields().keys():
+    for field in REQUIRED_FIELDS.keys():
         if pd.isnull(row[field]):
             return False
     return True
@@ -49,7 +49,7 @@ def has_required_fields(row):
 
 def build_document(row):
     result = {}
-    for field, dtype in FIELDS.iteritems():
+    for field, dtype in all_fields().iteritems():
         result[field] = dtype(row[field])
     return result
 
@@ -58,7 +58,7 @@ def run(args):
     assert args.cohort_name is not None, "Missing --cohort-name"
     assert args.microbiome_file is not None, "Missing --microbiome-file"
     line_count = 0
-    for df in pd.read_csv(args.microbiome_file, chunksize=CSV_CHUNKSIZE, delim_whitespace=True):
+    for df in pd.read_csv(args.microbiome_file, chunksize=CSV_CHUNKSIZE, sep='\t'):
         es_inserts = []
         for _, row in df.iterrows():
             line_count += 1

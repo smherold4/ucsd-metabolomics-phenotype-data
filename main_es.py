@@ -97,7 +97,7 @@ if __name__ == '__main__':
         r = requests.put(put_snapshot_url)
         print(r.json())
     elif clargs.action == 'create':
-        print es.indices.create(index=clargs.index, body=getattr(indices, clargs.index).index)
+        print es.indices.create(index=clargs.index, body=getattr(indices, clargs.index).index, include_type_name=True)
     elif clargs.action == 'delete':
         print es.indices.delete(index=clargs.index)
     elif clargs.action == 'update_mapping':

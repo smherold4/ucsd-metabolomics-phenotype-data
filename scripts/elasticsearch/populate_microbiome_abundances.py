@@ -51,7 +51,7 @@ def run(args):
     line_count = 0
     assert args.cohort_name is not None, "Missing --cohort-name"
     assert args.microbiome_file is not None, "Missing --microbiome-file"
-    for df in pd.read_csv(args.microbiome_file, chunksize=CSV_CHUNKSIZE, delim_whitespace=True):
+    for df in pd.read_csv(args.microbiome_file, chunksize=CSV_CHUNKSIZE, sep='\t'):
         es_inserts = []
         for _, row in df.iterrows():
             line_count += 1
