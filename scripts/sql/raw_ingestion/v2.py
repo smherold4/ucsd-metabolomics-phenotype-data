@@ -3,6 +3,7 @@ from models import *
 from db import db_connection
 import pandas as pd
 import re
+import string
 
 CSV_CHUNKSIZE = 8000
 
@@ -74,7 +75,8 @@ def find_or_create_dataset(cohort, units, session):
 
 
 def run(args):
-    assert args.col_of_first_measurement is not None, "Must provide --col-of-first-measurement"
+    assert args.col_of_first_measurement in string.ascii_uppercase, "Must provide --col-of-first-measurement between A and Z"
+    col_of_first_measurement = string.ascii_uppercase.index(args.col_of_first_measurement)
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
@@ -85,12 +87,12 @@ def run(args):
     sample_ids_cache = {}
     row_count = 0
     for df in pd.read_csv(args.file, chunksize=(args.csv_chunksize or CSV_CHUNKSIZE)):
-        sample_id_labels = df.columns[args.col_of_first_measurement:]
+        sample_id_labels = df.columns[col_of_first_measurement:]
         for _, row in df.iterrows():
             sql = "INSERT INTO {} (sample_id, cohort_compound_id, dataset_id, measurement) VALUES ".format(Measurement.__tablename__)
             values = []
             row_count += 1
-            cohort_compound = find_or_create_cohort_compound(session, row, cohort, args.units == 'raw', args.col_of_first_measurement)
+            cohort_compound = find_or_create_cohort_compound(session, row, cohort, args.units == 'raw', col_of_first_measurement)
             if not cohort_compound:
                 continue
             for sample_id_label in sample_id_labels:

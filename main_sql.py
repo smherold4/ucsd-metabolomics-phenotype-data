@@ -25,7 +25,7 @@ def get_command_line_args():
     )
     parser.add_argument(
         '--col-of-first-measurement',
-        type=int,
+        type=str,
     )
     parser.add_argument(
         '--units',
