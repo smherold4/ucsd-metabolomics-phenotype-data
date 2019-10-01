@@ -40,9 +40,6 @@ def run(args):
 
     line_count = 0
     for df in pd.read_csv(args.file, chunksize=CSV_CHUNKSIZE):
-        cohort.cohort_sample_id_label = df.columns[COLUMNS['cohort_sample_id_label']]
-        session.add(cohort)
-        session.commit()
         for _, row in df.iterrows():
             line_count += 1
             cohort_sample_id = row[COLUMNS['cohort_sample_id_label']]
