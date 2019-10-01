@@ -5,14 +5,13 @@ import pandas as pd
 import re
 
 CSV_CHUNKSIZE = 8000
-COLUMN_OF_FIRST_MEASUREMENT = 14
 
 # Customize this by cohort
 SAMP_ID_REGEX = r'Samp\_+([A-Za-z0-9\-]+)\_([A-Za-z0-9\-]+)'
 PLATE_WELL_REGEX = r'Plate_([0-9]{2}\_[0-9]{2})\_'
 
 
-def find_or_create_cohort_compound(session, series, cohort, calc_agg_stats):
+def find_or_create_cohort_compound(session, series, cohort, calc_agg_stats, col_of_first_measurement):
     local_compound_id = series['local_Lab']
     if pd.isnull(local_compound_id):
         return None
@@ -27,7 +26,7 @@ def find_or_create_cohort_compound(session, series, cohort, calc_agg_stats):
         cohort, local_compound_id, mz, rt, cross_variation, ml_score
     )
     if calc_agg_stats:
-        measurements = series[COLUMN_OF_FIRST_MEASUREMENT:]
+        measurements = series[col_of_first_measurement:]
         cohort_compound.median_measurement = measurements.median()
         cohort_compound.prevalence = 100.0 * sum(1 for m in measurements if not pd.isnull(m)) / len(measurements)
         cohort_compound.min_raw = measurements.min()
@@ -75,6 +74,7 @@ def find_or_create_dataset(cohort, units, session):
 
 
 def run(args):
+    assert args.col_of_first_measurement is not None, "Must provide --col-of-first-measurement"
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
@@ -85,12 +85,12 @@ def run(args):
     sample_ids_cache = {}
     row_count = 0
     for df in pd.read_csv(args.file, chunksize=(args.csv_chunksize or CSV_CHUNKSIZE)):
-        sample_id_labels = df.columns[COLUMN_OF_FIRST_MEASUREMENT:]
+        sample_id_labels = df.columns[args.col_of_first_measurement:]
         for _, row in df.iterrows():
             sql = "INSERT INTO {} (sample_id, cohort_compound_id, dataset_id, measurement) VALUES ".format(Measurement.__tablename__)
             values = []
             row_count += 1
-            cohort_compound = find_or_create_cohort_compound(session, row, cohort, args.units == 'raw')
+            cohort_compound = find_or_create_cohort_compound(session, row, cohort, args.units == 'raw', args.col_of_first_measurement)
             if not cohort_compound:
                 continue
             for sample_id_label in sample_id_labels:

@@ -24,6 +24,10 @@ def get_command_line_args():
         type=int,
     )
     parser.add_argument(
+        '--col-of-first-measurement',
+        type=int,
+    )
+    parser.add_argument(
         '--units',
         type=str,
         help="Units used in cohort: {}" %
