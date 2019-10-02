@@ -59,7 +59,7 @@ python main_sql.py --mode raw_ingestion --file /volume1/Jain\ Lab\ Data/MassSpec
 ```
 
 ### STEP 4: Key Ingestion - Mapping Samples to Plate_Well and Creating Subjects For Each Sample
-- ##### PRIOR TO THIS STEP YOU MUST CUSTOMIZE THE `SUBJECT_ID_REGEX` IN THE CODE
+- ##### PRIOR TO THIS STEP YOU MUST CUSTOMIZE THE `SUBJECT_ID_REGEX` IN THE CODE AND CONFIRM THAT THE COLUMNS IN THE CSV AGREE WITH THE `KEY_COLUMNS` CONSTANT
 
 
 ```
