@@ -4,7 +4,6 @@ from elasticsearch import Elasticsearch, helpers
 from db import db_connection
 from models import *
 from sqlalchemy.orm import joinedload
-from scripts.elasticsearch import alignment_file_params
 import sys
 import os
 import re
@@ -15,35 +14,42 @@ INDEX_NAME = 'metabolite_alignments'
 DOC_TYPE = 'metabolite_alignment'
 DEFAULT_BATCH_SIZE = 40000
 
+ALIGNMENT_FILE_PATH = '/volume1/Jain Lab Data/MassSpecDatabase/Eicosanoid method/'
 
-def build_alignment_dict(args, alignment_params, cohort, session):
+def build_alignment_dict(cohort, session):
     alignments = {}
-    for alignment_file in alignment_params:
-        alignment_cohort = session.query(Cohort).filter(Cohort.name == alignment_file['cohort_name']).first()
-        assert alignment_cohort is not None, "Could not find alignment cohort for {}".format(alignment_file)
-        assert cohort != alignment_cohort, "Alignment cohort must be different from cohort for {}".format(alignment_file)
-        this_cohort_col, alignment_cohort_col = (None, None)
-        if alignment_file['cohort_column'] == 'A':
-            this_cohort_col, alignment_cohort_col = (1, 0)
-        elif alignment_file['cohort_column'] == 'B':
-            this_cohort_col, alignment_cohort_col = (0, 1)
-        else:
-            raise Exception("Invalid cohort_column (should be A or B) for {}".format(alignment_file))
-        with open(alignment_file['path']) as csvfile:
-            line_count = 0
-            csv_reader = csv.reader(csvfile, delimiter=',')
-            for row in csv_reader:
-                line_count += 1
-                if line_count == 1 or not row[this_cohort_col] or not row[alignment_cohort_col]:
-                    continue
-                entry = {
-                    "local_ID": row[alignment_cohort_col],
-                    "study": alignment_cohort.name,
-                }
-                if alignments.get(row[this_cohort_col]):
-                    alignments[row[this_cohort_col]].append(entry)
-                else:
-                    alignments[row[this_cohort_col]] = [entry]
+    alignment_regex = r'AlignedPeaks\_([^\_]+)\_(^\_)\.csv'
+    directory = ALIGNMENT_FILE_PATH + cohort.name
+    for filename in os.listdir(directory):
+        re_match = re.search(alignment_regex, filename)
+        print(filename)
+        if re_match:
+            alignment_cohort = None
+            this_cohort_col, alignment_cohort_col = (None, None)
+            cohort1, cohort2 = re_match.group(1). re_match.group(2)
+            if cohort.name == cohort1:
+                alignment_cohort = session.query(Cohort).filter(Cohort.name == cohort2).first()
+                this_cohort_col, alignment_cohort_col = (0, 1)
+            elif cohort.name == cohort2:
+                alignment_cohort = session.query(Cohort).filter(Cohort.name == cohort1).first()
+                this_cohort_col, alignment_cohort_col = (1, 0)
+            if alignment_cohort:
+                print('Building alignments with {}'.format(alignment_cohort.name))
+                with open(directory + '/' + filename) as csvfile:
+                    line_count = 0
+                    csv_reader = csv.reader(csvfile, delimiter=',')
+                    for row in csv_reader:
+                        line_count += 1
+                        if line_count == 1 or not row[this_cohort_col] or not row[alignment_cohort_col]:
+                            continue
+                        entry = {
+                            "local_ID": row[alignment_cohort_col],
+                            "study": alignment_cohort.name,
+                        }
+                        if alignments.get(row[this_cohort_col]):
+                            alignments[row[this_cohort_col]].append(entry)
+                        else:
+                            alignments[row[this_cohort_col]] = [entry]
     return alignments
 
 
@@ -53,8 +59,7 @@ def run(args):
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()
     assert cohort is not None, "Could not find cohort with name '{}'".format(args.cohort_name)
     Measurement = measurement_class_factory(cohort)
-    alignment_params = getattr(alignment_file_params, cohort.name.replace(" ", "_").replace("-", "_")).files
-    alignments = build_alignment_dict(args, alignment_params, cohort, session)
+    alignments = build_alignment_dict(cohort, session)
 
     last_queried_id = args.starting_entity_id or 0
     while last_queried_id is not None:
