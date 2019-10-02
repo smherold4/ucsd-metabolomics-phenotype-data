@@ -18,11 +18,10 @@ ALIGNMENT_FILE_PATH = '/volume1/Jain Lab Data/MassSpecDatabase/Eicosanoid method
 
 def build_alignment_dict(cohort, session):
     alignments = {}
-    alignment_regex = r'AlignedPeaks\_([^\_]+)\_(^\_)\.csv'
+    alignment_regex = r'AlignedPeaks\_([^\_]+)\_([^\_]+)\.csv'
     directory = ALIGNMENT_FILE_PATH + cohort.name
     for filename in os.listdir(directory):
         re_match = re.search(alignment_regex, filename)
-        print(filename)
         if re_match:
             alignment_cohort = None
             this_cohort_col, alignment_cohort_col = (None, None)
