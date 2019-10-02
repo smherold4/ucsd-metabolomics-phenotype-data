@@ -25,7 +25,7 @@ def build_alignment_dict(cohort, session):
         if re_match:
             alignment_cohort = None
             this_cohort_col, alignment_cohort_col = (None, None)
-            cohort1, cohort2 = re_match.group(1). re_match.group(2)
+            cohort1, cohort2 = re_match.group(1, 2)
             if cohort.name == cohort1:
                 alignment_cohort = session.query(Cohort).filter(Cohort.name == cohort2).first()
                 this_cohort_col, alignment_cohort_col = (0, 1)
