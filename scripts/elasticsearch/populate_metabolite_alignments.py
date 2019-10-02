@@ -26,11 +26,11 @@ def build_alignment_dict(cohort, session):
             alignment_cohort = None
             this_cohort_col, alignment_cohort_col = (None, None)
             cohort1, cohort2 = re_match.group(1, 2)
-            if cohort.name == cohort1:
-                alignment_cohort = session.query(Cohort).filter(Cohort.name == cohort2).first()
+            if cohort.name.upper() == cohort1.upper():
+                alignment_cohort = session.query(Cohort).filter( Cohort.name.in_([cohort2, cohort2.upper()]) ).first()
                 this_cohort_col, alignment_cohort_col = (0, 1)
-            elif cohort.name == cohort2:
-                alignment_cohort = session.query(Cohort).filter(Cohort.name == cohort1).first()
+            elif cohort.name.upper() == cohort2.upper():
+                alignment_cohort = session.query(Cohort).filter( Cohort.name.in_([cohort1, cohort1.upper()]) ).first()
                 this_cohort_col, alignment_cohort_col = (1, 0)
             if alignment_cohort:
                 print('Building alignments with {}'.format(alignment_cohort.name))
