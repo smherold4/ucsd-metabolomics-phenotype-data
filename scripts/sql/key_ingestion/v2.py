@@ -8,8 +8,8 @@ import re
 SUBJECT_ID_REGEX = r'^([A-Za-z0-9]+)$'
 
 CSV_CHUNKSIZE = 100000
-COLUMNS = {
-    'cohort_sample_id_label': 2,
+KEY_COLUMNS = {
+    'cohort_sample_id_label': 0,
     'plate_well': 1,
 }
 
@@ -42,12 +42,12 @@ def run(args):
     for df in pd.read_csv(args.file, chunksize=CSV_CHUNKSIZE):
         for _, row in df.iterrows():
             line_count += 1
-            cohort_sample_id = row[COLUMNS['cohort_sample_id_label']]
+            cohort_sample_id = row[KEY_COLUMNS['cohort_sample_id_label']]
             if pd.isnull(cohort_sample_id):
                 continue
             local_subject_id = extract_subject_id(cohort_sample_id)
             assert local_subject_id is not None, "Could not extract subject_id from cohort_sample_id {}".format(cohort_sample_id)
-            plate_well = row[COLUMNS['plate_well']]
+            plate_well = row[KEY_COLUMNS['plate_well']]
             subject = find_or_create_subject(session, cohort, local_subject_id)
             if pd.isnull(plate_well):
                 continue
