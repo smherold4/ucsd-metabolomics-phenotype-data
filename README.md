@@ -31,31 +31,31 @@ CREATE TABLE ciao_sage_measurement (
 
 
 ```
-python main_sql.py --mode raw_ingestion --cohort-name FINRISK --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/finrisk/ProcessedDataRawDeadducted.csv --units raw --verbose --col-of-first-measurement O
+python main_sql.py --mode raw_ingestion --cohort-name FINRISK --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/finrisk/ProcessedDataRawDeadducted.csv --units raw --method LCMS_BAL --verbose --col-of-first-measurement O
 ```
 
 
 ```
-python main_sql.py --mode raw_ingestion --cohort-name FHS --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/FHS/ProcessedDataRawDeadducted.csv --units raw --verbose --col-of-first-measurement O
+python main_sql.py --mode raw_ingestion --cohort-name FHS --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/FHS/ProcessedDataRawDeadducted.csv --units raw --method LCMS_BAL --verbose --col-of-first-measurement O
 ```
 
 
 ```
-python main_sql.py --mode raw_ingestion --cohort-name MESA --exam-no 2 --units raw --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA02/ProcessedDataRawDeadducted_relabelled.csv --verbose --col-of-first-measurement O
+python main_sql.py --mode raw_ingestion --cohort-name MESA --exam-no 2 --units raw --method LCMS_BAL --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA02/ProcessedDataRawDeadducted_relabelled.csv --verbose --col-of-first-measurement O
 ```
 
 
 ```
-python main_sql.py --mode raw_ingestion --cohort-name MESA --exam-no 4 --units raw --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA04/ProcessedDataRawDeadducted_relabelled.csv --verbose --col-of-first-measurement O
+python main_sql.py --mode raw_ingestion --cohort-name MESA --exam-no 4 --units raw --method LCMS_BAL --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA04/ProcessedDataRawDeadducted_relabelled.csv --verbose --col-of-first-measurement O
 ```
 
 
 ```
-python main_sql.py --mode raw_ingestion --cohort-name 'VITAL CTSC' --units raw --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/VITAL\ CTSC/ProcessedDataRawDeadducted_relabelled.csv --verbose --col-of-first-measurement O
+python main_sql.py --mode raw_ingestion --cohort-name 'VITAL CTSC' --units raw --method LCMS_BAL --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/VITAL\ CTSC/ProcessedDataRawDeadducted_relabelled.csv --verbose --col-of-first-measurement O
 ```
 
 ```
-python main_sql.py --mode raw_ingestion --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/FinTwin/ProcessedDataNormDeadductedV2.csv  --cohort-name FinTwin --units normalized --col-of-first-measurement K --verbose
+python main_sql.py --mode raw_ingestion --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/FinTwin/ProcessedDataNormDeadductedV2.csv  --cohort-name FinTwin --units normalized --method LCMS_BAL --col-of-first-measurement K --verbose
 ```
 
 ### STEP 4: Key Ingestion - Mapping Samples to Plate_Well and Creating Subjects For Each Sample
