@@ -33,6 +33,11 @@ def get_command_line_args():
         help="Units used in cohort: {}" %
         Dataset.UNITS)
     parser.add_argument(
+        '--method',
+        type=str,
+        help="Spectroscopy method used: {}" %
+        CohortCompound.METHODS)
+    parser.add_argument(
         '--cohort-name',
         type=str,
         required=True)

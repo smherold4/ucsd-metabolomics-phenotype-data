@@ -25,7 +25,7 @@ def run(args):
     normalization_by_dataset_id = {(d.id): d.units
                                    for d
                                    in session.query(Dataset).filter(Dataset.cohort == cohort).all()}
-    metabolites_by_id = {(c.id): {"local_compound_id": c.local_compound_id, "ml_score": c.ml_score, "mz": c.mz, "rt": c.rt}
+    metabolites_by_id = {(c.id): {"local_compound_id": c.local_compound_id, "ml_score": c.ml_score, "mz": c.mz, "rt": c.rt, "method": c.method }
                          for c
                          in session.query(CohortCompound).filter(CohortCompound.cohort == cohort).all()}
     last_queried_id = args.starting_entity_id or 0
@@ -58,7 +58,7 @@ def run(args):
                     "created": datetime.now().strftime("%s"),
                     "measurement": mmt.measurement,
                     "normalization": normalization_by_dataset_id[mmt.dataset_id],
-                    "method": cohort.method,
+                    "method": metabolites_by_id[mmt.cohort_compound_id]["method"],
                     "local_ID": metabolites_by_id[mmt.cohort_compound_id]["local_compound_id"],
                     "ML_score": metabolites_by_id[mmt.cohort_compound_id]["ml_score"],
                     "MZ": metabolites_by_id[mmt.cohort_compound_id]["mz"],

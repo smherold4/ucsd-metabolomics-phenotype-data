@@ -8,6 +8,9 @@ from sqlalchemy import Column, String, Text, Date, Integer, Numeric, Index, Date
 
 class CohortCompound(base.Base):
     __tablename__ = 'cohort_compound'
+
+    METHODS = ['LCMS_BAL', 'rLCMS_PM']
+
     id = Column(Integer, primary_key=True)
     cohort_id = Column(
         Integer,
@@ -23,6 +26,7 @@ class CohortCompound(base.Base):
     prevalence = Column(Numeric(precision=4, scale=1), nullable=True)
     min_raw = Column(Numeric(precision=80, scale=30), nullable=True)
     max_raw = Column(Numeric(precision=80, scale=30), nullable=True)
+    method = Column(String, nullable=False)
     __table_args__ = (
         UniqueConstraint("cohort_id", "local_compound_id", name="uniq_cohort_id_local_compound_id"),
         Index("ix_cohort_compound_on_cohort_id_mz", "cohort_id", "mz"),
@@ -31,8 +35,9 @@ class CohortCompound(base.Base):
     cohort = relationship("Cohort", backref="metabolites")
     subjects = relationship("Subject", secondary="cohort")
 
-    def __init__(self, cohort, local_compound_id, mz, rt, cross_variation, ml_score, median_measurement=None):
+    def __init__(self, cohort, method, local_compound_id, mz, rt, cross_variation, ml_score, median_measurement=None):
         self.cohort = cohort
+        self.method = method
         self.local_compound_id = local_compound_id
         self.mz = mz
         self.rt = rt
