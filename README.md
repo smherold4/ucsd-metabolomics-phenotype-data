@@ -167,3 +167,9 @@ python main_es.py --index microbiome_sequences --action populate --cohort-name F
 ```
 python main_es.py --index microbiome_sequences --action populate --cohort-name AGP --microbiome-file /volume1/Database/microbiome/agp/microbiome_sequence.txt
 ```
+
+#### `microbiome_sample_phenotypes`
+
+```
+python main_es.py --index microbiome_sample_phenotypes --action populate --cohort-name AGP --microbiome-file /volume1/Database/microbiome/agp/sample_phenotypes.txt
+```
