@@ -20,10 +20,11 @@ REQUIRED_FIELDS = {
     "subject": str,
     "sample_id": str,
     "variable": str,
-    "value": str,
 }
 
-ADDITIONAL_FIELDS = {}
+ADDITIONAL_FIELDS = {
+    "value": str,
+}
 
 def all_fields():
     result = REQUIRED_FIELDS.copy()
