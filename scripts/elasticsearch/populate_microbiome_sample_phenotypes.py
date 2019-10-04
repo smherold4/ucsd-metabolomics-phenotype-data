@@ -60,7 +60,7 @@ def run(args):
             es_inserts.append({
                 "_index": INDEX_NAME,
                 "_type": DOC_TYPE,
-                "_id": args.cohort_name.replace(" ", "_") + "_" + doc['subject'] + "_" + doc['sample'] + "_" + doc['variable'],
+                "_id": args.cohort_name.replace(" ", "_") + "_" + doc['subject'] + "_" + doc['sample_id'] + "_" + doc['variable'],
                 "_source": doc
             })
         print "Inserting {} {} documents.  Line count is {}".format(
