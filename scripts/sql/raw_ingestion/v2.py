@@ -76,7 +76,7 @@ def find_or_create_dataset(cohort, units, session):
 
 
 def run(args):
-    assert args.col_of_first_measurement in string.ascii_uppercase, "Must provide --col-of-first-measurement between A and Z"
+    assert str(args.col_of_first_measurement) in string.ascii_uppercase, "Must provide --col-of-first-measurement between A and Z"
     col_of_first_measurement = string.ascii_uppercase.index(args.col_of_first_measurement)
     session = db_connection.session_factory()
     cohort = session.query(Cohort).filter(Cohort.name == args.cohort_name).first()

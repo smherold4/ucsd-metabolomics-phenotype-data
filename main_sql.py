@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 import argparse
-from models import Cohort, Dataset
+from models import Cohort, Dataset, CohortCompound
 from scripts.sql import raw_ingestion, key_ingestion
 
 MODES = ['raw_ingestion', 'key_ingestion']
