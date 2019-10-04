@@ -15,6 +15,7 @@ INDICES = [
     'microbiome_abundances',
     'microbiome_alignments',
     'microbiome_sequences',
+    'microbiome_sample_phenotypes',
 ]
 ACTIONS = ['create', 'delete', 'populate', 'update_mapping', 'snapshot']
 

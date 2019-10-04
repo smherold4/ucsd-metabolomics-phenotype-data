@@ -6,3 +6,4 @@ import phenotype_descriptions
 import microbiome_abundances
 import microbiome_alignments
 import microbiome_sequences
+import microbiome_sample_phenotypes
