@@ -26,7 +26,9 @@ CREATE TABLE ciao_sage_measurement (
 ```
 
 ### STEP 3: Metabolite Measurement Ingestion - Import Metabolite Measurements And Create Samples In SQL
-- ##### PRIOR TO THIS STEP YOU MUST CUSTOMIZE THE `SAMP_ID_REGEX` IN THE CODE, AND ENSURE THAT `COLUMN_OF_FIRST_MEASUREMENT` IS CORRECT FOR THE INGESTION FILE
+- ##### PRIOR TO THIS STEP YOU MUST CUSTOMIZE THE `SAMP_ID_REGEX` and/or `PLATE_WELL_REGEX` IN THE CODE
+- ##### SET THE `UNIQ_LOOKUP_VALUE` to use either `cohort_sample_id` or `plate_well`.  If both `cohort_sample_id` and `plate_well` can be extracted from the labels, then `cohort_sample_id` is probably the preferred lookup value.
+
 - ##### THIS STEP SHOULD BE RUN ONCE FOR 'RAW_RELABELLED.CSV' AND ONCE FOR 'NORMALIZEDV2_RELABELLED.CSV'
 
 
