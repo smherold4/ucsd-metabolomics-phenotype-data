@@ -41,7 +41,7 @@ def find_or_create_cohort_compound(session, series, cohort, method, calc_agg_sta
 def extract_cohort_sample_id(string):
     re_match = re.search(SAMP_ID_REGEX, string)
     if re_match:
-        re_match.group(1)
+        return re_match.group(1)
 
 def extract_plate_well(string):
     re_match = re.search(PLATE_WELL_REGEX, string)
