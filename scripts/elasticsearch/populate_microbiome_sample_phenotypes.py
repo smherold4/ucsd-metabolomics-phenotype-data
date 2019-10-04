@@ -19,7 +19,7 @@ CSV_CHUNKSIZE = 3000
 REQUIRED_FIELDS = {
     "subject": str,
     "sample_id": str,
-    "variable": float,
+    "variable": str,
     "value": str,
 }
 
