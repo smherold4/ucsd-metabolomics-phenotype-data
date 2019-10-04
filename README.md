@@ -31,31 +31,31 @@ CREATE TABLE ciao_sage_measurement (
 
 
 ```
-python main_sql.py --mode raw_ingestion --cohort-name FINRISK --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/finrisk/ProcessedDataRawDeadducted.csv --units raw --method LCMS_BAL --verbose --col-of-first-measurement O
+python main_sql.py --mode measurement_ingestion --cohort-name FINRISK --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/finrisk/ProcessedDataRawDeadducted.csv --units raw --method LCMS_BAL --col-of-first-measurement O
 ```
 
 
 ```
-python main_sql.py --mode raw_ingestion --cohort-name FHS --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/FHS/ProcessedDataRawDeadducted.csv --units raw --method LCMS_BAL --verbose --col-of-first-measurement O
+python main_sql.py --mode measurement_ingestion --cohort-name FHS --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/FHS/ProcessedDataRawDeadducted.csv --units raw --method LCMS_BAL --col-of-first-measurement O
 ```
 
 
 ```
-python main_sql.py --mode raw_ingestion --cohort-name MESA --exam-no 2 --units raw --method LCMS_BAL --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA02/ProcessedDataRawDeadducted_relabelled.csv --verbose --col-of-first-measurement O
+python main_sql.py --mode measurement_ingestion --cohort-name MESA --exam-no 2 --units raw --method LCMS_BAL --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA02/ProcessedDataRawDeadducted_relabelled.csv --col-of-first-measurement O
 ```
 
 
 ```
-python main_sql.py --mode raw_ingestion --cohort-name MESA --exam-no 4 --units raw --method LCMS_BAL --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA04/ProcessedDataRawDeadducted_relabelled.csv --verbose --col-of-first-measurement O
+python main_sql.py --mode measurement_ingestion --cohort-name MESA --exam-no 4 --units raw --method LCMS_BAL --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA04/ProcessedDataRawDeadducted_relabelled.csv --col-of-first-measurement O
 ```
 
 
 ```
-python main_sql.py --mode raw_ingestion --cohort-name 'VITAL CTSC' --units raw --method LCMS_BAL --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/VITAL\ CTSC/ProcessedDataRawDeadducted_relabelled.csv --verbose --col-of-first-measurement O
+python main_sql.py --mode measurement_ingestion --cohort-name 'VITAL CTSC' --units raw --method LCMS_BAL --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/VITAL\ CTSC/ProcessedDataRawDeadducted_relabelled.csv --col-of-first-measurement O
 ```
 
 ```
-python main_sql.py --mode raw_ingestion --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/FinTwin/ProcessedDataNormDeadductedV2.csv  --cohort-name FinTwin --units normalized --method LCMS_BAL --col-of-first-measurement K --verbose
+python main_sql.py --mode measurement_ingestion --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/FinTwin/ProcessedDataNormDeadductedV2.csv  --cohort-name FinTwin --units normalized --method LCMS_BAL --col-of-first-measurement K
 ```
 
 ### STEP 4: Key Ingestion - Mapping Samples to Plate_Well and Creating Subjects For Each Sample
@@ -63,32 +63,32 @@ python main_sql.py --mode raw_ingestion --file /volume1/Jain\ Lab\ Data/MassSpec
 
 
 ```
-python main_sql.py --mode key_ingestion --file /volume1/Database/FINRISK2002/metabolomics/FINRISK_Example_Key.csv --cohort-name FINRISK --verbose
+python main_sql.py --mode key_mapping --file /volume1/Database/FINRISK2002/metabolomics/FINRISK_Example_Key.csv --cohort-name FINRISK
 ```
 
 
 ```
-python main_sql.py --mode key_ingestion --file /volume1/Database/Framingham/metabolomics/FHS_Patient_Keys.csv --cohort-name FHS --verbose
+python main_sql.py --mode key_mapping --file /volume1/Database/Framingham/metabolomics/FHS_Patient_Keys.csv --cohort-name FHS
 ```
 
 
 ```
-python main_sql.py --mode key_ingestion --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA04/SampleKey.csv --cohort-name MESA --exam-no 4 --verbose
+python main_sql.py --mode key_mapping --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/MESA04/SampleKey.csv --cohort-name MESA --exam-no 4
 ```
 
 
 ```
-python main_sql.py --mode key_ingestion --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/VITAL\ CTSC/SampleKey.csv --cohort-name 'VITAL CTSC' --verbose
+python main_sql.py --mode key_mapping --file /volume1/Jain\ Lab\ Data/MassSpecDatabase/Eicosanoid\ method/VITAL\ CTSC/SampleKey.csv --cohort-name 'VITAL CTSC'
 ```
 
 ### STEP 5: Elasticsearch Indexing - metabolite_samples
 
 ```
-python main_es.py --index metabolite_samples --action populate --verbose --cohort-name FINRISK
+python main_es.py --index metabolite_samples --action populate --cohort-name FINRISK
 ```
 
 ```
-python main_es.py --index metabolite_samples --action populate --verbose --cohort-name FHS
+python main_es.py --index metabolite_samples --action populate --cohort-name FHS
 ```
 
 ### STEP 6: Elasticsearch Indexing - metabolite_alignments
@@ -96,12 +96,12 @@ python main_es.py --index metabolite_samples --action populate --verbose --cohor
 
 
 ```
-python main_es.py --index metabolite_alignments --action populate --cohort-name FINRISK --verbose
+python main_es.py --index metabolite_alignments --action populate --cohort-name FINRISK
 ```
 
 
 ```
-python main_es.py --index metabolite_alignments --action populate --cohort-name FHS --verbose
+python main_es.py --index metabolite_alignments --action populate --cohort-name FHS
 ```
 
 ### STEP 7.A: Elasticsearch Indexing - subject_phenotypes
@@ -109,23 +109,23 @@ python main_es.py --index metabolite_alignments --action populate --cohort-name 
 
 
 ```
-python main_es.py --index subject_phenotypes --action populate --cohort-name FINRISK --phenotype-file /volume1/Database/phenotype/FINRISK2002/F2015_60_Salomaa_Jain_dataFR02_FU16_2018-11-16_FR02_TL.csv  --subject-id-label PLASMA_ID --verbose
+python main_es.py --index subject_phenotypes --action populate --cohort-name FINRISK --phenotype-file /volume1/Database/phenotype/FINRISK2002/F2015_60_Salomaa_Jain_dataFR02_FU16_2018-11-16_FR02_TL.csv  --subject-id-label PLASMA_ID
 ```
 
 
 ```
-python main_es.py --index subject_phenotypes --action populate --cohort-name FHS --phenotype-file /volume1/Database/phenotype/FHS/pheno_data_fhs_20171210_TL.csv --subject-id-label SubjectID --verbose
+python main_es.py --index subject_phenotypes --action populate --cohort-name FHS --phenotype-file /volume1/Database/phenotype/FHS/pheno_data_fhs_20171210_TL.csv --subject-id-label SubjectID
 ```
 
 ```
-python main_es.py --index subject_phenotypes --action populate --cohort-name 'VITAL 400' --phenotype-file /volume1/Database/phenotype/VITAL400/vital_20180801.csv --subject-id-label subject_ID --verbose
+python main_es.py --index subject_phenotypes --action populate --cohort-name 'VITAL 400' --phenotype-file /volume1/Database/phenotype/VITAL400/vital_20180801.csv --subject-id-label subject_ID
 ```
 
 ### STEP 7.B: Elasticsearch Indexing - sample_phenotypes
 
 
 ```
-python main_es.py --action populate --index sample_phenotypes --phenotype-file /volume1/Database/phenotype/MESA/MESA2_20160520.csv --cohort-name MESA --exam-no 2 --subject-id-label idno --verbose
+python main_es.py --action populate --index sample_phenotypes --phenotype-file /volume1/Database/phenotype/MESA/MESA2_20160520.csv --cohort-name MESA --exam-no 2 --subject-id-label idno
 ```
 
 ### STEP 8: Elasticsearch Indexing - phenotype_descriptions
@@ -133,35 +133,35 @@ python main_es.py --action populate --index sample_phenotypes --phenotype-file /
 
 
 ```
-python main_es.py --index phenotype_descriptions --action populate --cohort-name FINRISK --phenotype-file /volume1/Database/phenotype/FINRISK2002/FR02_pheno_annotations.csv --verbose
+python main_es.py --index phenotype_descriptions --action populate --cohort-name FINRISK --phenotype-file /volume1/Database/phenotype/FINRISK2002/FR02_pheno_annotations.csv
 ```
 
 
 ```
-python main_es.py --index phenotype_descriptions --action populate --cohort-name FHS --phenotype-file /volume1/Database/phenotype/FHS/pheno_data_fhs_description_KM.csv --verbose
+python main_es.py --index phenotype_descriptions --action populate --cohort-name FHS --phenotype-file /volume1/Database/phenotype/FHS/pheno_data_fhs_description_KM.csv
 ```
 
 ## MICROBIOME INDEXING
 
 #### `microbiome_abundances`
 ```
-python main_es.py --index microbiome_abundances --action populate --cohort-name AGP --microbiome-file /volume1/Database/microbiome/agp/microbiome_abundance.txt --verbose
+python main_es.py --index microbiome_abundances --action populate --cohort-name AGP --microbiome-file /volume1/Database/microbiome/agp/microbiome_abundance.txt
 ```
 
 #### `microbiome_alignments`
 ```
-python main_es.py --index microbiome_alignments --action populate --cohort-name FINRISK --microbiome-file /volume1/Database/microbiome/finrisk/microbiome_alignments.txt --verbose
+python main_es.py --index microbiome_alignments --action populate --cohort-name FINRISK --microbiome-file /volume1/Database/microbiome/finrisk/microbiome_alignments.txt
 ```
 
 ```
-python main_es.py --index microbiome_alignments --action populate --cohort-name GGMP --microbiome-file /volume1/Database/microbiome/ggmp/microbiome_alignments.txt --verbose
+python main_es.py --index microbiome_alignments --action populate --cohort-name GGMP --microbiome-file /volume1/Database/microbiome/ggmp/microbiome_alignments.txt
 ```
 
 #### `microbiome_sequenes`
 ```
-python main_es.py --index microbiome_sequences --action populate --cohort-name FINRISK --microbiome-file /volume1/Database/microbiome/finrisk/microbiome_sequence.txt --verbose
+python main_es.py --index microbiome_sequences --action populate --cohort-name FINRISK --microbiome-file /volume1/Database/microbiome/finrisk/microbiome_sequence.txt
 ```
 
 ```
-python main_es.py --index microbiome_sequences --action populate --cohort-name AGP --microbiome-file /volume1/Database/microbiome/agp/microbiome_sequence.txt --verbose
+python main_es.py --index microbiome_sequences --action populate --cohort-name AGP --microbiome-file /volume1/Database/microbiome/agp/microbiome_sequence.txt
 ```

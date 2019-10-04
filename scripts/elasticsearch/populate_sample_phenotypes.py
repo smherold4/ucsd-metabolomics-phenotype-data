@@ -91,13 +91,12 @@ def run(args):
                 }
                 for phenotype_name, phenotype_value_data in row_data.iteritems()
             ]
-            if args.verbose:
-                print "Inserting {} {} documents for {}.  Line count is {}".format(
-                    len(es_inserts),
-                    args.index,
-                    sample_barcode_or_backup,
-                    line_count,
-                )
+            print "Inserting {} {} documents for {}.  Line count is {}".format(
+                len(es_inserts),
+                args.index,
+                sample_barcode_or_backup,
+                line_count,
+            )
             for success, info in helpers.parallel_bulk(es, es_inserts):
                 if not success:
                     print('Parallel bulk failure:', info)

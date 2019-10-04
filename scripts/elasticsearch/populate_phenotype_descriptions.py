@@ -48,8 +48,7 @@ def run(args):
                 "study": cohort.name,
                 "variable_name": variable_name,
             })
-            if args.verbose:
-                print "Indexed {}".format(variable_name)
+            print "Indexed {}".format(variable_name)
 
 
 def get_datatype_for_phenotype(variable_name, cohort):

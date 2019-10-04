@@ -72,11 +72,6 @@ def get_command_line_args():
     parser.add_argument(
         '--exam-no',
         type=str)
-    parser.add_argument(
-        '--verbose',
-        action='store_true',
-        default=False,
-        help="Show status outputs to monitor progress of script")
     return parser.parse_args()
 
 

@@ -71,12 +71,11 @@ def run(args):
                 "_type": DOC_TYPE,
                 "_source": doc
             })
-        if args.verbose:
-            print "Inserting {} {} documents.  Line count is {}".format(
-                len(es_inserts),
-                args.index,
-                line_count,
-            )
+        print "Inserting {} {} documents.  Line count is {}".format(
+            len(es_inserts),
+            args.index,
+            line_count,
+        )
         for success, info in helpers.parallel_bulk(es, es_inserts):
             if not success:
                 print('Parallel bulk failure:', info)

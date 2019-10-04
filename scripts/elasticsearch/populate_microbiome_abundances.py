@@ -68,12 +68,11 @@ def run(args):
                 "_id": args.cohort_name.replace(" ", "_") + "_" + doc['subjectID'] + "_" + doc['osu_id'],
                 "_source": doc
             })
-        if args.verbose:
-            print "Inserting {} {} documents.  Line count is {}".format(
-                len(es_inserts),
-                args.index,
-                line_count,
-            )
+        print "Inserting {} {} documents.  Line count is {}".format(
+            len(es_inserts),
+            args.index,
+            line_count,
+        )
         for success, info in helpers.parallel_bulk(es, es_inserts):
             if not success:
                 print('Parallel bulk failure:', info)

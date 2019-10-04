@@ -2,9 +2,9 @@ from dotenv import load_dotenv
 load_dotenv()
 import argparse
 from models import Cohort, Dataset, CohortCompound
-from scripts.sql import raw_ingestion, key_ingestion
+from scripts.sql import measurement_ingestion, key_mapping
 
-MODES = ['raw_ingestion', 'key_ingestion']
+MODES = ['measurement_ingestion', 'key_mapping']
 
 def get_command_line_args():
     parser = argparse.ArgumentParser(description='Move CSV data into Postgres')
@@ -44,20 +44,15 @@ def get_command_line_args():
     parser.add_argument(
         '--exam-no',
         type=str)
-    parser.add_argument(
-        '--verbose',
-        action='store_true',
-        default=False,
-        help="Show status outputs to monitor progress of script")
 
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     clargs = get_command_line_args()
-    if clargs.mode == 'raw_ingestion':
-        raw_ingestion.v2.run(clargs)
-    elif clargs.mode == 'key_ingestion':
-        key_ingestion.v2.run(clargs)
+    if clargs.mode == 'measurement_ingestion':
+        measurement_ingestion.run(clargs)
+    elif clargs.mode == 'key_mapping':
+        key_mapping.run(clargs)
     else:
         raise Exception('Unknown --mode {}'.format(clargs.mode))

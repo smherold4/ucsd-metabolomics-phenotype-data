@@ -92,12 +92,11 @@ def run(args):
             for metabolite in metabolites
         ]
         last_queried_id = metabolites[-1].id if len(metabolites) else None
-        if args.verbose:
-            print "Inserting {} {} documents for {}.  Up to {}.id {}".format(
-                len(metabolites),
-                args.index,
-                cohort.name,
-                CohortCompound.__tablename__,
-                last_queried_id,
-            )
+        print "Inserting {} {} documents for {}.  Up to {}.id {}".format(
+            len(metabolites),
+            args.index,
+            cohort.name,
+            CohortCompound.__tablename__,
+            last_queried_id,
+        )
         helpers.bulk(es, es_inserts)

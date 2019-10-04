@@ -72,14 +72,13 @@ def run(args):
             for mmt in mmts if mmt.cohort_id == cohort.id
         ]
         last_queried_id = mmts[-1].id if len(mmts) else None
-        if args.verbose:
-            print "Inserting {} {} documents for {}.  Up to {}.id {}".format(
-                len(es_inserts),
-                args.index,
-                cohort.name,
-                Measurement.__tablename__,
-                last_queried_id,
-            )
+        print "Inserting {} {} documents for {}.  Up to {}.id {}".format(
+            len(es_inserts),
+            args.index,
+            cohort.name,
+            Measurement.__tablename__,
+            last_queried_id,
+        )
         for success, info in helpers.parallel_bulk(es, es_inserts):
             if not success:
                 print('Parallel bulk failure:', info)

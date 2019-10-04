@@ -8,7 +8,7 @@ import string
 CSV_CHUNKSIZE = 8000
 
 # Customize this by cohort
-SAMP_ID_REGEX = r'Samp\_+([A-Za-z0-9\-]+)\_([A-Za-z0-9\-]+)'
+SAMP_ID_REGEX = r'^(a[0-9]+)_500FG'
 PLATE_WELL_REGEX = r'Plate_([0-9]{2}\_[0-9]{2})\_'
 
 
@@ -41,26 +41,31 @@ def find_or_create_cohort_compound(session, series, cohort, method, calc_agg_sta
 def extract_cohort_sample_id(string):
     re_match = re.search(SAMP_ID_REGEX, string)
     if re_match:
-        return (re_match.group(1), re_match.group(2))
-    else:
-        return (None, None)
+        re_match.group(1)
 
 def extract_plate_well(string):
     re_match = re.search(PLATE_WELL_REGEX, string)
     if re_match:
         return re_match.group(1)
 
-
-def find_or_create_sample(session, cohort, cohort_sample_id, sample_barcode, plate_well):
-    sample = session.query(Sample).filter(
-        Sample.cohort == cohort,
-        Sample.cohort_sample_id == cohort_sample_id,
-    ).first() or Sample(cohort.id, None, cohort_sample_id, sample_barcode, plate_well)
+def find_or_create_sample(session, cohort, cohort_sample_id, plate_well):
+    sample = find_sample(session, cohort, cohort_sample_id, plate_well) or Sample(cohort.id, None, cohort_sample_id, None, plate_well)
     if not sample.id:
         session.add(sample)
         session.commit()
     return sample
 
+def find_sample(session, cohort, cohort_sample_id, plate_well):
+    if not pd.isnull(cohort_sample_id):
+        return session.query(Sample).filter(
+            Sample.cohort == cohort,
+            Sample.cohort_sample_id == cohort_sample_id,
+        ).first()
+    elif not pd.isnull(plate_well):
+        return session.query(Sample).filter(
+            Sample.cohort == cohort,
+            Sample.plate_well == plate_well,
+        ).first()
 
 def find_or_create_dataset(cohort, units, session):
     dataset = session.query(Dataset).filter(
@@ -98,20 +103,20 @@ def run(args):
             if not cohort_compound:
                 continue
             for sample_id_label in sample_id_labels:
-                sample_barcode, cohort_sample_id = extract_cohort_sample_id(sample_id_label)
+                cohort_sample_id = extract_cohort_sample_id(sample_id_label)
                 plate_well = extract_plate_well(sample_id_label)
-                if not cohort_sample_id:
-                    continue
-                if args.exam_no:
-                    cohort_sample_id = cohort_sample_id + "-" + args.exam_no
-                sample_id = sample_ids_cache.get(cohort_sample_id) or find_or_create_sample(session, cohort, cohort_sample_id, sample_barcode, plate_well).id
-                sample_ids_cache[cohort_sample_id] = sample_id
 
-                if not pd.isnull(row[sample_id_label]):
-                    values.append("({}, {}, {}, {})".format(sample_id, cohort_compound.id, dataset.id, row[sample_id_label]))
-            if args.verbose:
-                print "Inserting {} records into {} for metabolite {}.  Row count is {}".format(
-                    len(values), Measurement.__tablename__, cohort_compound.local_compound_id, row_count)
+                # HERE YOU CHOOSE WHICH FIELD (cohort_sample_id or plate_well) TO DO THE UNIQUE LOOKUP ON
+                UNIQ_LOOKUP_VALUE = plate_well
+
+                if pd.isnull(UNIQ_LOOKUP_VALUE):
+                    continue
+                sample_id = sample_ids_cache.get(UNIQ_LOOKUP_VALUE) or find_or_create_sample(session, cohort, cohort_sample_id, plate_well).id
+                sample_ids_cache[UNIQ_LOOKUP_VALUE] = sample_id
+
+                values.append("({}, {}, {}, {})".format(sample_id, cohort_compound.id, dataset.id, row[sample_id_label]))
+            print "Inserting {} records into {} for metabolite {}.  Row count is {}".format(
+                len(values), Measurement.__tablename__, cohort_compound.local_compound_id, row_count)
             if len(values):
                 sql += ",".join(values)
                 session.execute(sql)
