@@ -2,6 +2,9 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:7.3.1
 ARG ELASTIC_PASSWORD
 ENV ELASTIC_PASSWORD=$ELASTIC_PASSWORD
 
+ARG AWS_ACCESS_KEY
+ARG AWS_SECRET_KEY
+
 ADD ./elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
 ADD ./jvm.options /usr/share/elasticsearch/config/jvm.options
 
@@ -15,5 +18,5 @@ RUN chown elasticsearch:elasticsearch config/elasticsearch.yml
 USER elasticsearch
 RUN bin/elasticsearch-plugin install -b repository-s3
 RUN bin/elasticsearch-keystore create
-RUN echo AKIA26RW3LE3HN2A4M4Z | bin/elasticsearch-keystore add --stdin s3.client.default.access_key
-RUN echo h5yNHqAX7zwr/m3rbUEoyQj+NmphKmnbjSmzcVMa | bin/elasticsearch-keystore add --stdin s3.client.default.secret_key
+RUN echo $AWS_ACCESS_KEY | bin/elasticsearch-keystore add --stdin s3.client.default.access_key
+RUN echo $AWS_SECRET_KEY | bin/elasticsearch-keystore add --stdin s3.client.default.secret_key

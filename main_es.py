@@ -19,7 +19,7 @@ INDICES = [
 ]
 ACTIONS = ['create', 'delete', 'populate', 'update_mapping', 'snapshot']
 
-SNAPSHOT_REPOSITORY = 'monthly'
+SNAPSHOT_REPOSITORY = 's3_transfer_backup'
 
 
 def get_command_line_args():
