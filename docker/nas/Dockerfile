@@ -13,3 +13,7 @@ ADD ./es.key /usr/share/elasticsearch/config/certificates/es.key
 USER root
 RUN chown elasticsearch:elasticsearch config/elasticsearch.yml
 USER elasticsearch
+RUN bin/elasticsearch-plugin install -b repository-s3
+RUN bin/elasticsearch-keystore create
+RUN echo AKIA26RW3LE3HN2A4M4Z | bin/elasticsearch-keystore add --stdin s3.client.default.access_key
+RUN echo h5yNHqAX7zwr/m3rbUEoyQj+NmphKmnbjSmzcVMa | bin/elasticsearch-keystore add --stdin s3.client.default.secret_key
