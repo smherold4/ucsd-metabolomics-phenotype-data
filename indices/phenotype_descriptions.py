@@ -47,6 +47,9 @@ index = {
                     "type": "text",
                     "analyzer": "phenotype_description_analyzer"
                 },
+                "name": {
+                    "type": "keyword"
+                },
                 "study": {
                     "type": "keyword"
                 },
