@@ -12,7 +12,7 @@ import pandas as pd
 from pandasticsearch import Select
 
 COLUMNS = {
-    'variable_name': 0,
+    'phenotype_name': 0,
     'description': 1
 }
 
@@ -36,22 +36,22 @@ def run(args):
             line_count += 1
             if line_count == 1:
                 continue
-            variable_name = row[COLUMNS['variable_name']]
+            phenotype_name = row[COLUMNS['phenotype_name']]
             description = row[COLUMNS['description']] and unicode(row[COLUMNS['description']], 'UTF-8')
-            if pd.isnull(variable_name):
+            if pd.isnull(phenotype_name):
                 continue
-            doc_id = "{}_{}".format(cohort.name, variable_name)  # careful when changing this
-            datatype = get_datatype_for_phenotype(variable_name, cohort)
+            doc_id = "{}_{}".format(cohort.name, phenotype_name)  # careful when changing this
+            datatype = get_datatype_for_phenotype(phenotype_name, cohort)
             es.index(index=INDEX_NAME, doc_type=DOC_TYPE, id=doc_id, body={
                 "datatype": datatype,
                 "description": description,
                 "study": cohort.name,
-                "variable_name": variable_name,
+                "name": phenotype_name,
             })
-            print "Indexed {}".format(variable_name)
+            print "Indexed {}".format(phenotype_name)
 
 
-def get_datatype_for_phenotype(variable_name, cohort):
+def get_datatype_for_phenotype(phenotype_name, cohort):
     query = {
         "bool": {
             "must": [
@@ -62,7 +62,7 @@ def get_datatype_for_phenotype(variable_name, cohort):
                 },
                 {
                     "term": {
-                        "name": variable_name
+                        "name": phenotype_name
                     }
                 },
             ]
