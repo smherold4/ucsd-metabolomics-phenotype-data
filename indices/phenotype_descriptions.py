@@ -53,9 +53,6 @@ index = {
                 "study": {
                     "type": "keyword"
                 },
-                "variable_name": {
-                    "type": "keyword"
-                },
             }
         }
     }
