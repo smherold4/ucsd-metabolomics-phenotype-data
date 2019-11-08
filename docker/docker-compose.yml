@@ -20,8 +20,8 @@ services:
   workstation1:
     image: herold961/ucsd-workstation1
     volumes:
-      - /media/es-data1:/usr/share/elasticsearch/data:rw
-      - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
+      - /media/ssd1/elasticsearch:/usr/share/elasticsearch/data:rw
+      - /mnt/Database/elasticsearch-snapshots:/opt/elasticsearch/snapshots-repo:rw
     deploy:
       endpoint_mode: dnsrr
       placement:
@@ -45,8 +45,8 @@ services:
   workstation2:
     image: herold961/ucsd-workstation2
     volumes:
-      - /media/es-data2:/usr/share/elasticsearch/data:rw
-      - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
+      - /media/ssd2/elasticsearch:/usr/share/elasticsearch/data:rw
+      - /mnt/Database/elasticsearch-snapshots:/opt/elasticsearch/snapshots-repo:rw
     deploy:
       endpoint_mode: dnsrr
       placement:
@@ -66,8 +66,8 @@ services:
   workstation3:
     image: herold961/ucsd-workstation3
     volumes:
-      - /media/es-data3:/usr/share/elasticsearch/data:rw
-      - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
+      - /media/ssd2/elasticsearch2:/usr/share/elasticsearch/data:rw
+      - /mnt/Database/elasticsearch-snapshots:/opt/elasticsearch/snapshots-repo:rw
     deploy:
       endpoint_mode: dnsrr
       placement:
@@ -87,8 +87,8 @@ services:
   nas:
     image: herold961/ucsd-nas
     volumes:
-      - /volume1/Elasticsearch/data:/usr/share/elasticsearch/data:rw
-      - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
+      - /volume1/Database/elasticsearch:/usr/share/elasticsearch/data:rw
+      - /mnt/Database/elasticsearch-snapshots:/opt/elasticsearch/snapshots-repo:rw
     deploy:
       endpoint_mode: dnsrr
       placement:

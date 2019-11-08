@@ -22,6 +22,6 @@ node.name: workstation1
 cluster.name: "docker-cluster"
 cluster.routing.allocation.disk.threshold_enabled: false
 network.host: 0.0.0.0
-network.publish_host: 137.110.194.143
+network.publish_host: 137.110.194.34
 transport.publish_port: 9300
 bootstrap.system_call_filter: false
