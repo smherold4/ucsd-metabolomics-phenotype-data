@@ -1,0 +1,14 @@
+instances:
+  - name: nas
+    dns:
+      - nas
+      - localhost
+    ip:
+      - 137.110.193.103
+
+  - name: workstation
+    dns:
+      - workstation
+      - localhost
+    ip:
+      - 137.110.194.143

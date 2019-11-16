@@ -1,0 +1,27 @@
+discovery.zen.ping.unicast.hosts: 137.110.193.103
+discovery.zen.ping_timeout: 5s
+discovery.zen.commit_timeout: 5s
+discovery.zen.minimum_master_nodes: 1
+
+path.repo: ["/opt/elasticsearch/snapshots-repo"]
+
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+xpack.security.http.ssl.key: /usr/share/elasticsearch/config/certificates/es.key
+xpack.security.http.ssl.certificate_authorities: /usr/share/elasticsearch/config/certificates/ca.crt
+xpack.security.http.ssl.certificate: /usr/share/elasticsearch/config/certificates/es.crt
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.certificate_authorities: /usr/share/elasticsearch/config/certificates/ca.crt
+xpack.security.transport.ssl.certificate: /usr/share/elasticsearch/config/certificates/es.crt
+xpack.security.transport.ssl.key: /usr/share/elasticsearch/config/certificates/es.key
+
+node.master: false
+node.data: true
+node.ingest: true
+node.name: workstation3
+cluster.name: "docker-cluster"
+cluster.routing.allocation.disk.threshold_enabled: false
+network.host: 0.0.0.0
+network.publish_host: 137.110.194.143
+transport.publish_port: 9302
+bootstrap.system_call_filter: false

@@ -1,0 +1,164 @@
+version: '3.2'
+services:
+  jupyter:
+    image: herold961/ucsd-jupyter
+    volumes:
+      - /volume1/Database/jupyter:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 8888
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == worker ]
+      mode: "replicated"
+      replicas: 1
+  workstation1:
+    image: herold961/ucsd-workstation1
+    volumes:
+      - /media/es-data1:/usr/share/elasticsearch/data:rw
+      - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+      - target: 9300
+        published: 9300
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+      - analytics
+    logging:
+      driver: json-file
+  workstation2:
+    image: herold961/ucsd-workstation2
+    volumes:
+      - /media/es-data2:/usr/share/elasticsearch/data:rw
+      - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+    ports:
+      - target: 9300
+        published: 9301
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+      - analytics
+    logging:
+      driver: json-file
+  workstation3:
+    image: herold961/ucsd-workstation3
+    volumes:
+      - /media/es-data3:/usr/share/elasticsearch/data:rw
+      - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+    ports:
+      - target: 9300
+        published: 9302
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+      - analytics
+    logging:
+      driver: json-file
+  nas:
+    image: herold961/ucsd-nas
+    volumes:
+      - /volume1/Elasticsearch/data:/usr/share/elasticsearch/data:rw
+      - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == worker ]
+      mode: "replicated"
+      replicas: 1
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+      - target: 9300
+        published: 9300
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+      - analytics
+    logging:
+      driver: json-file
+  kibana:
+    image: herold961/ucsd-kibana
+    networks:
+      - analytics
+    logging:
+      driver: json-file
+    ports:
+      - target: 5601
+        published: 5601
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: volume
+        source: kibanalog
+        target: /usr/share/elasticsearch/kibana.log
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [ node.role == worker ]
+      update_config:
+        failure_action: rollback
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [ node.role == manager ]
+    networks:
+      - analytics
+
+volumes:
+  kibanalog:
+
+networks:
+  analytics:
+    driver: overlay
+    attachable: true
+  esnet:
+    driver: overlay
+    attachable: true
