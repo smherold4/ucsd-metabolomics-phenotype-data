@@ -6,7 +6,7 @@ if [ -z "$ELASTIC_PASSWORD" ] ; then
   exit 64
 fi
 
-docker build --no-cache -f ./docker/kibana/Dockerfile -t herold961/ucsd-kibana ./docker/kibana
+docker build --no-cache -f ./docker/kibana/Dockerfile -t herold961/ucsd-kibana ./docker/kibana --build-arg ELASTIC_PASSWORD=$ELASTIC_PASSWORD
 docker push herold961/ucsd-kibana
 
 docker build --no-cache -f ./docker/nas/Dockerfile -t herold961/ucsd-nas ./docker/nas --build-arg ELASTIC_PASSWORD=$ELASTIC_PASSWORD --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY --build-arg AWS_SECRET_KEY=$AWS_SECRET_KEY
