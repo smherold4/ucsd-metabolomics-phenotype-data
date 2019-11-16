@@ -1,7 +1,11 @@
 version: '3.2'
 services:
   jupyter:
-    image: herold961/ucsd-jupyter
+    build:
+      context: ./jupyter
+      args:
+        JUPYTER_USERNAME: jupyter
+        JUPYTER_PASSWORD: "${JUPYTER_PASSWORD}"
     volumes:
       - /volume1/Database/jupyter:/home/jovyan/work:rw
     ports:
@@ -18,7 +22,12 @@ services:
       mode: "replicated"
       replicas: 1
   workstation1:
-    image: herold961/ucsd-workstation1
+    build:
+      context: ./workstation1
+      args:
+        ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
+        AWS_ACCESS_KEY: "${AWS_ACCESS_KEY}"
+        AWS_SECRET_KEY: "${AWS_SECRET_KEY}"
     volumes:
       - /media/es-data1:/usr/share/elasticsearch/data:rw
       - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
@@ -43,7 +52,12 @@ services:
     logging:
       driver: json-file
   workstation2:
-    image: herold961/ucsd-workstation2
+    build:
+      context: ./workstation2
+      args:
+        ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
+        AWS_ACCESS_KEY: "${AWS_ACCESS_KEY}"
+        AWS_SECRET_KEY: "${AWS_SECRET_KEY}"
     volumes:
       - /media/es-data2:/usr/share/elasticsearch/data:rw
       - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
@@ -64,7 +78,12 @@ services:
     logging:
       driver: json-file
   workstation3:
-    image: herold961/ucsd-workstation3
+    build:
+      context: ./workstation3
+      args:
+        ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
+        AWS_ACCESS_KEY: "${AWS_ACCESS_KEY}"
+        AWS_SECRET_KEY: "${AWS_SECRET_KEY}"
     volumes:
       - /media/es-data3:/usr/share/elasticsearch/data:rw
       - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
@@ -85,7 +104,12 @@ services:
     logging:
       driver: json-file
   nas:
-    image: herold961/ucsd-nas
+    build:
+      context: ./nas
+      args:
+        ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
+        AWS_ACCESS_KEY: "${AWS_ACCESS_KEY}"
+        AWS_SECRET_KEY: "${AWS_SECRET_KEY}"
     volumes:
       - /volume1/Elasticsearch/data:/usr/share/elasticsearch/data:rw
       - /mnt/Elasticsearch/snapshots:/opt/elasticsearch/snapshots-repo:rw
@@ -110,7 +134,10 @@ services:
     logging:
       driver: json-file
   kibana:
-    image: herold961/ucsd-kibana
+    build:
+      context: ./kibana
+      args:
+        ELASTIC_PASSWORD: "${ELASTIC_PASSWORD}"
     networks:
       - analytics
     logging:
