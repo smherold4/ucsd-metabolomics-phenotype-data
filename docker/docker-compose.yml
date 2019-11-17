@@ -1,6 +1,7 @@
 version: '3.2'
 services:
   jupyter:
+    image: herold961/ucsd-jupyter
     build:
       context: ./jupyter
       args:
@@ -22,6 +23,7 @@ services:
       mode: "replicated"
       replicas: 1
   workstation1:
+    image: herold961/ucsd-workstation1
     build:
       context: ./workstation1
       args:
@@ -52,6 +54,7 @@ services:
     logging:
       driver: json-file
   workstation2:
+    image: herold961/ucsd-workstation2
     build:
       context: ./workstation2
       args:
@@ -78,6 +81,7 @@ services:
     logging:
       driver: json-file
   workstation3:
+    image: herold961/ucsd-workstation3
     build:
       context: ./workstation3
       args:
@@ -104,6 +108,7 @@ services:
     logging:
       driver: json-file
   nas:
+    image: herold961/ucsd-nas
     build:
       context: ./nas
       args:
@@ -134,6 +139,7 @@ services:
     logging:
       driver: json-file
   kibana:
+    image: herold961/ucsd-kibana
     build:
       context: ./kibana
       args:
