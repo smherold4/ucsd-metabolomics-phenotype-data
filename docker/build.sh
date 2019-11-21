@@ -21,5 +21,5 @@ docker push herold961/ucsd-workstation2
 docker build --no-cache -f ./docker/workstation3/Dockerfile -t herold961/ucsd-workstation3 ./docker/workstation3 --build-arg ELASTIC_PASSWORD=$ELASTIC_PASSWORD --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY --build-arg AWS_SECRET_KEY=$AWS_SECRET_KEY
 docker push herold961/ucsd-workstation3
 
-docker build --no-cache -f ./docker/jupyter/Dockerfile -t herold961/ucsd-jupyter ./docker/jupyter --build-arg JUPYTER_PASSWORD=$JUPYTER_PASSWORD
+docker build --no-cache -f ./docker/jupyter/Dockerfile -t herold961/ucsd-jupyter ./docker/jupyter --build-arg JUPYTER_USERNAME=$JUPYTER_USERNAME --build-arg JUPYTER_PASSWORD=$JUPYTER_PASSWORD
 docker push herold961/ucsd-jupyter
