@@ -2,6 +2,7 @@ version: '3.2'
 services:
   jupyter:
     image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=marsearthvenusmercury4321"
     volumes:
       - /volume1/Database/jupyter:/home/jovyan/work:rw
     ports:

@@ -7,4 +7,3 @@ ENV RESTARTABLE=yes
 ADD ./pip_install_frequently_used_libraries.sh /usr/local/bin/before-notebook.d/
 USER root
 RUN chmod -R 777 /home/jovyan/work
-CMD "start-notebook.sh --NotebookApp.token=${JUPYTER_PASSWORD}"
