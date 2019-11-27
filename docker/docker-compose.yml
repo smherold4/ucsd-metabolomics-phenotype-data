@@ -152,6 +152,367 @@ services:
         constraints: [ node.role == manager ]
     networks:
       - analytics
+  jport9001:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=jupyter1"
+    volumes:
+      - /media/jupyter-ports/9001:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9001
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9002:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=milkyway2"
+    volumes:
+      - /media/jupyter-ports/9002:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9002
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9003:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=nebula3"
+    volumes:
+      - /media/jupyter-ports/9003:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9003
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9004:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=blackhole4"
+    volumes:
+      - /media/jupyter-ports/9004:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9004
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9005:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=schwarzschild5"
+    volumes:
+      - /media/jupyter-ports/9005:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9005
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9006:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=einstein6"
+    volumes:
+      - /media/jupyter-ports/9006:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9006
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9007:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=kepler7"
+    volumes:
+      - /media/jupyter-ports/9007:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9007
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9008:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=sagan8"
+    volumes:
+      - /media/jupyter-ports/9008:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9008
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9009:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=copernicus9"
+    volumes:
+      - /media/jupyter-ports/9009:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9009
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9010:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=galileo10"
+    volumes:
+      - /media/jupyter-ports/9010:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9010
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9011:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=hubble11"
+    volumes:
+      - /media/jupyter-ports/9011:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9011
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9012:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=halley12"
+    volumes:
+      - /media/jupyter-ports/9012:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9012
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9013:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=hawking13"
+    volumes:
+      - /media/jupyter-ports/9013:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9013
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9014:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=supernova14"
+    volumes:
+      - /media/jupyter-ports/9014:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9014
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9015:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=dwarf15"
+    volumes:
+      - /media/jupyter-ports/9015:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9015
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9016:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=planet16"
+    volumes:
+      - /media/jupyter-ports/9016:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9016
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9017:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=moon17"
+    volumes:
+      - /media/jupyter-ports/9017:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9017
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9018:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=startrek18"
+    volumes:
+      - /media/jupyter-ports/9018:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9018
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9019:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=orion19"
+    volumes:
+      - /media/jupyter-ports/9019:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9019
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+  jport9020:
+    image: herold961/ucsd-jupyter
+    command: "start-notebook.sh --NotebookApp.token=asteroid20"
+    volumes:
+      - /media/jupyter-ports/9020:/home/jovyan/work:rw
+    ports:
+      - target: 8888
+        published: 9020
+        protocol: tcp
+        mode: host
+    networks:
+      - esnet
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints: [ node.role == manager ]
+      mode: "replicated"
+      replicas: 1
+
 
 volumes:
   kibanalog:
